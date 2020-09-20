@@ -1,5 +1,12 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import RequestTutorModal from '@/components/RequestTutorModal.vue'
+import CalendarExtension from '@/components/CalendarExtension'
+import CalendarEvent from '@/components/CalendarEvent'
+
+Vue.component('request-tutor-modal', RequestTutorModal)
+Vue.component('calendar-extension', CalendarExtension)
+Vue.component('calendar-event', CalendarEvent)
 
 Vue.use(VueRouter)
 
@@ -36,6 +43,11 @@ Vue.use(VueRouter)
     path: '/signup',
     name: 'SignUp',
     component: () => import('@/components/SignUp.vue')
+  },
+  {
+    path: '/user/:user_id/calendar',
+    name: 'Calendar',
+    component: () => import('@/components/Calendar.vue')
   }
 ]
 
