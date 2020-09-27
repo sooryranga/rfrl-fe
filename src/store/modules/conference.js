@@ -1,6 +1,8 @@
-
 const state = {
-  currentUser: null,
+  room: undefined, // Current room
+  username: undefined, // Username
+  status: STATUS_OPTIONS.available, // User status
+  rooms: [], // Available rooms in the whole chat
 };
 
 const getters = {

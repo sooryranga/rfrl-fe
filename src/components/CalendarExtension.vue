@@ -118,6 +118,9 @@
           :read-only="readOnly"
           @saved="eventFinish"
           @actioned="eventFinish"
+          @event-create="eventCreate"
+          @event-update="eventUpdate"
+          @event-remove="eventRemove"
         ></ds-event-dialog>
 
       </slot>
@@ -353,6 +356,18 @@ export default {
 
   methods:
   {
+    eventCreate(ev)
+    {
+      this.$emit('event-create', ev);
+    },
+    eventUpdate(ev)
+    {
+      this.$emit('event-update', ev);
+    },
+    eventRemove(ev)
+    {
+      this.$emit('event-remove', ev);
+    },
     setState(state)
     {
       state.eventSorter = state.listTimes
