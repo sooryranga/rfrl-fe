@@ -1,34 +1,62 @@
-import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-import Vue from 'vue'
-import Vuetify from 'vuetify'
-import DaySpanVuetify from 'dayspan-vuetify'
-import App from './App.vue'
-import router from './router'
-import store from './store'
-import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
+import Vue from 'vue';
+import Vuetify from 'vuetify';
+import DaySpanVuetify from 'dayspan-vuetify';
+import VueSocketIO from 'vue-socket.io';
+import {BootstrapVue, IconsPlugin} from 'bootstrap-vue';
 
-import 'vuetify/dist/vuetify.min.css'
-import 'material-design-icons-iconfont/dist/material-design-icons.css'
-import 'dayspan-vuetify/dist/lib/dayspan-vuetify.min.css'
+
+import App from './App.vue';
+import router from './router';
+import store from './store';
+import constant from './config';
+
+import 'vuetify/dist/vuetify.min.css';
+import 'material-design-icons-iconfont/dist/material-design-icons.css';
+import 'dayspan-vuetify/dist/lib/dayspan-vuetify.min.css';
 
 
 Vue.use(Vuetify);
 // Install BootstrapVue
-Vue.use(BootstrapVue)
+Vue.use(BootstrapVue);
 // Optionally install the BootstrapVue icon components plugin
-Vue.use(IconsPlugin)
+Vue.use(IconsPlugin);
 
 Vue.use(DaySpanVuetify, {
   methods: {
-    getDefaultEventColor: () => '#1976d2'
-  }
+    getDefaultEventColor: () => '#1976d2',
+    getDefaultEventDetails: () => {
+      return {
+        id: null,
+        title: 'Schedule Tutoring',
+        description: 'Schedule your tutoring session!',
+        user: null,
+        location: '',
+        color: '#1976d2',
+        forecolor: '#ffffff',
+        calendar: '',
+        busy: true,
+        icon: '',
+      };
+    },
+  },
 });
 
-Vue.config.productionTip = false
+Vue.use(new VueSocketIO({
+  debug: true,
+  connection: `${constant.url}/video-chat`,
+  vuex: {
+    store, // Attach the store
+    actionPrefix: 'SOCKET_',
+    mutationPrefix: 'SOCKET_',
+  },
+}));
+
+Vue.config.productionTip = false;
 
 new Vue({
   router,
   store,
-  render: h => h(App)
-}).$mount('#app')
+  render: (h) => h(App),
+}).$mount('#app');
