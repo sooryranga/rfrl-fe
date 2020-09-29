@@ -5,10 +5,11 @@
             <button id="startbutton">Take photo</button>
         </div>
         <canvas id="canvas">
-        </canvas>
-        <div class="output">
+          <div class="output">
             <img id="photo" alt="The screen capture will appear in this box.">
-        </div>
+          </div>
+        </canvas>
+        <instant-messaging></instant-messaging>
     </div>
 </template>
 
@@ -26,65 +27,69 @@ export default {
       width: 320,
     };
   },
-  created: function() {
-    video = document.getElementById('video');
-    canvas = document.getElementById('canvas');
-    photo = document.getElementById('photo');
-    startbutton = document.getElementById('startbutton');
-
+  mounted: function() {
+    this.video = document.getElementById('video');
+    console.log(this.video);
+    this.canvas = document.getElementById('canvas');
+    this.photo = document.getElementById('photo');
+    this.startbutton = document.getElementById('startbutton');
+    const self = this;
     navigator.mediaDevices.getUserMedia({video: true, audio: false})
         .then(function(stream) {
-          video.srcObject = stream;
-          video.play();
+          self.video.srcObject = stream;
+          self.video.play();
         })
         .catch(function(err) {
           console.log('An error occurred: ' + err);
         });
 
-    video.addEventListener('canplay', function(ev) {
-      if (!streaming) {
-        height = video.videoHeight / (video.videoWidth/width);
+    this.video.addEventListener('canplay', function(ev) {
+      if (!self.streaming) {
+        self.height = (
+          self.video.videoHeight /
+          (self.video.videoWidth/self.width)
+        );
 
         // Firefox currently has a bug where the height can't be read from
         // the video, so we will make assumptions if this happens.
 
-        if (isNaN(height)) {
-          height = width / (4/3);
+        if (isNaN(self.height)) {
+          self.height = self.width / (4/3);
         }
 
-        video.setAttribute('width', width);
-        video.setAttribute('height', height);
-        canvas.setAttribute('width', width);
-        canvas.setAttribute('height', height);
-        streaming = true;
+        self.video.setAttribute('width', self.width);
+        self.video.setAttribute('height', self.height);
+        self.canvas.setAttribute('width', self.width);
+        self.canvas.setAttribute('height', self.height);
+        self.streaming = true;
       }
     }, false);
 
     startbutton.addEventListener('click', function(ev) {
-      takepicture();
+      self.takepicture();
       ev.preventDefault();
     }, false);
 
-    clearphoto();
+    this.clearphoto();
   },
   methods: {
     clearphoto: function() {
-      const context = canvas.getContext('2d');
+      const context = this.canvas.getContext('2d');
       context.fillStyle = '#AAA';
-      context.fillRect(0, 0, canvas.width, canvas.height);
+      context.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-      const data = canvas.toDataURL('image/png');
-      photo.setAttribute('src', data);
+      const data = this.canvas.toDataURL('image/png');
+      this.photo.setAttribute('src', data);
     },
     takepicture: function() {
-      const context = canvas.getContext('2d');
-      if (width && height) {
-        canvas.width = width;
-        canvas.height = height;
-        context.drawImage(video, 0, 0, width, height);
+      const context = this.canvas.getContext('2d');
+      if (this.width && this.height) {
+        canvas.width = this.width;
+        canvas.height = this.height;
+        context.drawImage(this.video, 0, 0, this.width, this.height);
 
-        const data = canvas.toDataURL('image/png');
-        photo.setAttribute('src', data);
+        const data = this.canvas.toDataURL('image/png');
+        this.photo.setAttribute('src', data);
       } else {
         clearphoto();
       }

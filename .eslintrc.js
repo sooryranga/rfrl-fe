@@ -23,7 +23,7 @@ module.exports = {
   'rules': {
     "vue/max-len": ["error", {
         "code": 80,
-        "template": 120,
+        "template": 160,
         "tabWidth": 2,
         "comments": 80,
         "ignorePattern": "",

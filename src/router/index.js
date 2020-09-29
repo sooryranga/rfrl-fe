@@ -3,10 +3,12 @@ import VueRouter from 'vue-router';
 import RequestTutorModal from '@/components/RequestTutorModal.vue';
 import CalendarExtension from '@/components/CalendarExtension';
 import CalendarEvent from '@/components/CalendarEvent';
+import instantMessaging from '@/components/instantMessaging';
 
 Vue.component('request-tutor-modal', RequestTutorModal);
 Vue.component('calendar-extension', CalendarExtension);
 Vue.component('ds-event', CalendarEvent);
+Vue.component('instant-messaging', instantMessaging);
 
 Vue.use(VueRouter);
 
