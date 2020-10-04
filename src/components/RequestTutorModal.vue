@@ -2,7 +2,7 @@
   <transition name="modal">
     <div class="modal-mask">
       <div class="modal-wrapper">
-        <div class="modal-container">
+        <div class="modal-container-fluid">
 
           <div class="modal-header">
             <slot name="header" class="font-weight-bold">
@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import utils from '@/utils.js'
+import utils from '@/utils.js';
 
 export default {
   name: 'request-tutor-modal',
@@ -41,18 +41,18 @@ export default {
   computed: {
     title: function() {
       if (this.type == 'tutor') {
-        return "Wanna tutor?"
+        return 'Wanna tutor?';
       }
-      return "Wanna book a tutor?"
+      return 'Wanna book a tutor?';
     },
     startTime: function() {
-      return utils.getTimeFromIndex(this.startTimeIndex)
+      return utils.getTimeFromIndex(this.startTimeIndex);
     },
     endTime: function() {
-      return utils.getTimeFromIndex(this.endTimeIndex)
-    }
-  }
-}
+      return utils.getTimeFromIndex(this.endTimeIndex);
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -73,7 +73,7 @@ export default {
   vertical-align: middle;
 }
 
-.modal-container {
+.modal-container-fluid {
   width: 300px;
   margin: 0px auto;
   padding: 20px 30px;
@@ -112,8 +112,8 @@ export default {
   opacity: 0;
 }
 
-.modal-enter .modal-container,
-.modal-leave-active .modal-container {
+.modal-enter .modal-container-fluid,
+.modal-leave-active .modal-container-fluid {
   -webkit-transform: scale(1.1);
   transform: scale(1.1);
 }

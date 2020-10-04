@@ -62,7 +62,7 @@
 
   </v-toolbar>
   <v-content class="ds-expand">
-    <v-container fluid fill-height class="ds-calendar-container">
+    <v-container-fluid fluid fill-height class="ds-calendar-container-fluid">
 
       <ds-gestures
         @swipeleft="next"
@@ -88,7 +88,9 @@
 
         <div v-else class="ds-expand">
 
-          <slot name="calendarAppCalendar" v-bind="{$scopedSlots, $listeners, calendar, add, addAt, edit, viewDay, handleAdd, handleMove}">
+          <slot
+          name="calendarAppCalendar"
+          v-bind="{$scopedSlots, $listeners, calendar, add, addAt, edit, viewDay, handleAdd, handleMove}">
 
             <ds-calendar ref="calendar"
               v-bind="{$scopedSlots}"
@@ -163,9 +165,9 @@
 
       </slot>
 
-      <slot name="containerInside" v-bind="{events, calendar}"></slot>
+      <slot name="container-fluidInside" v-bind="{events, calendar}"></slot>
 
-    </v-container>
+    </v-container-fluid>
   </v-content>
 </div>
 </template>
@@ -720,7 +722,7 @@ export default {
   height: 100%;
 }
 
-.ds-calendar-container {
+.ds-calendar-container-fluid {
   padding: 0px !important;
   position: relative;
 }

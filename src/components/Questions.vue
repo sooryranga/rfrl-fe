@@ -1,5 +1,5 @@
 <template>
-<div class="container h-100">
+<div class="container-fluid h-100">
   <div class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -32,7 +32,7 @@
     <img class="card-img-top" alt="Card image cap">
     <div class="card-body">
       <h5 class="card-title">{{question.poster}}</h5>
-      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+      <p class="card-text">Some quick example text.</p>
     </div>
     <ul class="list-group list-group-flush">
       <li class="list-group-item">Cras justo odio</li>
@@ -47,10 +47,10 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import {mapGetters} from 'vuex';
 
 export default {
   name: 'Questions',
-  computed: mapGetters(['questions'])
-}
+  computed: mapGetters(['questions']),
+};
 </script>
