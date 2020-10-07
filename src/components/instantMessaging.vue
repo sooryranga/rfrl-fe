@@ -1,54 +1,73 @@
 <template>
   <div>
-      <div class="controlbox">
-        <button
-          id="connectButton"
-          name="connectButton"
-          class="buttonleft"
-          v-on:click="connectPeers"
-        >
-          Connect
-        </button>
-        <button
-          id="disconnectButton"
-          name="disconnectButton"
-          class="buttonright"
-          disabled
-          v-on:click="disconnectPeers"
-        >
-          Disconnect
-        </button>
-      </div>
-
-      <div class="messagebox">
-        <label for="message">Enter a message:
-          <input
-            type="text" name="message" id="message" placeholder="Message text"
-            inputmode="latin" size=60 maxlength=120 disabled>
-        </label>
-        <button
-          id="sendButton" name="sendButton" class="buttonright" disabled
-          v-on:click="sendMessage"
-        >
-          Send
-        </button>
-      </div>
-      <div class="messagebox" id="receivebox">
-        <p>Messages received:</p>
-      </div>
+    <chat-window
+      :currentUserId="currentUserId"
+      :rooms="rooms"
+      :messages="messages"
+      :single-room="true"
+      :messages-loaded="messagesLoaded"
+      :menu-actions="menuActions"
+      :room-id="1"
+      @fetchMessages="fetchMessages"
+      @sendMessage="sendMessage"
+      @editMessage="editMessage"
+      @deleteMessage="deleteMessage"
+      @openFile="openFile"
+      @messageActionHandler="messageActionHandler"
+      @sendMessageReaction="sendMessageReaction"
+      @typingMessage="typingMessage" />
   </div>
 </template>
 
 <script>
+import ChatWindow from 'vue-advanced-chat';
+import utils from '@/utils';
+import {v4 as uuidv4} from 'uuid';
+import 'vue-advanced-chat/dist/vue-advanced-chat.css';
+
 export default {
   name: 'instant-messaging',
+  components: {
+    ChatWindow,
+  },
   data: function() {
     return {
-      connectButton: null,
-      disconnectButton: null,
-      sendButton: null,
-      messageInputBox: null,
-      receiveBox: null,
+      rooms: [{
+        roomId: 1,
+        roomName: 'Room 1',
+        lastMessage: {
+          content: 'Last message received',
+          sender_id: 1234,
+          username: 'John Doe',
+          timestamp: '10:20',
+          date: 123242424,
+          seen: false,
+          new: true,
+        },
+        users: [
+          {
+            _id: 1234,
+            username: 'John Doe',
+            status: {
+              state: 'online',
+              last_changed: 'today, 14:30',
+            },
+          },
+          {
+            _id: 4321,
+            username: 'Doe John',
+            status: {
+              state: 'online',
+              last_changed: 'today, 14:44',
+            },
+          },
+        ],
+      }],
+      messages: [],
+      currentUserId: 1234,
+      messagesLoaded: true,
+      menuActions: [],
+
       localConnection: null,
       remoteConnection: null,
       sendChannel: null,
@@ -56,13 +75,43 @@ export default {
     };
   },
   mounted: function() {
-    this.connectButton = document.getElementById('connectButton');
-    this.disconnectButton = document.getElementById('disconnectButton');
-    this.sendButton = document.getElementById('sendButton');
-    this.messageInputBox = document.getElementById('message');
-    this.receiveBox = document.getElementById('receivebox');
+    this.connectPeers();
+  },
+  beforeDestroy: function() {
+    this.disconnectPeers();
   },
   methods: {
+    fetchMessages({room, options = {}}) {
+    },
+    sendMessage: async function({content, roomId, file, replyMessage}) {
+      const date = new Date;
+      const messasge = {
+        _id: uuidv4(),
+        content: content,
+        sender_id: 4321,
+        username: 'John Doe',
+        date: date.toDateString(),
+        timestamp: utils.formatAMPM(date),
+        seen: true,
+        disable_actions: false,
+        disable_reactions: false,
+      };
+      this.sendMessageRTC(messasge);
+    },
+    editMessage: async function({messageId, newContent, roomId, file}) {
+    },
+    deleteMessage: async function({messageId, roomId}) {
+    },
+    openFile: function({message, action}) {
+      window.open(message.file.url, '_blank');
+    },
+    messageActionHandler: function() {
+      // do something
+    },
+    sendMessageReaction: async function({reaction, remove, messageId, roomId}) {
+    },
+    typingMessage: function({message, roomId}) {
+    },
     connectPeers: function() {
     // Create the local connection and its event listeners
 
@@ -92,17 +141,25 @@ export default {
 
       this.localConnection.createOffer()
           .then((offer) => this.localConnection.setLocalDescription(offer))
-          .then(() => {
-            this.remoteConnection
-                .setRemoteDescription(this.localConnection.localDescription);
-          })
+          .then(() => this.sendOfferMessage({
+            type: 'data-channel',
+            sdp: this.localConnection.localDescription,
+          }))
+          .catch(this.handleCreateDescriptionError);
+    },
+    sendOfferMessage: function(data) {
+      return this.remoteConnection
+          .setRemoteDescription(data.sdp)
           .then(() => this.remoteConnection.createAnswer())
           .then((answer) => this.remoteConnection.setLocalDescription(answer))
-          .then(() => {
-            this.localConnection
-                .setRemoteDescription(this.remoteConnection.localDescription);
-          })
-          .catch(this.handleCreateDescriptionError);
+          .then(()=> this.sendAnswerMessage({
+            type: 'data-channel',
+            sdp: this.remoteConnection.localDescription,
+          }));
+    },
+    sendAnswerMessage: function(data) {
+      this.localConnection
+          .setRemoteDescription(data.sdp);
     },
     handleCreateDescriptionError: function(error) {
       console.log('Unable to create an offer: ' + error.toString());
@@ -116,33 +173,11 @@ export default {
     handleAddCandidateError: function() {
       console.log('Oh noes! addICECandidate failed!');
     },
-    sendMessage: function() {
-      const message = this.messageInputBox.value;
-      this.sendChannel.send(message);
-
-      // Clear the input box and re-focus it, so that we're
-      // ready for the next message.
-
-      this.messageInputBox.value = '';
-      this.messageInputBox.focus();
+    sendMessageRTC: function(message) {
+      this.sendChannel.send(JSON.stringify(message));
     },
     handleSendChannelStatusChange: function(event) {
-      if (this.sendChannel) {
-        const state = this.sendChannel.readyState;
 
-        if (state === 'open') {
-          this.messageInputBox.disabled = false;
-          this.messageInputBox.focus();
-          this.sendButton.disabled = false;
-          this.disconnectButton.disabled = false;
-          this.connectButton.disabled = true;
-        } else {
-          this.messageInputBox.disabled = true;
-          this.sendButton.disabled = true;
-          this.connectButton.disabled = false;
-          this.disconnectButton.disabled = true;
-        }
-      }
     },
     receiveChannelCallback: function(event) {
       this.receiveChannel = event.channel;
@@ -151,11 +186,8 @@ export default {
       this.receiveChannel.onclose = this.handleReceiveChannelStatusChange;
     },
     handleReceiveMessage: function(event) {
-      const el = document.createElement('p');
-      const txtNode = document.createTextNode(event.data);
-
-      el.appendChild(txtNode);
-      this.receiveBox.appendChild(el);
+      const messasge = JSON.parse(event.data);
+      this.messages.push(messasge);
     },
     handleReceiveChannelStatusChange: function(event) {
       if (this.receiveChannel) {
@@ -181,15 +213,6 @@ export default {
       this.receiveChannel = null;
       this.localConnection = null;
       this.remoteConnection = null;
-
-      // Update user interface elements
-
-      this.connectButton.disabled = false;
-      this.disconnectButton.disabled = true;
-      this.sendButton.disabled = true;
-
-      this.messageInputBox.value = '';
-      this.messageInputBox.disabled = true;
     },
   },
 };

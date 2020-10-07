@@ -3,12 +3,14 @@ import VueRouter from 'vue-router';
 import RequestTutorModal from '@/components/RequestTutorModal.vue';
 import CalendarExtension from '@/components/CalendarExtension';
 import CalendarEvent from '@/components/CalendarEvent';
-import instantMessaging from '@/components/instantMessaging';
+import instantMessaging from '@/components/InstantMessaging';
+import VideoMessaging from '@/components/VideoMessaging.vue';
 
 Vue.component('request-tutor-modal', RequestTutorModal);
 Vue.component('calendar-extension', CalendarExtension);
 Vue.component('ds-event', CalendarEvent);
 Vue.component('instant-messaging', instantMessaging);
+Vue.component('video-messaging', VideoMessaging);
 
 Vue.use(VueRouter);
 
@@ -53,8 +55,8 @@ const routes = [
   },
   {
     path: '/conference/:user_id',
-    name: 'VideoConference',
-    component: () => import('@/components/videoConference.vue'),
+    name: 'tutoring-session',
+    component: () => import('@/components/TutoringSession.vue'),
   },
 ];
 
