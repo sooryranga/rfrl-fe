@@ -3,14 +3,12 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Vue from 'vue';
 import Vuetify from 'vuetify';
 import DaySpanVuetify from 'dayspan-vuetify';
-import VueSocketIO from 'vue-socket.io';
 import {BootstrapVue, IconsPlugin} from 'bootstrap-vue';
 
 
 import App from './App.vue';
 import router from './router';
 import store from './store';
-import constant from './config';
 
 import 'vuetify/dist/vuetify.min.css';
 import 'material-design-icons-iconfont/dist/material-design-icons.css';
@@ -42,16 +40,6 @@ Vue.use(DaySpanVuetify, {
     },
   },
 });
-
-Vue.use(new VueSocketIO({
-  debug: true,
-  connection: `${constant.url}/video-chat`,
-  vuex: {
-    store, // Attach the store
-    actionPrefix: 'SOCKET_',
-    mutationPrefix: 'SOCKET_',
-  },
-}));
 
 Vue.config.productionTip = false;
 
