@@ -1,6 +1,8 @@
 <template>
-  <div>
+  <div class="d-flex flex-grow-1">
     <chat-window
+      class="d-flex flex-grow-1"
+      :height="'auto'"
       :currentUserId="currentUserId"
       :rooms="rooms"
       :messages="messages"

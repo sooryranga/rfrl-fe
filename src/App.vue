@@ -1,14 +1,14 @@
 <template>
-  <div id="app" class="container-fluid w-100">
-    <div class="d-flex flex-column h-100">
-      <div class="
-        sticky-top navbar navbar-default navbar-fixed-top align-items-center
-        justify-content-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm
-        w-100">
-        <div class="col-sm">
+  <div id="app" class="d-flex flex-column h-100 w-100">
+    <div class="
+      sticky-top navbar navbar-default navbar-fixed-top align-items-center
+      justify-content-center p-3 px-md-4 bg-white border-bottom shadow-sm
+      w-100 flex-column flex-shrink-1 mb-0" id="topnavbar">
+      <div class="d-flex flex-row w-100">
+        <div class="d-flex my-2 my-md-0 mr-md-3 justify-content-start">
           <router-link class="p-2" to="/">TutorMe</router-link>
         </div>
-        <nav class="col-sm row my-2 my-md-0 mr-md-3 justify-content-end">
+        <nav class="d-flex my-2 my-md-0 mr-md-3 justify-content-end">
           <router-link class="p-2 text-dark" to="/questions">Ask Question</router-link>
           <router-link class="p-2 text-dark" to="/tutors">Find Tutor</router-link>
           <router-link class="p-2 text-dark mr-3" to="/about">About</router-link>
@@ -21,9 +21,9 @@
           </div>
         </nav>
       </div>
-      <div>
-        <router-view class="col"/>
-      </div>
+    </div>
+    <div class="d-flex flex-column flex-grow-1">
+      <router-view/>
     </div>
   </div>
 </template>
@@ -44,7 +44,12 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  min-height: 100%;
+  min-height: 100vh;
+  min-width: 100vw;
+  flex-flow: column;
+}
+#topnavbar{
+  max-height: 8vh;
 }
 html, body {
     height: 100%;
