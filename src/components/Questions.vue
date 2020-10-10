@@ -1,5 +1,5 @@
 <template>
-<div class="container-fluid h-100">
+<div class="container-fluid h-100 mt-3">
   <div class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
