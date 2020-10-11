@@ -24,6 +24,8 @@
 </template>
 
 <script>
+// import Peer from 'simple-peer';
+
 export default {
   name: 'video-messaging',
   data: function() {
@@ -37,8 +39,6 @@ export default {
       audioTrackSender: null,
       videoTrackSender: null,
       stream: null,
-      height: 0,
-      width: 320,
 
       connectButton: null,
       disconnectButton: null,
@@ -230,7 +230,6 @@ export default {
 #parent{
   position: relative;
   width: 100%;
-  height: 15%;
   min-width: 300px;
   min-height: calc(300px*(3/4));
   background-color: black;

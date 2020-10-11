@@ -57,6 +57,13 @@ const routes = [
     path: '/conference/:user_id',
     name: 'tutoring-session',
     component: () => import('@/components/TutoringSession.vue'),
+    children: [
+      {
+        path: 'code',
+        name: 'code',
+        component: () => import('@/components/CodeEditor.vue'),
+      },
+    ],
   },
 ];
 
