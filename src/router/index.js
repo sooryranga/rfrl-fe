@@ -56,6 +56,10 @@ const routes = [
   {
     path: '/conference/:user_id',
     name: 'tutoring-session',
+    redirect: (to) => {
+      console.log(to);
+      return '/conference/' + to.params.user_id +'/code';
+    },
     component: () => import('@/components/TutoringSession.vue'),
     children: [
       {
