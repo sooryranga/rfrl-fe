@@ -67,6 +67,11 @@ const routes = [
         name: 'code',
         component: () => import('@/components/CodeEditor.vue'),
       },
+      {
+        path: 'text-editor',
+        name: 'text-editor',
+        component: () => import('@/components/TextEditor.vue'),
+      },
     ],
   },
 ];

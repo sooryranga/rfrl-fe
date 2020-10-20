@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="d-flex flex-column h-100 w-100">
+  <div id="app">
     <div class="
       sticky-top navbar navbar-default navbar-fixed-top align-items-center
       justify-content-center p-3 px-md-4 bg-white border-bottom shadow-sm
@@ -22,7 +22,7 @@
         </nav>
       </div>
     </div>
-    <div class="d-flex flex-column flex-grow-1">
+    <div id="content">
       <router-view/>
     </div>
   </div>
@@ -44,12 +44,14 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  min-height: 100vh;
-  min-width: 100vw;
   flex-flow: column;
+  height: 100%;
 }
 #topnavbar{
-  max-height: 8vh;
+  height: 8vh;
+}
+#content{
+  height:92vh;
 }
 html, body {
     height: 100%;

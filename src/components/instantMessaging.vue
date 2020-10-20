@@ -1,8 +1,7 @@
 <template>
-  <div class="d-flex flex-grow-1">
+  <div id="intant-messaging">
     <chat-window
-      class="d-flex flex-grow-1"
-      :height="'auto'"
+      :height="'100%'"
       :currentUserId="currentUserId"
       :rooms="rooms"
       :messages="messages"
@@ -221,5 +220,4 @@ export default {
 </script>
 
 <style>
-
 </style>

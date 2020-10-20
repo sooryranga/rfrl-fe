@@ -1,5 +1,5 @@
 <template>
-<div class='container-fluid mt-3'>
+<div class='container-fluid mt-3 h-100'>
   <div class='container-fluid h-100 mt-0'>
     <div class='row h-100'>
       <div class='col col-3 p-0'>
@@ -8,7 +8,7 @@
         </div>
       </div>
       <div class='col'>
-        <v-app id="dayspan" v-cloak>
+        <v-app id="dayspan" class="overflow-auto" v-cloak>
           <calendar-extension
             :calendar="calendar"
             :events="events"

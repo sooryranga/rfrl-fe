@@ -80,6 +80,14 @@ export default {
 
     this.connectPeers();
   },
+  beforeDestroy: function() {
+    if (this.audioTrack) {
+      this.audioTrack.stop();
+    }
+    if (this.videoTrack) {
+      this.videoTrack.stop();
+    }
+  },
   methods: {
     connectPeers: function() {
     // Create the local connection and its event listeners
@@ -229,9 +237,9 @@ export default {
 <style scoped>
 #parent{
   position: relative;
+  flex: 0 0 auto!important;
+  height: 30%;
   width: 100%;
-  min-width: 300px;
-  min-height: calc(300px*(3/4));
   background-color: black;
 }
 #rtcvideo{

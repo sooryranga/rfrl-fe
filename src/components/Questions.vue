@@ -1,5 +1,5 @@
 <template>
-<div class="container-fluid h-100 mt-3">
+<div id="question-div" class="mt-3">
   <div class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -54,3 +54,14 @@ export default {
   computed: mapGetters(['questions']),
 };
 </script>
+
+<style>
+#question-div{
+  flex-direction: column;
+  flex-grow: 1!important;
+  overflow: auto;
+  /* for Firefox */
+  min-height: 0;
+  flex: 0 1 auto!important;
+}
+</style>
