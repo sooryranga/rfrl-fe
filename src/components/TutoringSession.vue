@@ -1,38 +1,48 @@
 <template>
-  <div class="d-flex flex-row">
-    <div id="left-bar" class="d-flex flex-column">
-      <video-messaging></video-messaging>
-      <instant-messaging class="d-flex flex-grow-1 overflow-auto"></instant-messaging>
-    </div>
-    <div id="right" class="d-flex flex-column">
-      <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav">
-            <li class="nav-item active">
-              <router-link
-                class="nav-link"
-                :to="{ name: 'code', params: {userId: $route.params.userId }}">
-                Code
-              </router-link>
-            </li>
-            <li class="nav-item">
-              <router-link
-                class="nav-link"
-                :to="{ name: 'code', params: {userId: $route.params.userId }}">
-                Code
-              </router-link>
-            </li>
-            <li class="nav-item">
-              <router-link
-                class="nav-link"
-                :to="{ name: 'code', params: {userId: $route.params.userId }}">
-                Code
-              </router-link>
-            </li>
-          </ul>
+  <div class="container-fluid h-100">
+    <div class="row h-100">
+      <div class='p-0'>
+        <video-messaging style="height: 30%;"></video-messaging>
+        <instant-messaging style="height: 70%; max-height: 65vh;"></instant-messaging>
+      </div>
+      <div class="col">
+        <div class="row" style="height:6%">
+          <div class="col p-0">
+            <nav id="tutor-nav" class="navbar navbar-expand-lg navbar-light bg-light">
+              <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                  <li class="nav-item active">
+                    <router-link
+                      class="nav-link"
+                      :to="{ name: 'code', params: {userId: $route.params.userId }}">
+                      Code
+                    </router-link>
+                  </li>
+                  <li class="nav-item">
+                    <router-link
+                      class="nav-link"
+                      :to="{ name: 'text-editor', params: {userId: $route.params.userId }}">
+                      Text Editor
+                    </router-link>
+                  </li>
+                  <li class="nav-item">
+                    <router-link
+                      class="nav-link"
+                      :to="{ name: 'code', params: {userId: $route.params.userId }}">
+                      Code
+                    </router-link>
+                  </li>
+                </ul>
+              </div>
+            </nav>
+          </div>
         </div>
-      </nav>
-      <router-view class="flex-grow-1"/>
+        <div class="row" style="height:94%">
+          <div class="col p-0">
+            <router-view :key="$route.path"/>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -49,11 +59,13 @@ export default {
 </script>
 
 <style>
+#tutor-nav{
+  flex: 0 0 auto!important;
+}
 #left-bar{
   position:relative;
   width:21vw;
   min-width: 300px;
   flex: 0 1 auto!important;;
 }
-
 </style>
