@@ -13,7 +13,7 @@ import {
   LOGOUT,
 } from '@/constants.actions.js';
 
-const blankState = {
+const blankAuth = {
   google: {token: null},
   linkedin: {token: null},
   default: {username: null, passwordHash: null},
@@ -21,14 +21,16 @@ const blankState = {
 };
 
 const state = {
-  google: {token: null},
-  linkedin: {token: null},
-  default: {username: null, passwordHash: null},
-  loggedIn: false,
+  auth: {
+    google: {token: null},
+    linkedin: {token: null},
+    default: {username: null, passwordHash: null},
+    loggedIn: false,
+  },
 };
 
 const getters = {
-  loggedIn: (state) => state.loggedIn,
+  loggedIn: (state) => state.auth.loggedIn,
 };
 
 const actions = {
@@ -52,20 +54,20 @@ const actions = {
 const mutations = {
   [SET_LOGGED_IN](state) {
     if (!state.loggedIn) {
-      state.loggedIn = true;
+      state.auth.loggedIn = true;
     }
   },
   [SET_GOOGLE_AUTH](state, token) {
-    state.google.token = token;
+    state.auth.google.token = token;
   },
   [SET_LINKED_IN_AUTH](state, token) {
-    state.linkedin.token = token;
+    state.auth.linkedin.token = token;
   },
   [SET_DEFAULT_AUTH](state, username, pass) {
-    state.default= {username: username, passwordHash: pass};
+    state.auth.default= {username: username, passwordHash: pass};
   },
   [SET_LOGGED_OUT](state) {
-    state = {...blankState};
+    state.auth = {...blankAuth};
   },
 };
 
