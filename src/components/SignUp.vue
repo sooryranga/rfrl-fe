@@ -49,6 +49,7 @@ import {
   LINKED_IN_LOGIN,
   DEFAULT_LOGIN,
   NAME,
+  PROFILE_PICTURE,
 } from '@/constants.actions.js';
 import {mapActions} from 'vuex';
 import queryString from 'query-string';
@@ -86,9 +87,15 @@ export default {
       console.log('token: ' + idToken);
       this[GOOGLE_LOGIN](idToken);
       this[NAME](profile.getName());
+      this[PROFILE_PICTURE](profile.getImageUrl());
       return;
     },
-    ...mapActions([GOOGLE_LOGIN, LINKED_IN_LOGIN, DEFAULT_LOGIN, NAME]),
+    ...mapActions([
+      GOOGLE_LOGIN,
+      LINKED_IN_LOGIN,
+      DEFAULT_LOGIN,
+      NAME,
+      PROFILE_PICTURE]),
   },
   computed: {
     linkedinOauthUrl: function() {

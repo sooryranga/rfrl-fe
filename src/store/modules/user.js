@@ -4,17 +4,19 @@ import {
 } from '@/constants.mutations.js';
 
 const state ={
-  name: null,
-  birthDay: null,
-  profileImage: null,
-  about: null,
-  education: {},
-  workExperience: {},
-  documentation: {},
+  profile: {
+    name: null,
+    birthDay: null,
+    profileImage: null,
+    about: null,
+    education: {},
+    workExperience: {},
+    documentation: {},
+  },
 };
 
 const getters = {
-  currentProfile: (state) => state,
+  currentProfile: (state) => state.profile,
 };
 
 const actions = {
@@ -28,13 +30,13 @@ const actions = {
 
 const mutations = {
   [SET_PROFILE](state, profile) {
-    state = {...profile};
+    state.profile = {...profile};
   },
   [SET_PROFILE_IMAGE](state, imageSrc) {
-    this.state.profileImage = imageSrc;
+    state.profile.profileImage = imageSrc;
   },
   [SET_NAME](state, name) {
-    this.state.name = name;
+    state.profile.name = name;
   },
 };
 
