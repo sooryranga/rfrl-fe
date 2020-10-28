@@ -4,21 +4,33 @@
       sticky-top navbar navbar-default navbar-fixed-top align-items-center
       justify-content-center p-3 px-md-4 bg-white border-bottom shadow-sm
       w-100 flex-column flex-shrink-1 mb-0" id="topnavbar">
-      <div class="d-flex flex-row w-100">
+      <div class="d-flex flex-row w-75" id="navbar2">
         <div class="d-flex my-2 my-md-0 mr-md-3 justify-content-start">
           <router-link class="p-2" to="/">TutorMe</router-link>
         </div>
         <nav class="d-flex my-2 my-md-0 mr-md-3 justify-content-end">
-          <router-link class="p-2 text-dark" to="/questions">Ask Question</router-link>
-          <router-link class="p-2 text-dark" to="/tutors">Find Tutor</router-link>
-          <router-link class="p-2 text-dark mr-3" to="/about">About</router-link>
-          <div v-if="currentUser">
-              <router-link class="p-2 text-dark" to="/"> {{currentUser.name}}</router-link>
-          </div>
-          <div class="d-flex align-items-center" v-else>
+            <router-link class="p-2 text-dark" to="/">Home</router-link>
+            <router-link class="p-2 text-dark" to="/questions">Ask Question</router-link>
+            <router-link class="p-2 text-dark" to="/tutors">Find Tutor</router-link>
+            <router-link class="p-2 text-dark mr-3" to="/about">About</router-link>
+            <div v-if="loggedIn">
+              <div class="dropdown">
+                <button
+                class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <img class="profilePicture" v-bind:src="currentProfile.profileImage"/>
+                  {{currentProfile.name}}
+                </button>
+                <div class="dropdown-menu dropdown-menu-left" aria-labelledby="dropdownMenuButton">
+                  <router-link class="dropdown-item text-dark" to="/">View Profile</router-link>
+                  <a class="dropdown-item" href="#">Settings & Privacy</a>
+                  <a class="dropdown-item" href="#">Sign Out</a>
+                </div>
+              </div>
+            </div>
+            <div class="d-flex align-items-center" v-else>
               <router-link class="btn btn-dark p-2 mr-2" to="/signup">Sign Up</router-link>
-              <router-link class="btn btn-dark p-2" to="/login">Login</router-link>
-          </div>
+            </div>
         </nav>
       </div>
     </div>
@@ -33,7 +45,9 @@ import {mapGetters} from 'vuex';
 
 export default {
   name: 'tutor',
-  computed: mapGetters(['currentUser']),
+  computed: {
+    ...mapGetters(['loggedIn', 'currentProfile']),
+  },
 };
 </script>
 
@@ -48,15 +62,25 @@ export default {
   height: 100%;
 }
 #topnavbar{
-  height: 8vh;
+  height: 7vh;
+}
+#navbar2{
+  min-width: 400px;
 }
 #content{
-  height:92vh;
+  height:93vh;
 }
 html, body {
     height: 100%;
 }
 .sticky-top{
   z-index:4
+}
+.profilePicture{
+  height: 3vh;
+  width: 3vh;
+  background-size: cover;
+  background-position: top center;
+  border-radius: 50%;
 }
 </style>
