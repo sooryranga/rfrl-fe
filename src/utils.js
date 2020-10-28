@@ -14,6 +14,17 @@ function formatAMPM(date) {
   return strTime;
 }
 
+/**
+ * Check whether text is phone number.
+ * @param {Str} phonetext the date.
+ * @return {Boolean} whether text is a phone nubmer.
+ */
+function phonenumber(phonetext) {
+  const phoneno = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+  return inputtxt.value.match(phoneno);
+}
+
 export default {
   formatAMPM,
+  phonenumber,
 };
