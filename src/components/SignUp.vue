@@ -51,8 +51,10 @@ import {
   NAME,
   PROFILE_PICTURE,
 } from '@/constants.actions.js';
-import {mapActions} from 'vuex';
+import {GET_PROFILE} from '@/constants.getters.js';
+import {mapActions, mapGetters} from 'vuex';
 import queryString from 'query-string';
+
 
 export default {
   name: 'SignUp',
@@ -88,14 +90,22 @@ export default {
       this[GOOGLE_LOGIN](idToken);
       this[NAME](profile.getName());
       this[PROFILE_PICTURE](profile.getImageUrl());
-      return;
+      this.$router.push(
+          {name: 'Profile', params: {userId: this[GET_PROFILE].id}},
+      );
     },
-    ...mapActions([
+    ...mapActions('authentication', [
       GOOGLE_LOGIN,
       LINKED_IN_LOGIN,
       DEFAULT_LOGIN,
+    ]),
+    ...mapActions('profile', [
       NAME,
-      PROFILE_PICTURE]),
+      PROFILE_PICTURE,
+    ]),
+    ...mapGetters('profile', [
+      GET_PROFILE,
+    ]),
   },
   computed: {
     linkedinOauthUrl: function() {

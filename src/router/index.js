@@ -34,6 +34,11 @@ const routes = [
     component: () => import('@/components/Home.vue'),
   },
   {
+    path: '/profile/:userId',
+    name: 'Profile',
+    component: () => import('@/components/Profile.vue'),
+  },
+  {
     path: '/about',
     name: 'About',
     component: () => import('@/components/About.vue'),
@@ -49,15 +54,15 @@ const routes = [
     component: () => import('@/components/SignUp.vue'),
   },
   {
-    path: '/user/:user_id/calendar',
+    path: '/user/:userId/calendar',
     name: 'Calendar',
     component: () => import('@/components/Calendar.vue'),
   },
   {
-    path: '/conference/:user_id',
+    path: '/conference/:userId',
     name: 'tutoring-session',
     redirect: (to) => {
-      return '/conference/' + to.params.user_id +'/code';
+      return '/conference/' + to.params.userId +'/code';
     },
     component: () => import('@/components/TutoringSession.vue'),
     children: [
