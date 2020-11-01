@@ -1,8 +1,8 @@
 import Vuex from 'vuex';
 import Vue from 'vue';
-import auth from './modules/authentication';
-import question from './modules/questions';
-import user from './modules/user';
+import authentication from './modules/authentication';
+import questions from './modules/questions';
+import profile from './modules/profile';
 
 // Load Vuex
 Vue.use(Vuex);
@@ -10,8 +10,8 @@ Vue.use(Vuex);
 // Create store
 export default new Vuex.Store({
   modules: {
-    auth,
-    question,
-    user,
+    authentication,
+    questions,
+    profile,
   },
 });

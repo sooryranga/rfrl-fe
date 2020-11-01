@@ -22,7 +22,10 @@
                   {{currentProfile.name}}
                 </button>
                 <div class="dropdown-menu dropdown-menu-left" aria-labelledby="dropdownMenuButton">
-                  <router-link class="dropdown-item text-dark" to="/">View Profile</router-link>
+                  <router-link
+                    class="dropdown-item text-dark" to="/profile/currentProfile.id">
+                    View Profile
+                  </router-link>
                   <a class="dropdown-item" href="#">Settings & Privacy</a>
                   <a class="dropdown-item" href="#">Sign Out</a>
                 </div>
@@ -46,7 +49,8 @@ import {mapGetters} from 'vuex';
 export default {
   name: 'tutor',
   computed: {
-    ...mapGetters(['loggedIn', 'currentProfile']),
+    ...mapGetters('authentication', ['loggedIn']),
+    ...mapGetters('profile', ['currentProfile']),
   },
 };
 </script>

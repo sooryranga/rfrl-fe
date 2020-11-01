@@ -4,7 +4,7 @@
     <div class='row h-100'>
       <div class='col col-3 p-0'>
         <div>
-          <p> {{$route.params.user_id}} </p>
+          <p> {{$route.params.userId}} </p>
         </div>
       </div>
       <div class='col'>
@@ -46,7 +46,7 @@ export default {
   methods: {
     eventCreate(ev) {
       ev.data.description='Tutoring session scheduled';
-      ev.data.user = this.$route.params.user_id;
+      ev.data.user = this.$route.params.userId;
       ev.data.id = uuidv1();
       console.log(ev);
     },
