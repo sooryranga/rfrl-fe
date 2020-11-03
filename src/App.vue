@@ -23,7 +23,8 @@
                 </button>
                 <div class="dropdown-menu dropdown-menu-left" aria-labelledby="dropdownMenuButton">
                   <router-link
-                    class="dropdown-item text-dark" to="/profile/currentProfile.id">
+                      class="dropdown-item text-dark"
+                      :to="profileLink">
                     View Profile
                   </router-link>
                   <a class="dropdown-item" href="#">Settings & Privacy</a>
@@ -38,7 +39,7 @@
       </div>
     </div>
     <div id="content">
-      <router-view/>
+      <router-view :key="$route.fullPath"/>
     </div>
   </div>
 </template>
@@ -51,6 +52,12 @@ export default {
   computed: {
     ...mapGetters('authentication', ['loggedIn']),
     ...mapGetters('profile', ['currentProfile']),
+    profileLink: function() {
+      return {
+        name: 'profile',
+        params: {userId: this.currentProfile.id},
+      };
+    },
   },
 };
 </script>
