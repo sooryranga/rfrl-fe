@@ -35,7 +35,7 @@ const routes = [
   },
   {
     path: '/profile/:userId',
-    name: 'Profile',
+    name: 'profile',
     component: () => import('@/components/Profile.vue'),
   },
   {
