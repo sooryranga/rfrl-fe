@@ -46,17 +46,21 @@
 
 <script>
 import {mapGetters} from 'vuex';
+import {GET_PROFILE} from '@/constants.getters.js';
 
 export default {
   name: 'tutor',
   computed: {
     ...mapGetters('authentication', ['loggedIn']),
-    ...mapGetters('profile', ['currentProfile']),
+    ...mapGetters('profile', [GET_PROFILE]),
     profileLink: function() {
       return {
         name: 'profile',
-        params: {userId: this.currentProfile.id},
+        params: {userId: this[GET_PROFILE].id},
       };
+    },
+    currentProfile: function() {
+      return this[GET_PROFILE];
     },
   },
 };
@@ -71,6 +75,8 @@ export default {
   color: #2c3e50;
   flex-flow: column;
   height: 100%;
+  z-index: 10;
+  width: 100vw;
 }
 #topnavbar{
   height: 7vh;
@@ -82,7 +88,7 @@ export default {
   height:93vh;
 }
 html, body {
-    height: 100%;
+  height: 100%;
 }
 .sticky-top{
   z-index:4

@@ -1,5 +1,6 @@
 import {v1 as uuidv1} from 'uuid';
 
+import {GET_PROFILE} from '@/constants.getters.js';
 import {PROFILE_PICTURE, NAME} from '@/constants.actions.js';
 import {
   SET_PROFILE, SET_PROFILE_IMAGE, SET_NAME,
@@ -16,11 +17,12 @@ const state ={
     education: {},
     workExperience: {},
     documentation: {},
+    isTutor: true,
   },
 };
 
 const getters = {
-  currentProfile: (state) => state.profile,
+  [GET_PROFILE]: (state) => state.profile,
 };
 
 const actions = {
