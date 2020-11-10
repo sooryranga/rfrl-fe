@@ -51,7 +51,6 @@ import {
   NAME,
   PROFILE_PICTURE,
 } from '@/constants.actions.js';
-import {GET_PROFILE} from '@/constants.getters.js';
 import {mapActions, mapGetters} from 'vuex';
 import queryString from 'query-string';
 
@@ -93,7 +92,7 @@ export default {
       this.$router.push(
           {
             name: 'profile',
-            params: {userId: this[GET_PROFILE].id},
+            params: {userId: this.getProfile.id},
           },
       );
     },
@@ -120,7 +119,7 @@ export default {
       );
     },
     ...mapGetters('profile', [
-      GET_PROFILE,
+      'getProfile',
     ]),
   },
   mounted: function() {

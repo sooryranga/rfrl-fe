@@ -105,17 +105,16 @@
 
 <script>
 import {mapGetters} from 'vuex';
-import {GET_PROFILE} from '@/constants.getters.js';
 
 export default {
   name: 'tutor',
   computed: {
-    ...mapGetters('profile', [GET_PROFILE]),
+    ...mapGetters('profile', ['getProfile']),
     'profile': function() {
-      if (this.$route.params.userId == this[GET_PROFILE].id) {
-        return this[GET_PROFILE];
+      if (this.$route.params.userId == this.getProfile.id) {
+        return this.getProfile;
       } else {
-        return this[GET_PROFILE];
+        return this.getProfile;
       }
     },
     'bookTutorRoute': function() {
@@ -125,7 +124,7 @@ export default {
       };
     },
     'currentProfile': function() {
-      return this[GET_PROFILE];
+      return this.getProfile;
     },
     'bookTutorButton': function() {
       return this.profile.isTutor &&
