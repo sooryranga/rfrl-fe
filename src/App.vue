@@ -18,8 +18,8 @@
                 <button
                 class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <img class="profilePicture" v-bind:src="currentProfile.profileImage"/>
-                  {{currentProfile.name}}
+                  <img class="profilePicture" v-bind:src="getProfile.profileImage"/>
+                  {{getProfile.name}}
                 </button>
                 <div class="dropdown-menu dropdown-menu-left" aria-labelledby="dropdownMenuButton">
                   <router-link
@@ -46,21 +46,17 @@
 
 <script>
 import {mapGetters} from 'vuex';
-import {GET_PROFILE} from '@/constants.getters.js';
 
 export default {
   name: 'tutor',
   computed: {
     ...mapGetters('authentication', ['loggedIn']),
-    ...mapGetters('profile', [GET_PROFILE]),
+    ...mapGetters('profile', ['getProfile']),
     profileLink: function() {
       return {
         name: 'profile',
-        params: {userId: this[GET_PROFILE].id},
+        params: {userId: this.getProfile.id},
       };
-    },
-    currentProfile: function() {
-      return this[GET_PROFILE];
     },
   },
 };
