@@ -5,12 +5,16 @@ import CalendarExtension from '@/components/CalendarExtension';
 import CalendarEvent from '@/components/CalendarEvent';
 import instantMessaging from '@/components/InstantMessaging';
 import VideoMessaging from '@/components/VideoMessaging.vue';
+import Education from '@/components/profile/Education.vue';
+import Documents from '@/components/profile/Documents.vue';
 
 Vue.component('request-tutor-modal', RequestTutorModal);
 Vue.component('calendar-extension', CalendarExtension);
 Vue.component('ds-event', CalendarEvent);
 Vue.component('instant-messaging', instantMessaging);
 Vue.component('video-messaging', VideoMessaging);
+Vue.component('education', Education);
+Vue.component('documents', Documents);
 
 Vue.use(VueRouter);
 
@@ -36,7 +40,7 @@ const routes = [
   {
     path: '/profile/:userId',
     name: 'profile',
-    component: () => import('@/components/Profile.vue'),
+    component: () => import('@/components/profile/Profile.vue'),
   },
   {
     path: '/about',

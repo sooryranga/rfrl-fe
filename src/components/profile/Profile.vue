@@ -1,7 +1,7 @@
 <template>
-  <div class="row">
-    <div class="col-7">
-      <div id="profileheader" class="shadow p-3 my-3 mt-5 pb-5 bg-white">
+  <div class="row w-75 mx-auto">
+    <div class="col-7 overflowContainer">
+      <div class="shadow p-3 my-3 bg-white">
         <div class="row">
           <div class="col-3">
             <img class="profilePicture" v-bind:src="profile.profileImage"/>
@@ -16,63 +16,31 @@
           </div>
         </div>
       </div>
-      <div v-if="profileEducation" id="education" class="shadow p-3 my-3 bg-white">
-        <h3 class="text-left"> Education </h3>
-        <div v-for="education in profileEducation" v-bind:key="education.id">
-          <div class="row">
-            <div class="col-3">
-              <p>{{education.institution}}</p>
-            </div>
-            <div class="col-6">
-              <p>{{education.institutionName}}</p>
-              <p>{{education.degree}}</p>
-              <p>{{education.fieldOfStudy</p>
-              <p><small>{{education.start}}-{{education.end}}</small></p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div v-if="profileDocuments" id="documents" class="shadow p-3 my-3 bg-white">
-        <div class="card-columns">
-          <div v-for="document in profileDocuments" v-bind:key="document.name" class="card" style="width: 18rem;">
-            <div class="card-body">
-              <h5 class="card-title">{{document.name}}</h5>
-              <h6 class="card-subtitle mb-2 text-muted">{{document.type}}</h6>
-              <p class="card-text">
-                Some quick example text to build on the card title and make up the bulk of the card's content.
-              </p>
-              <a href="#" class="card-link">Card link</a>
-              <a href="#" class="card-link">Another link</a>
-            </div>
-          </div>
-        </div>
-      </div>
+      <education v-bind:profile-id="$route.params.userId"></education>
+      <documents v-bind:profile-id="$route.params.userId"></documents>
       <div :v-if="profile.isTutor" class="shadow p-3 my-1 bg-white">
-        <h3> Tutoring Dashboard </h3>
+        <h3 class="text-left ml-4 my-2"> Tutoring Dashboard </h3>
         <div id="tutorStatus">
           <!-- Chart showing previous tutoring session -->
         </div>
         <div id="previousStudentProfiles">
-         <ul class="list-group">
-            <li class="list-group-item">
-              <div id="studentPreview">
-                <div class="row">
-                  <div class="col-3">
-                    <img class="studentPicture float-left"/>
-                  </div>
-                  <div class="col">
-                    <h5 class="text-left">Student Name</h5>
-                    <p class="text-left"><small>Last tutored Date</small></p>
-                  </div>
-                </div>
+          <div id="studentPreview">
+            <div v-for="student in profile.tutoredStudents" v-bind:key="student.profileId" class="row mb-2">
+              <div class="col-3 my-auto">
+                <img v-bind:src="student.image" class="studentPicture"/>
               </div>
-            </li>
-          </ul>
+              <div class="col my-auto">
+                <h5 class="text-left mb-1">{{student.name}}</h5>
+                <p class="text-left mb-0"><small>{{student.lastTutoredDate.toDateString()}}</small></p>
+                <hr class="my-0"/>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div :v-if="profile.isTutor" id="review" class="shadow p-3 my-3 bg-white">
         <div id="averageReview">
-          <h3> Student Review </h3>
+          <h3 class="text-left ml-4 my-2"> Student Review </h3>
           <div class="row">
             <div class="col-4">
               <p> stars div </p>
@@ -104,7 +72,8 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex';
+import {mapGetters, mapActions} from 'vuex';
+import {TUTORED_STUDENTS, DOCUMENTS} from '@/constants.actions.js';
 
 export default {
   name: 'tutor',
@@ -131,6 +100,12 @@ export default {
       (this.profile.id === this.currentProfile.id);
     },
   },
+  methods: {
+    ...mapActions('profile', [TUTORED_STUDENTS, DOCUMENTS] ),
+  },
+  mounted: function() {
+    this[TUTORED_STUDENTS]();
+  },
 };
 </script>
 
@@ -141,5 +116,19 @@ export default {
   border-radius: 50%;
   background-color: #fff;
   padding: 4px;
+  height: 5vh;
+  width: 5vh;
+}
+.studentPicture{
+  background-size: cover;
+  background-position: top center;
+  border-radius:50%;
+  background-color: #fff;
+  height: 5vh;
+  width: 5vh;
+}
+.overflowContainer{
+  max-height:93vh;
+  overflow-y:scroll;
 }
 </style>
