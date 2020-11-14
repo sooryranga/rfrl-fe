@@ -7,6 +7,10 @@ const SET_LOGGED_OUT = 'log_out';
 const SET_PROFILE = 'set_profile';
 const SET_PROFILE_IMAGE = 'set_profile_image';
 const SET_NAME = 'set_name';
+const SET_TUTORED_STUDENTS = 'set_tutored_students';
+const SET_DOCUMENTS = 'set_documents';
+const SET_EDUCATION = 'set_education';
+
 export {
   // Mutations for authentication
   SET_LOGGED_IN,
@@ -19,4 +23,7 @@ export {
   SET_PROFILE,
   SET_PROFILE_IMAGE,
   SET_NAME,
+  SET_TUTORED_STUDENTS,
+  SET_DOCUMENTS,
+  SET_EDUCATION,
 };
