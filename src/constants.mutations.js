@@ -10,6 +10,7 @@ const SET_NAME = 'set_name';
 const SET_TUTORED_STUDENTS = 'set_tutored_students';
 const SET_DOCUMENTS = 'set_documents';
 const SET_EDUCATION = 'set_education';
+const SET_TUTOR_REVIEW = 'set_tutor_review';
 
 export {
   // Mutations for authentication
@@ -26,4 +27,5 @@ export {
   SET_TUTORED_STUDENTS,
   SET_DOCUMENTS,
   SET_EDUCATION,
+  SET_TUTOR_REVIEW,
 };

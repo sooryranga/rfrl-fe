@@ -92,7 +92,7 @@ export default {
       this.$router.push(
           {
             name: 'profile',
-            params: {userId: this.getProfile.id},
+            params: {userId: this.currentProfile.id},
           },
       );
     },
@@ -119,7 +119,7 @@ export default {
       );
     },
     ...mapGetters('profile', [
-      'getProfile',
+      'currentProfile',
     ]),
   },
   mounted: function() {

@@ -18,53 +18,8 @@
       </div>
       <education v-bind:profile-id="$route.params.userId"></education>
       <documents v-bind:profile-id="$route.params.userId"></documents>
-      <div :v-if="profile.isTutor" class="shadow p-3 my-1 bg-white">
-        <h3 class="text-left ml-4 my-2"> Tutoring Dashboard </h3>
-        <div id="tutorStatus">
-          <!-- Chart showing previous tutoring session -->
-        </div>
-        <div id="previousStudentProfiles">
-          <div id="studentPreview">
-            <div v-for="student in profile.tutoredStudents" v-bind:key="student.profileId" class="row mb-2">
-              <div class="col-3 my-auto">
-                <img v-bind:src="student.image" class="studentPicture"/>
-              </div>
-              <div class="col my-auto">
-                <h5 class="text-left mb-1">{{student.name}}</h5>
-                <p class="text-left mb-0"><small>{{student.lastTutoredDate.toDateString()}}</small></p>
-                <hr class="my-0"/>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div :v-if="profile.isTutor" id="review" class="shadow p-3 my-3 bg-white">
-        <div id="averageReview">
-          <h3 class="text-left ml-4 my-2"> Student Review </h3>
-          <div class="row">
-            <div class="col-4">
-              <p> stars div </p>
-            </div>
-            <div class="col-5">
-              <p> stars div</p>
-            </div>
-          </div>
-        </div>
-        <div id="reviewList">
-          <ul class="list-group">
-            <li class="list-group-item">
-              <div class="row">
-                <div class="col-3">
-                  <p>Stars div</p>
-                </div>
-                <div class="col-6">
-                  <p>review description</p>
-                </div>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </div>
+      <tutor-dashboard v-bind:profile-id="$route.params.userId"></tutor-dashboard>
+      <tutor-review v-bind:profile-id="$route.params.userId"></tutor-review>
     </div>
     <div class="col">
     </div>
@@ -72,39 +27,36 @@
 </template>
 
 <script>
-import {mapGetters, mapActions} from 'vuex';
-import {TUTORED_STUDENTS, DOCUMENTS} from '@/constants.actions.js';
+import {mapGetters} from 'vuex';
+import {profileState} from '@/constants.state.js';
 
 export default {
   name: 'tutor',
+  data: function() {
+    return {
+      profile: profileState(),
+    };
+  },
   computed: {
-    ...mapGetters('profile', ['getProfile']),
-    'profile': function() {
-      if (this.$route.params.userId == this.getProfile.id) {
-        return this.getProfile;
-      } else {
-        return this.getProfile;
-      }
-    },
+    ...mapGetters('profile', ['currentProfile']),
     'bookTutorRoute': function() {
       return {
         name: 'Calendar',
         params: {userId: this.profile.id},
       };
     },
-    'currentProfile': function() {
-      return this.getProfile;
-    },
     'bookTutorButton': function() {
       return this.profile.isTutor &&
       (this.profile.id === this.currentProfile.id);
     },
   },
-  methods: {
-    ...mapActions('profile', [TUTORED_STUDENTS, DOCUMENTS] ),
-  },
-  mounted: function() {
-    this[TUTORED_STUDENTS]();
+  beforeMount: function() {
+    if (this.$route.params.userId == this.currentProfile.id) {
+      this.profile = this.currentProfile;
+    } else {
+      console.log('get profile');
+      this.profile = this.currentProfile;
+    }
   },
 };
 </script>
