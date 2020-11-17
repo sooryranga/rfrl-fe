@@ -5,7 +5,7 @@
         <h3 class="text-left ml-4 my-2"> Education </h3>
       </div>
       <div class="col-2 my-auto addHover">
-        <span class="material-icons md-36 md-dark">add</span>
+        <span class="material-icons md-36 md-dark btn-outline-light btn">add</span>
       </div>
     </div>
     <div class="mt-4"  v-for="education in profile.education" v-bind:key="education.id">
@@ -20,9 +20,9 @@
           <p><small>{{education.start}}-{{education.end}}</small></p>
           <hr class="my-0"/>
         </div>
-        <div class="col-1 hover-to-show">
-          <span class="material-icons">create</span>
-          <span class="material-icons">drag_handle</span>
+        <div class="col-1 hover-to-show mr-4" v-if="isLoggedInUser">
+          <span class="material-icons md-dark btn-outline-light btn">create</span>
+          <span class="material-icons md-dark btn-outline-light btn">drag_handle</span>
         </div>
       </div>
     </div>

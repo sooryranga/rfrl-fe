@@ -5,7 +5,7 @@
         <h3 class="text-left ml-4 my-2"> Documents </h3>
       </div>
       <div class="col-2 mx-auto my-auto addHover">
-        <span class="material-icons md-dark md-36">add</span>
+        <button><span class="btn btn-outline-light material-icons md-dark md-36">add</span></button>
       </div>
     </div>
     <div v-if="profile.documents.length" class="mt-4 card-columns mx-3">
@@ -17,9 +17,9 @@
             <p class="card-text">{{document.description}}</p>
           </div>
         </div>
-        <div class="documentEditor hover-to-show">
-          <span class="material-icons md-dark">create</span>
-          <span class="material-icons md-dark">drag_handle</span>
+        <div class="documentEditor hover-to-show mt-1">
+          <span class="material-icons md-dark btn-outline-light btn">create</span>
+          <span class="material-icons md-dark btn-outline-light btn">drag_handle</span>
         </div>
       </div>
     </div>
