@@ -2,32 +2,21 @@ import {v1 as uuidv1} from 'uuid';
 
 import {
   PROFILE_PICTURE, NAME, TUTORED_STUDENTS,
-  DOCUMENTS, EDUCATION,
+  DOCUMENTS, EDUCATION, TUTOR_REVIEW,
 } from '@/constants.actions.js';
 import {
   SET_PROFILE, SET_PROFILE_IMAGE, SET_NAME,
   SET_TUTORED_STUDENTS, SET_DOCUMENTS, SET_EDUCATION,
+  SET_TUTOR_REVIEW,
 } from '@/constants.mutations.js';
-
+import {profileState} from '@/constants.state.js';
 
 const state ={
-  profile: {
-    id: null,
-    name: null,
-    birthDay: null,
-    profileImage: null,
-    about: null,
-    education: [],
-    workExperience: {},
-    documentation: {},
-    isTutor: true,
-    tutoredStudents: [],
-    documents: [],
-  },
+  profile: profileState(),
 };
 
 const getters = {
-  'getProfile': (state) => state.profile,
+  'currentProfile': (state) => state.profile,
 };
 
 const actions = {
@@ -45,13 +34,19 @@ const actions = {
   },
   async [DOCUMENTS]({commit}) {
     commit(SET_DOCUMENTS, [
-      {name: 'resume', type: 'application/pdf', src: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf', description: 'My resume'}, // eslint-disable-line
-      {name: 'Grade Report', type: 'image/jpeg', src: 'https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png', description: 'My grade report'}, // eslint-disable-line
+      {id: 14, name: 'resume', type: 'application/pdf', src: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf', description: 'My resume is super big and nastyMy resume is super big and nastyMy resume is super big and nastyMy resume is super big and nastyMy resume is super big and nastyMy resume is super big and nasty'}, // eslint-disable-line
+      {id: 15, name: 'Grade Report', type: 'image/jpeg', src: 'https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png', description: 'My grade report'}, // eslint-disable-line
     ]);
   },
   async [EDUCATION]({commit}) {
     commit(SET_EDUCATION, [
       {id: uuidv1(), institution: 'Waterloo', degree: 'bachelorrs', fieldOfStudy: 'engineering', start: 2014, end: 2019, institutionLogo: 'https://upload.wikimedia.org/wikipedia/en/thumb/6/6e/University_of_Waterloo_seal.svg/1920px-University_of_Waterloo_seal.svg.png'},// eslint-disable-line
+    ]);
+  },
+  async [TUTOR_REVIEW]({commit}) {
+    commit(SET_TUTOR_REVIEW, [
+      {studentImage: 'https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png', studentName: 'Arun', id: 12, title: 'Good tutor', createdDate: new Date(), stars: 4.5, description: 'He taught me well'}, //eslint-disable-line
+      {studentImage: 'https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png', studentName: 'Soory',id: 1, title:'meh, there are other tutors', createdDate: new Date(), stars: 2.5, description: 'couldn\' speak english properly'}, // eslint-disable-line
     ]);
   },
 };
@@ -75,6 +70,9 @@ const mutations = {
   },
   [SET_EDUCATION](state, education) {
     state.profile.education = education;
+  },
+  [SET_TUTOR_REVIEW](state, reviews) {
+    state.profile.tutorReviews = reviews;
   },
 };
 

@@ -1,8 +1,15 @@
 <template>
-  <div v-if="profile.education" id="education" class="shadow p-3 my-3 bg-white">
-    <h3 class="text-left ml-4 my-2"> Education </h3>
-    <div v-for="education in profile.education" v-bind:key="education.id">
-      <div class="row">
+  <div id="education" class="shadow p-3 my-3 bg-white">
+    <div class="row">
+      <div class="col">
+        <h3 class="text-left ml-4 my-2"> Education </h3>
+      </div>
+      <div class="col-2 my-auto addHover">
+        <span class="material-icons md-36 md-dark">add</span>
+      </div>
+    </div>
+    <div class="mt-4"  v-for="education in profile.education" v-bind:key="education.id">
+      <div class="educationRow row">
         <div class="col-3 my-auto">
           <img class="institutionLogo" v-bind:src="education.institutionLogo"/>
         </div>
@@ -12,6 +19,10 @@
           <p>{{education.fieldOfStudy}}</p>
           <p><small>{{education.start}}-{{education.end}}</small></p>
           <hr class="my-0"/>
+        </div>
+        <div class="col-1 hover-to-show">
+          <span class="material-icons">create</span>
+          <span class="material-icons">drag_handle</span>
         </div>
       </div>
     </div>
@@ -28,15 +39,15 @@ export default {
     'profileId': String,
   },
   computed: {
-    ...mapGetters('profile', ['getProfile']),
+    ...mapGetters('profile', ['currentProfile']),
     'isLoggedInUser': function() {
-      return this.getProfile.id == this.profileId;
+      return this.currentProfile.id == this.profileId;
     },
     'profile': function() {
-      if (this.profileId == this.getProfile.id) {
-        return this.getProfile;
+      if (this.profileId == this.currentProfile.id) {
+        return this.currentProfile;
       } else {
-        return this.getProfile;
+        return this.currentProfile;
       }
     },
   },
@@ -51,7 +62,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .institutionLogo{
   background-size: cover;
   background-position: top center;
@@ -60,4 +71,28 @@ export default {
   height: 5vh;
   width: 5vh;
 }
+.hover-to-show{
+  visibility:hidden;
+  opacity:0;
+  transition:opacity 0.5s linear;
+}
+.educationRow:hover>.hover-to-show
+{
+  display:block;
+  visibility:visible;
+  opacity:1;
+}
+/* Rules for sizing the icon. */
+.material-icons.md-18 { font-size: 18px; }
+.material-icons.md-24 { font-size: 24px; }
+.material-icons.md-36 { font-size: 36px; }
+.material-icons.md-48 { font-size: 48px; }
+
+/* Rules for using icons as black on a light background. */
+.material-icons.md-dark { color: rgba(0, 0, 0, 0.54); }
+.material-icons.md-dark.md-inactive { color: rgba(0, 0, 0, 0.26); }
+
+/* Rules for using icons as white on a dark background. */
+.material-icons.md-light { color: rgba(255, 255, 255, 1); }
+.material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }
 </style>
