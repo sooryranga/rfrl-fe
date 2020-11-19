@@ -42,7 +42,7 @@
         </div>
       </div>
     </div>
-    <div v-else>
+    <div class="mt-4" v-else>
       <p> This tutor currently doesn't have any ratings </p>
       <p> Rest assured our tutors are verified </p>
     </div>

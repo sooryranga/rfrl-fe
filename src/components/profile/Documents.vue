@@ -1,15 +1,20 @@
 <template>
-  <div  id="documents" class="shadow p-3 my-3 bg-white">
+  <div  id="localDocuments" class="shadow p-3 my-3 bg-white">
+    <document-editor
+      v-if="editorOpen"
+      v-on:saveEvent="saveEvent"
+      v-on:cancelEvent="cancelEvent"
+    ></document-editor>
     <div class="row">
       <div class="col">
         <h3 class="text-left ml-4 my-2"> Documents </h3>
       </div>
       <div class="col-2 mx-auto my-auto addHover">
-        <button><span class="btn btn-outline-light material-icons md-dark md-36">add</span></button>
+        <button v-on:click="add"><span class="btn btn-outline-light material-icons md-dark md-36">add</span></button>
       </div>
     </div>
-    <div v-if="profile.documents.length" class="mt-4 card-columns mx-3">
-      <div v-for="document in profile.documents" v-bind:key="document.id" class="card">
+    <div v-if="localDocuments.length" class="mt-4 card-columns mx-3">
+      <div v-for="document in localDocuments" v-bind:key="document.id" class="card">
         <div>
           <embed v-bind:type="document.type" v-bind:src="document.src" class="documentEmbed">
           <div class="card-body text-left py-1 documentBody">
@@ -29,31 +34,69 @@
 <script>
 import {mapGetters, mapActions} from 'vuex';
 import {DOCUMENTS} from '@/constants.actions.js';
+import DocumentEditor from '@/components/profile/DocumentsEditor.vue';
+import {documentState} from '@/constants.state.js';
+
 
 export default {
   name: 'document',
+  components: {'document-editor': DocumentEditor},
+  data: function() {
+    return {
+      'editorOpen': false,
+      'localDocuments': [],
+      'documentIndex': null,
+    };
+  },
   props: {
     'profileId': String,
   },
   computed: {
     ...mapGetters('profile', ['currentProfile']),
-    'profile': function() {
-      if (this.profileId == this.currentProfile.id) {
-        return this.currentProfile;
-      } else {
-        return this.currentProfile;
-      }
-    },
     'isLoggedInUser': function() {
       return this.currentProfile.id == this.profileId;
     },
   },
   methods: {
     ...mapActions('profile', [DOCUMENTS]),
+    'cancelEvent': function() {
+      this.clearEditorState();
+      this.editorOpen = false;
+    },
+    'clearEditorState': function() {
+      this.editorDocument = documentState();
+    },
+    'add': function() {
+      this.editorOpen = true;
+      this.documentIndex = null;
+    },
+    'edit': function(index) {
+      this.documentIdex = index;
+      this.editorOpen = true;
+    },
+    'saveEvent': function() {
+      this.editorOpen = false;
+      this.saveDocument();
+    },
+    'saveDocument': function() {
+      if (this.isLoggedInUser) {
+        this[ADD_DOCUMENT](this.editorDocument, this.documentIndex);
+      } else {
+        console.log('call document post');
+      }
+
+      if (this.documentIndex) {
+        this.localDocuments[this.documentIndex] = this.editorDocument;
+      } else {
+        this.localDocuments.push(this.editorDocument);
+      }
+      this.clearEditorState();
+    },
   },
   mounted: function() {
     if (this.isLoggedInUser) {
       this[DOCUMENTS]();
+      this.localDocuments.push(...this.currentProfile.documents);
     }
   },
 };
