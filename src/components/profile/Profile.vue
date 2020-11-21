@@ -1,24 +1,7 @@
 <template>
   <div class="row w-75 mx-auto">
     <div class="col-7 overflowContainer">
-      <div class="shadow p-3 my-4 pt-5 pb-4 bg-white">
-        <div class="row">
-          <div class="col-3">
-            <img class="profilePicture" v-bind:src="profile.profileImage"/>
-            <div v-if="bookTutorButton">
-              <router-link class="btn btn-dark p-2 mr-2"  :to="bookTutorRoute">Book Tutor</router-link>
-            </div>
-          </div>
-          <div class="col">
-            <h3 class="text-left">{{profile.name}}</h3>
-            <h4 class="text-left text-uppercase"> About </h4>
-            <p class="text-left">{{profile.about}}</p>
-          </div>
-          <div class="col-2" v-if="isLoggedInUser">
-            <span class="material-icons md-dark btn-outline-light btn">create</span>
-          </div>
-        </div>
-      </div>
+      <profile-about v-bind:profile-id="$route.params.userId"></profile-about>
       <education v-bind:profile-id="$route.params.userId"></education>
       <documents v-bind:profile-id="$route.params.userId"></documents>
       <tutor-dashboard v-bind:profile-id="$route.params.userId"></tutor-dashboard>
@@ -42,16 +25,6 @@ export default {
   },
   computed: {
     ...mapGetters('profile', ['currentProfile']),
-    'bookTutorRoute': function() {
-      return {
-        name: 'Calendar',
-        params: {userId: this.profile.id},
-      };
-    },
-    'bookTutorButton': function() {
-      return this.profile.isTutor &&
-      (this.profile.id === this.currentProfile.id);
-    },
     'isLoggedInUser': function() {
       return this.currentProfile.id == this.$route.params.userId;
     },
@@ -60,7 +33,6 @@ export default {
     if (this.$route.params.userId == this.currentProfile.id) {
       this.profile = this.currentProfile;
     } else {
-      console.log('get profile');
       this.profile = this.currentProfile;
     }
   },

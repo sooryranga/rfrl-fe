@@ -11,6 +11,9 @@ const SET_TUTORED_STUDENTS = 'set_tutored_students';
 const SET_DOCUMENTS = 'set_documents';
 const SET_EDUCATION = 'set_education';
 const SET_TUTOR_REVIEW = 'set_tutor_review';
+const SET_DOCUMENT = 'set_document';
+const SET_NEW_DOCUMENT = 'set_new_document';
+const SET_ABOUT = 'set_about';
 
 export {
   // Mutations for authentication
@@ -28,4 +31,7 @@ export {
   SET_DOCUMENTS,
   SET_EDUCATION,
   SET_TUTOR_REVIEW,
+  SET_DOCUMENT,
+  SET_NEW_DOCUMENT,
+  SET_ABOUT,
 };

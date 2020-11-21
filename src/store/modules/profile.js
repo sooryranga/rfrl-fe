@@ -3,11 +3,12 @@ import {v1 as uuidv1} from 'uuid';
 import {
   PROFILE_PICTURE, NAME, TUTORED_STUDENTS,
   DOCUMENTS, EDUCATION, TUTOR_REVIEW,
+  ADD_DOCUMENT, ABOUT,
 } from '@/constants.actions.js';
 import {
   SET_PROFILE, SET_PROFILE_IMAGE, SET_NAME,
   SET_TUTORED_STUDENTS, SET_DOCUMENTS, SET_EDUCATION,
-  SET_TUTOR_REVIEW,
+  SET_TUTOR_REVIEW, SET_DOCUMENT, SET_ABOUT,
 } from '@/constants.mutations.js';
 import {profileState} from '@/constants.state.js';
 
@@ -26,6 +27,9 @@ const actions = {
   [NAME]({commit}, name) {
     commit(SET_NAME, name);
   },
+  [ABOUT]({commit}, about) {
+    commit(SET_ABOUT, about);
+  },
   async [TUTORED_STUDENTS]({commit}) {
     commit(SET_TUTORED_STUDENTS, [
       {profileId: uuidv1(), name: 'soory', lastTutoredDate: new Date(), image: 'https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png'},// eslint-disable-line
@@ -34,8 +38,8 @@ const actions = {
   },
   async [DOCUMENTS]({commit}) {
     commit(SET_DOCUMENTS, [
-      {id: 14, name: 'resume', type: 'application/pdf', src: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf', description: 'My resume is super big and nastyMy resume is super big and nastyMy resume is super big and nastyMy resume is super big and nastyMy resume is super big and nastyMy resume is super big and nasty'}, // eslint-disable-line
-      {id: 15, name: 'Grade Report', type: 'image/jpeg', src: 'https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png', description: 'My grade report'}, // eslint-disable-line
+      {id: 14, name: 'resume', type: 'application/pdf', src: 'https://www.w3.org/wai/er/tests/xhtml/testfiles/resources/pdf/dummy.pdf', description: 'my resume is super big and nastymy resume is super big and nastymy resume is super big and nastymy resume is super big and nastymy resume is super big and nastymy resume is super big and nasty'}, // eslint-disable-line
+      {id: 15, name: 'grade report', type: 'image/jpeg', src: 'https://upload.wikimedia.org/wikipedia/commons/b/b6/image_created_with_a_mobile_phone.png', description: 'my grade report'}, // eslint-disable-line
     ]);
   },
   async [EDUCATION]({commit}) {
@@ -49,6 +53,9 @@ const actions = {
       {studentImage: 'https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png', studentName: 'Soory',id: 1, title:'meh, there are other tutors', createdDate: new Date(), stars: 2.5, description: 'couldn\' speak english properly'}, // eslint-disable-line
     ]);
   },
+  async [ADD_DOCUMENT]({commit}, {index, newDocument}) {
+    commit(SET_DOCUMENT, {index, newDocument});
+  },
 };
 
 const mutations = {
@@ -60,7 +67,9 @@ const mutations = {
   },
   [SET_NAME](state, name) {
     state.profile.name = name;
-    state.profile.id = uuidv1();
+  },
+  [SET_ABOUT](state, about) {
+    state.profile.about = about;
   },
   [SET_TUTORED_STUDENTS](state, tutoredStudents) {
     state.profile.tutoredStudents = tutoredStudents;
@@ -73,6 +82,13 @@ const mutations = {
   },
   [SET_TUTOR_REVIEW](state, reviews) {
     state.profile.tutorReviews = reviews;
+  },
+  [SET_DOCUMENT](state, {index, newDocument}) {
+    if (index != null) {
+      state.profile.documents[index] = newDocument;
+    } else {
+      state.profile.documents.push(newDocument);
+    };
   },
 };
 
