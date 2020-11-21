@@ -1,6 +1,7 @@
 <template>
   <div  id="localDocuments" class="shadow p-3 my-3 bg-white">
     <document-editor
+      :documentprop="this.editingDocument"
       v-if="editorOpen"
       v-on:saveEvent="saveEvent"
       v-on:cancelEvent="cancelEvent"
@@ -14,16 +15,16 @@
       </div>
     </div>
     <div v-if="localDocuments.length" class="mt-4 card-columns mx-3">
-      <div v-for="document in localDocuments" v-bind:key="document.id" class="card">
+      <div v-for="(document, index) in localDocuments" v-bind:key="document.id" class="card">
         <div>
-          <embed v-bind:type="document.type" v-bind:src="document.src" class="documentEmbed">
+          <embed v-bind:src="document.src" class="documentEmbed">
           <div class="card-body text-left py-1 documentBody">
             <h5 class="card-title">{{document.name}}</h5>
             <p class="card-text">{{document.description}}</p>
           </div>
         </div>
         <div class="documentEditor hover-to-show mt-1">
-          <span class="material-icons md-dark btn-outline-light btn">create</span>
+          <span v-on:click="edit(index)" class="material-icons md-dark btn-outline-light btn">create</span>
           <span class="material-icons md-dark btn-outline-light btn">drag_handle</span>
         </div>
       </div>
@@ -46,6 +47,7 @@ export default {
       'editorOpen': false,
       'localDocuments': [],
       'documentIndex': null,
+      'editingDocument': documentState(),
     };
   },
   props: {
@@ -67,28 +69,32 @@ export default {
       this.editorDocument = documentState();
     },
     'add': function() {
+      this.editingDocument = documentState();
       this.editorOpen = true;
       this.documentIndex = null;
     },
     'edit': function(index) {
-      this.documentIdex = index;
+      this.documentIndex = index;
+      this.editingDocument = this.localDocuments[index];
       this.editorOpen = true;
     },
-    'saveEvent': function() {
+    'saveEvent': function(state) {
       this.editorOpen = false;
-      this.saveDocument();
+      this.saveDocument(state);
     },
-    'saveDocument': function() {
+    'saveDocument': function(state) {
+      console.log(this.documentIndex);
       if (this.isLoggedInUser) {
-        this[ADD_DOCUMENT](this.editorDocument, this.documentIndex);
+        console.log('add ADD_DOCUMENT');
+        // this[ADD_DOCUMENT](state, this.documentIndex);
       } else {
         console.log('call document post');
       }
-
-      if (this.documentIndex) {
-        this.localDocuments[this.documentIndex] = this.editorDocument;
+      console.log(state);
+      if (this.documentIndex != null) {
+        this.localDocuments[this.documentIndex] = state;
       } else {
-        this.localDocuments.push(this.editorDocument);
+        this.localDocuments.push(state);
       }
       this.clearEditorState();
     },
