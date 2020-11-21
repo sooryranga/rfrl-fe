@@ -47,6 +47,12 @@ export default {
     'isLoggedInUser': function() {
       return this.currentProfile.id == this.profileId;
     },
+    'bookTutorRoute': function() {
+      return {
+        name: 'Calendar',
+        params: {userId: this.profile.id},
+      };
+    },
   },
   beforeMount: function() {
     if (this.isLoggedInUser) {
@@ -57,6 +63,10 @@ export default {
   },
   methods: {
     ...mapActions('profile', [NAME, PROFILE_PICTURE, ABOUT]),
+    'bookTutorButton': function() {
+      return this.profile.isTutor &&
+      (this.profile.id === this.currentProfile.id);
+    },
     'cancelEvent': function() {
       this.editorOpen = false;
     },
@@ -64,12 +74,13 @@ export default {
       this.editorOpen = true;
     },
     'saveEvent': function(state) {
+      console.log(state);
       if (state.name) {
         this[NAME](state.name);
       }
 
       if (state.about) {
-        this[ABOUT](about);
+        this[ABOUT](state.about);
       }
       this.editorOpen = false;
     },
