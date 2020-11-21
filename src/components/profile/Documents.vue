@@ -11,7 +11,9 @@
         <h3 class="text-left ml-4 my-2"> Documents </h3>
       </div>
       <div class="col-2 mx-auto my-auto addHover">
-        <button v-on:click="add"><span class="btn btn-outline-light material-icons md-dark md-36">add</span></button>
+        <button v-if="isLoggedInUser" v-on:click="add">
+          <span class="btn btn-outline-light material-icons md-dark md-36">add</span>
+        </button>
       </div>
     </div>
     <div v-if="localDocuments.length" class="mt-4 card-columns mx-3">
@@ -23,7 +25,7 @@
             <p class="card-text">{{document.description}}</p>
           </div>
         </div>
-        <div class="documentEditor hover-to-show mt-1">
+        <div v-if="isLoggedInUser" class="documentEditor hover-to-show mt-1">
           <span v-on:click="edit(index)" class="material-icons md-dark btn-outline-light btn">create</span>
           <span class="material-icons md-dark btn-outline-light btn">drag_handle</span>
         </div>
@@ -34,7 +36,7 @@
 
 <script>
 import {mapGetters, mapActions} from 'vuex';
-import {DOCUMENTS} from '@/constants.actions.js';
+import {DOCUMENTS, ADD_DOCUMENT} from '@/constants.actions.js';
 import DocumentEditor from '@/components/profile/DocumentsEditor.vue';
 import {documentState} from '@/constants.state.js';
 
@@ -60,7 +62,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions('profile', [DOCUMENTS]),
+    ...mapActions('profile', [DOCUMENTS, ADD_DOCUMENT]),
     'cancelEvent': function() {
       this.clearEditorState();
       this.editorOpen = false;
@@ -83,25 +85,26 @@ export default {
       this.saveDocument(state);
     },
     'saveDocument': function(state) {
-      console.log(this.documentIndex);
-      if (this.isLoggedInUser) {
-        console.log('add ADD_DOCUMENT');
-        // this[ADD_DOCUMENT](state, this.documentIndex);
-      } else {
-        console.log('call document post');
-      }
-      console.log(state);
+      this[ADD_DOCUMENT]({
+        index: this.documentIndex,
+        newDocument: state,
+      });
+
       if (this.documentIndex != null) {
         this.localDocuments[this.documentIndex] = state;
       } else {
         this.localDocuments.push(state);
       }
+
       this.clearEditorState();
     },
   },
   mounted: function() {
     if (this.isLoggedInUser) {
-      this[DOCUMENTS]();
+      if (this.currentProfile.documents.length == 0) {
+        this[DOCUMENTS]();
+      }
+      console.log(this.currentProfile.documents);
       this.localDocuments.push(...this.currentProfile.documents);
     }
   },
