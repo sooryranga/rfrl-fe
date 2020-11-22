@@ -11,8 +11,9 @@ const ABOUT = 'about';
 const TUTORED_STUDENTS = 'tutored_students';
 const DOCUMENTS = 'documents';
 const EDUCATION = 'education';
-const TUTOR_REVIEW = 'tutor-review';
-const ADD_DOCUMENT = 'add-document';
+const TUTOR_REVIEW = 'tutor_review';
+const ADD_DOCUMENT = 'add_document';
+const ADD_EDUCATION = 'add_education';
 
 export {
   // ACTION for authentication
@@ -30,4 +31,5 @@ export {
   TUTOR_REVIEW,
   ADD_DOCUMENT,
   ABOUT,
+  ADD_EDUCATION,
 };

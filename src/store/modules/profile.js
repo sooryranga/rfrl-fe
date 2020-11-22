@@ -3,12 +3,13 @@ import {v1 as uuidv1} from 'uuid';
 import {
   PROFILE_PICTURE, NAME, TUTORED_STUDENTS,
   DOCUMENTS, EDUCATION, TUTOR_REVIEW,
-  ADD_DOCUMENT, ABOUT,
+  ADD_DOCUMENT, ABOUT, ADD_EDUCATION,
 } from '@/constants.actions.js';
 import {
   SET_PROFILE, SET_PROFILE_IMAGE, SET_NAME,
   SET_TUTORED_STUDENTS, SET_DOCUMENTS, SET_EDUCATION,
   SET_TUTOR_REVIEW, SET_DOCUMENT, SET_ABOUT,
+  SET_EDUCATIONS,
 } from '@/constants.mutations.js';
 import {profileState} from '@/constants.state.js';
 
@@ -43,8 +44,8 @@ const actions = {
     ]);
   },
   async [EDUCATION]({commit}) {
-    commit(SET_EDUCATION, [
-      {id: uuidv1(), institution: 'Waterloo', degree: 'bachelorrs', fieldOfStudy: 'engineering', start: 2014, end: 2019, institutionLogo: 'https://upload.wikimedia.org/wikipedia/en/thumb/6/6e/University_of_Waterloo_seal.svg/1920px-University_of_Waterloo_seal.svg.png'},// eslint-disable-line
+    commit(SET_EDUCATIONS, [
+      {id: uuidv1(), institution: 'Waterloo', degree: 'bachelorrs', fieldOfStudy: 'engineering', start: new Date(2014, 0, 1, 0, 0, 0, 0), end: new Date(2019, 0, 1, 0, 0), institutionLogo: 'https://upload.wikimedia.org/wikipedia/en/thumb/6/6e/University_of_Waterloo_seal.svg/1920px-University_of_Waterloo_seal.svg.png'},// eslint-disable-line
     ]);
   },
   async [TUTOR_REVIEW]({commit}) {
@@ -55,6 +56,11 @@ const actions = {
   },
   async [ADD_DOCUMENT]({commit}, {index, newDocument}) {
     commit(SET_DOCUMENT, {index, newDocument});
+  },
+  async [ADD_EDUCATION]({commit}, {index, newEducation}) {
+    console.log(index);
+    console.log(newEducation);
+    commit(SET_EDUCATION, {index, newEducation});
   },
 };
 
@@ -77,8 +83,15 @@ const mutations = {
   [SET_DOCUMENTS](state, documents) {
     state.profile.documents = documents;
   },
-  [SET_EDUCATION](state, education) {
+  [SET_EDUCATIONS](state, education) {
     state.profile.education = education;
+  },
+  [SET_EDUCATION](state, {index, newEducation}) {
+    if (index != null) {
+      state.profile.education[index] = newEducation;
+    } else {
+      state.profile.education.push(newEducation);
+    }
   },
   [SET_TUTOR_REVIEW](state, reviews) {
     state.profile.tutorReviews = reviews;
