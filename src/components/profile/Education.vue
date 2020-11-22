@@ -1,14 +1,24 @@
 <template>
   <div id="education" class="shadow p-3 my-3 bg-white">
+    <education-editor
+      :educationprop="this.editingItem"
+      v-if="editorOpen"
+      v-on:saveEvent="saveEvent"
+      v-on:cancelEvent="cancelEvent"
+    ></education-editor>
     <div class="row">
       <div class="col">
         <h3 class="text-left ml-4 my-2"> Education </h3>
       </div>
       <div class="col-2 my-auto addHover">
-        <span class="material-icons md-36 md-dark btn-outline-light btn">add</span>
+        <span
+          v-if="isLoggedInUser"
+          v-on:click="add"
+          class="material-icons md-36 md-dark btn-outline-light btn"
+        >add</span>
       </div>
     </div>
-    <div class="mt-4"  v-for="education in profile.education" v-bind:key="education.id">
+    <div class="mt-4"  v-for="(education, index) in profile.education" v-bind:key="education.id">
       <div class="educationRow row">
         <div class="col-3 my-auto">
           <img class="institutionLogo" v-bind:src="education.institutionLogo"/>
@@ -17,11 +27,11 @@
           <h5>{{education.institution}}</h5>
           <h6>{{education.degree}}</h6>
           <p>{{education.fieldOfStudy}}</p>
-          <p><small>{{education.start}}-{{education.end}}</small></p>
+          <p><small>{{education.start.getFullYear()}}-{{education.end.getFullYear()}}</small></p>
           <hr class="my-0"/>
         </div>
         <div class="col-1 hover-to-show mr-4" v-if="isLoggedInUser">
-          <span class="material-icons md-dark btn-outline-light btn">create</span>
+          <span v-on:click="edit(index)" class="material-icons md-dark btn-outline-light btn">create</span>
           <span class="material-icons md-dark btn-outline-light btn">drag_handle</span>
         </div>
       </div>
@@ -31,13 +41,24 @@
 
 <script>
 import {mapGetters, mapActions} from 'vuex';
-import {EDUCATION} from '@/constants.actions.js';
+import {EDUCATION, ADD_EDUCATION} from '@/constants.actions.js';
+import EducationEditor from '@/components/profile/EducationEditor.vue';
+import {educationState} from '@/constants.state.js';
 
 export default {
   name: 'education',
   props: {
     'profileId': String,
   },
+  data: function() {
+    return {
+      'editorOpen': false,
+      'localEducation': [],
+      'editingIndex': null,
+      'editingItem': educationState(),
+    };
+  },
+  components: {'education-editor': EducationEditor},
   computed: {
     ...mapGetters('profile', ['currentProfile']),
     'isLoggedInUser': function() {
@@ -52,11 +73,50 @@ export default {
     },
   },
   methods: {
-    ...mapActions('profile', [EDUCATION]),
+    ...mapActions('profile', [EDUCATION, ADD_EDUCATION]),
+    'clearEditorState': function() {
+      this.editorDocument = educationState();
+    },
+    'cancelEvent': function() {
+      this.clearEditorState();
+      this.editorOpen = false;
+    },
+    'add': function() {
+      this.editingItem = educationState();
+      this.editorOpen = true;
+      this.editingIndex = null;
+    },
+    'edit': function(index) {
+      this.editingIndex = index;
+      console.log(this.localEducation[index]);
+      this.editingItem = this.localEducation[index];
+      this.editorOpen = true;
+    },
+    'saveEvent': function(state) {
+      this.editorOpen = false;
+      this.saveItem(state);
+    },
+    'saveItem': function(state) {
+      this[ADD_EDUCATION]({
+        index: this.editingIndex,
+        newEducation: state,
+      });
+
+      if (this.editingIndex != null) {
+        this.localEducation[this.editingIndex] = state;
+      } else {
+        this.localEducation.push(state);
+      }
+
+      this.clearEditorState();
+    },
   },
   mounted: function() {
     if (this.isLoggedInUser) {
-      this[EDUCATION]();
+      if (this.currentProfile.education.length == 0) {
+        this[EDUCATION]();
+      }
+      this.localEducation.push(...this.currentProfile.education);
     }
   },
 };
