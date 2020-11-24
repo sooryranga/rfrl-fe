@@ -8,6 +8,7 @@
       <tutor-review v-bind:profile-id="$route.params.userId"></tutor-review>
     </div>
     <div class="col">
+      <scheduled-tutoring v-bind:profile-id="$route.params.userId"></scheduled-tutoring>
     </div>
   </div>
 </template>
