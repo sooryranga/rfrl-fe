@@ -5,41 +5,57 @@
         <h5 class="text-left my-2">Scheduled Tutoring</h5>
       </div>
     </div>
-    <div class="mt-4" v-for="dateSession in dateScheduledSessions" v-bind:key="dateSession.date">
-      <div class="dateSessionRow row">
-        <div class="col-2" id="date">
-          <div class="btn btn-default btn-circle" v-bind:class="{'btn-primary':isToday(dateSession.date)}">
-            {{dateSession.date.getDate()}}
-          </div>
-          {{dateSession.date.getMonth()}},
-          {{dateSession.date.getDay()}}
-        </div>
-        <div class="col" id="sessions">
-          <div
-            class="mt-1 row"
-            v-for="(session, index) in dateSession.sessions"
-            v-bind:key="session.id">
-            <div class="col-2">
-              {{session.startTime.toLocaleTimeString()}}
-            </div>
-            <div class="col">
-              {{currentProfile.isTutor ? session.mentee.name : sessnion.mentor.name}}
+    <div v-if="scheduledSessions.length">
+      <div class="mt-4" v-for="(dateSession,index) in dateScheduledSessions" v-bind:key="index">
+        <div class="dateSessionRow row">
+          <div class="col-1 my-auto" id="date">
+            <div class="btn btn-default btn-circle" v-bind:class="{'btn-primary':isToday(dateSession.date)}">
+              {{dateSession.date.getDate()}}
             </div>
           </div>
+          <div class="col-2 my-auto">
+            <div>{{dateSession.date.getMonth()}},{{toDayOfWeek(dateSession.date.getDay())}}</div>
+          </div>
+          <div class="col align-middle" id="sessions">
+            <div
+              class="row h-100"
+              v-for="session in dateSession.sessions"
+              v-bind:key="session.id">
+              <div class="col-4 my-auto">
+                <div>{{session.startTime.toLocaleTimeString()}}</div>
+              </div>
+              <div class="col">
+               Session with {{currentProfile.isTutor ? session.mentee.name : sessnion.mentor.name}}
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
+    </div>
+    <div v-else>
+      <div class="mt-4">
+        <p class="text-left"> You haven't scheduled tutoring yet. Give it a try! </p>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import {mapGetters} from 'vuex';
+import {dayOfWeekMapping} from '@/util.js';
 
 export default {
   name: 'scheduled-tutoring',
   props: {
     'profileId': String,
   },
+  data: function() {
+    return {
+      'scheduledSessions': [],
+    };
+  },
   computed: {
+    ...mapGetters('profile', ['currentProfile']),
     'isLoggedInUser': function() {
       return this.currentProfile.id == this.profileId;
     },
@@ -48,7 +64,7 @@ export default {
         return [];
       }
 
-      const _date = this.scheduledSessions[0].startTime;
+      let _date = this.scheduledSessions[0].startTime;
       _date.setHours(0, 0, 0, 0);
       const cache = [{date: _date, sessions: []}];
 
@@ -58,23 +74,42 @@ export default {
         _compDate.setHours(0, 0, 0, 0);
 
         if (_compDate > _date) {
-          cache.append({date: _date, sessions: []});
           _date = _compDate;
+          cache.push({date: _date, sessions: []});
         }
-        cache[-1].sessions.push(session);
+        cache[cache.length-1].sessions.push(session);
       }
       return cache;
     },
   },
   methods: {
     'isToday': function(checkingDate) {
-      const today = Date.now();
+      const today = new Date();
+      console.log(today);
       return (
         today.getFullYear() === checkingDate.getFullYear() &&
         today.getMonth() === checkingDate.getMonth() &&
         today.getDate() === checkingDate.getDate()
       );
     },
+    'setSessions': function() {
+      this.$set(
+          this.scheduledSessions,
+          0,
+          {
+            startTime: new Date(),
+            mentor: {name: 'Arun'},
+            mentee: {name: 'soory'},
+          },
+      );
+    },
+    'toDayOfWeek': function(day) {
+      return dayOfWeekMapping[day];
+    },
+  },
+  mounted: function() {
+    this.setSessions();
+    console.log(this.scheduledSessions);
   },
 };
 </script>
