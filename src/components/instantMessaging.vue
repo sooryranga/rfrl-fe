@@ -22,7 +22,7 @@
 
 <script>
 import ChatWindow from 'vue-advanced-chat';
-import utils from '@/utils';
+import {formatAMPM} from '@/utils';
 import {v4 as uuidv4} from 'uuid';
 import 'vue-advanced-chat/dist/vue-advanced-chat.css';
 
@@ -92,7 +92,7 @@ export default {
         sender_id: 4321,
         username: 'John Doe',
         date: date.toDateString(),
-        timestamp: utils.formatAMPM(date),
+        timestamp: formatAMPM(date),
         seen: true,
         disable_actions: false,
         disable_reactions: false,
