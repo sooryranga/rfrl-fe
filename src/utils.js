@@ -24,7 +24,35 @@ function phonenumber(phonetext) {
   return inputtxt.value.match(phoneno);
 }
 
-export default {
+const dayOfWeekMapping = [
+  'Mon',
+  'Tue',
+  'Wed',
+  'Thur',
+  'Fri',
+  'Sat',
+  'Sun',
+];
+
+const tags = [
+  {name: 'Math', value: 'math'},
+  {name: 'English', value: 'english'},
+  {name: 'Science', value: 'science'},
+  {name: 'Music', value: 'music'},
+];
+
+const datePosted = [
+  {name: 'Past 24 hours', value: 'past_24_hours'},
+  {name: 'Past Week', value: 'past_week'},
+  {name: 'Past Month', value: 'past_month'},
+  {name: 'Any Time', value: 'any_time'},
+];
+
+
+export {
   formatAMPM,
   phonenumber,
+  dayOfWeekMapping,
+  tags,
+  datePosted,
 };

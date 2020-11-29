@@ -46,7 +46,7 @@
 
 <script>
 import {mapGetters} from 'vuex';
-import {dayOfWeekMapping} from '@/util.js';
+import {dayOfWeekMapping} from '@/utils.js';
 
 export default {
   name: 'scheduled-tutoring',

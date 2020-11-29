@@ -10,6 +10,7 @@
     <div class="col">
       <scheduled-tutoring v-bind:profile-id="$route.params.userId"></scheduled-tutoring>
       <answered-questions v-bind:profile-id="$route.params.userId"></answered-questions>
+      <asked-questions v-bind:profile-id="$route.params.userId"></asked-questions>
     </div>
   </div>
 </template>

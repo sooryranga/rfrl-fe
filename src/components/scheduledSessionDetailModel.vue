@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import utils from '@/utils.js';
+import {getTimeFromIndex} from '@/utils.js';
 
 export default {
   name: 'request-tutor-modal',
@@ -46,10 +46,10 @@ export default {
       return 'Wanna book a tutor?';
     },
     startTime: function() {
-      return utils.getTimeFromIndex(this.startTimeIndex);
+      return getTimeFromIndex(this.startTimeIndex);
     },
     endTime: function() {
-      return utils.getTimeFromIndex(this.endTimeIndex);
+      return getTimeFromIndex(this.endTimeIndex);
     },
   },
 };
