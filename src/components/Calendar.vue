@@ -1,26 +1,22 @@
 <template>
-<div class='container-fluid mt-3 h-100'>
-  <div class='container-fluid h-100 mt-0'>
-    <div class='row h-100'>
-      <div class='col col-3 p-0'>
-        <div>
-          <p> {{$route.params.userId}} </p>
-        </div>
+<div class='mt-3 h-100'>
+  <div class='row h-100'>
+    <div class='col-3 p-0'>
+      <div>
+        <p> {{$route.params.userId}} </p>
       </div>
-      <div class='col'>
-        <v-app id="dayspan" class="overflow-auto" v-cloak>
-          <calendar-extension
-            :calendar="calendar"
-            :events="events"
-            ref="app"
-            @change="saveState"
-            @event-create="eventCreate"
-            @event-update="eventUpdate"
-            @event-remove="eventRemove"
-          >
-          </calendar-extension>
-        </v-app>
-      </div>
+    </div>
+    <div class='col' id="calendar">
+      <calendar-extension
+        :calendar="calendar"
+        :events="events"
+        ref="app"
+        @change="saveState"
+        @event-create="eventCreate"
+        @event-update="eventUpdate"
+        @event-remove="eventRemove"
+      >
+      </calendar-extension>
     </div>
   </div>
 </div>
@@ -77,4 +73,8 @@ export default {
 .selectablerows.ui-selecting { background: #93969a; }
 .selectablerows.ui-selected { border-bottom:0px }
 .scheduled{background: #3a3b3d; color:white}
+
+#calendar{
+  height: calc(100% - 80px);
+}
 </style>
