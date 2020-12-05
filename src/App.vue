@@ -1,10 +1,10 @@
 <template>
   <div id="app">
     <div class="
-      sticky-top navbar navbar-default navbar-fixed-top align-items-center
-      justify-content-center p-3 px-md-4 bg-white border-bottom shadow-sm
-      w-100 flex-column flex-shrink-1 mb-0" id="topnavbar">
-      <div class="d-flex flex-row w-75" id="navbar2">
+      align-items-center p-3 px-md-4
+      bg-white border-bottom shadow-sm w-100
+    " id="topnavbar">
+      <div class="d-flex flex-row container-lg" id="navbar2">
         <div class="d-flex my-2 my-md-0 mr-md-3 justify-content-start">
           <router-link class="p-2" to="/">TutorMe</router-link>
         </div>
@@ -75,13 +75,13 @@ export default {
   width: 100vw;
 }
 #topnavbar{
-  height: 7vh;
+  height: 65px;
 }
 #navbar2{
   min-width: 400px;
 }
 #content{
-  height:93vh;
+  height: calc(100vh - 70px);
 }
 html, body {
   height: 100%;

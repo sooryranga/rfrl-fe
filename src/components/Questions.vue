@@ -1,5 +1,5 @@
 <template>
-  <div id="question-div" class="mt-3 w-75 mx-auto">
+  <div id="question-div" class="mt-3 container-lg mx-auto">
     <questions-editor></questions-editor>
     <questions-filter
     class="mt-3"

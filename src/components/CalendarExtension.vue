@@ -58,6 +58,30 @@
     </slot>
 
     <v-spacer></v-spacer>
+
+    <slot name="view" v-bind="{currentType, types}">
+
+      <v-menu>
+        <v-btn flat slot="activator">
+          {{ currentType.label }}
+          <v-icon>arrow_drop_down</v-icon>
+        </v-btn>
+        <v-list>
+          <v-list-tile v-for="type in types"
+            :key="type.id"
+            style="left:0px"
+            @click="currentType = type">
+            <v-list-tile-content>
+              <v-list-tile-title>{{ type.label }}</v-list-tile-title>
+            </v-list-tile-content>
+            <v-list-tile-action>{{ type.shortcut }}</v-list-tile-action>
+          </v-list-tile>
+        </v-list>
+      </v-menu>
+
+    </slot>
+
+    <v-spacer></v-spacer>
     <slot name="menuRight"></slot>
 
   </v-toolbar>
@@ -734,5 +758,12 @@ export default {
     height: 24px;
   }
 }
-
+.calendarTypeMenu{
+  left:0px;
+  top:0px;
+}
+.v-menu__content{
+  left:auto !important;
+  top:auto !important;
+}
 </style>

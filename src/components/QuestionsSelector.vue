@@ -59,6 +59,7 @@ export default {
       return timeAgo.format(newDate);
     },
     routeToQuestion: function(index) {
+      const routeQuestionId = this.$route.params.questionId;
       if (routeQuestionId?.toString() === this.questions[index].id.toString()) {
         return;
       }
