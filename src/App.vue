@@ -1,41 +1,47 @@
 <template>
   <div id="app">
     <div class="
-      align-items-center p-3 px-md-4
-      bg-white border-bottom shadow-sm w-100
+      align-items-center p-1 px-md-4
+      bg-white border-bottom shadow-sm
     " id="topnavbar">
-      <div class="d-flex flex-row container-lg" id="navbar2">
-        <div class="d-flex my-2 my-md-0 mr-md-3 justify-content-start">
-          <router-link class="p-2" to="/">TutorMe</router-link>
-        </div>
-        <nav class="d-flex my-2 my-md-0 mr-md-3 justify-content-end">
-            <router-link class="p-2 text-dark" to="/">Home</router-link>
-            <router-link class="p-2 text-dark" to="/questions">Ask Question</router-link>
-            <router-link class="p-2 text-dark" to="/tutors">Find Tutor</router-link>
-            <router-link class="p-2 text-dark mr-3" to="/about">About</router-link>
-            <div v-if="loggedIn">
-              <div class="dropdown">
-                <button
-                class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
-                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <img class="profilePicture" v-bind:src="currentProfile.profileImage"/>
-                  {{currentProfile.name}}
-                </button>
-                <div class="dropdown-menu dropdown-menu-left" aria-labelledby="dropdownMenuButton">
-                  <router-link
-                      class="dropdown-item text-dark"
-                      :to="profileLink">
-                    View Profile
-                  </router-link>
-                  <a class="dropdown-item" href="#">Settings & Privacy</a>
-                  <a class="dropdown-item" href="#">Sign Out</a>
+      <div class="container-lg" id="navbar2">
+        <div class="row my-2">
+          <div class="col-4">
+            <div class="row">
+              <router-link class="p-2 col" to="/">TutorMe</router-link>
+            </div>
+          </div>
+          <div class="col">
+            <div class="row">
+              <router-link class="col p-2 text-dark" to="/">Home</router-link>
+              <router-link class="col p-2 text-dark" to="/questions">Ask Question</router-link>
+              <router-link class="col p-2 text-dark" to="/tutors">Find Tutor</router-link>
+              <router-link class="col p-2 text-dark mr-3" to="/about">About</router-link>
+              <div v-if="loggedIn" class="col">
+                <div class="dropdown">
+                  <button
+                  class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <img id="navProfilePicture" v-bind:src="currentProfile.profileImage"/>
+                    {{currentProfile.name}}
+                  </button>
+                  <div class="dropdown-menu dropdown-menu-left" aria-labelledby="dropdownMenuButton">
+                    <router-link
+                        class="dropdown-item text-dark"
+                        :to="profileLink">
+                      View Profile
+                    </router-link>
+                    <a class="dropdown-item" href="#">Settings & Privacy</a>
+                    <a class="dropdown-item" href="#">Sign Out</a>
+                  </div>
                 </div>
               </div>
+              <div class="col align-items-center" v-else>
+                <router-link class="btn btn-dark mr-2" to="/signup">Sign Up</router-link>
+              </div>
             </div>
-            <div class="d-flex align-items-center" v-else>
-              <router-link class="btn btn-dark p-2 mr-2" to="/signup">Sign Up</router-link>
-            </div>
-        </nav>
+          </div>
+        </div>
       </div>
     </div>
     <div id="content">
@@ -62,7 +68,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -74,11 +80,11 @@ export default {
   z-index: 10;
   width: 100vw;
 }
+p {
+  font-size: 14px;
+}
 #topnavbar{
   height: 65px;
-}
-#navbar2{
-  min-width: 400px;
 }
 #content{
   height: calc(100vh - 70px);
@@ -89,9 +95,9 @@ html, body {
 .sticky-top{
   z-index:4
 }
-.profilePicture{
-  height: 3vh;
-  width: 3vh;
+#navProfilePicture{
+  height: 30px;
+  width: 30px;
   background-size: cover;
   background-position: top center;
   border-radius: 50%;

@@ -8,12 +8,14 @@
     ></document-editor>
     <div class="row">
       <div class="col">
-        <h3 class="text-left ml-4 my-2"> Documents </h3>
+        <h4 class="text-left ml-4 my-2"> Documents </h4>
       </div>
-      <div class="col-2 mx-auto my-auto addHover">
-        <button v-if="isLoggedInUser" v-on:click="add">
-          <span class="btn btn-outline-light material-icons md-dark md-36">add</span>
-        </button>
+      <div class="col-2 my-auto addHover">
+        <span
+          v-if="isLoggedInUser"
+          v-on:click="add"
+          class="material-icons md-24 md-dark btn-outline-light btn"
+        >add</span>
       </div>
     </div>
     <div v-if="localDocuments.length" class="mt-4 card-columns mx-3">
@@ -21,7 +23,7 @@
         <div>
           <embed v-bind:src="document.src" class="documentEmbed">
           <div class="card-body text-left py-1 documentBody">
-            <h5 class="card-title">{{document.name}}</h5>
+            <h6 class="card-title">{{document.name}}</h6>
             <p class="card-text">{{document.description}}</p>
           </div>
         </div>

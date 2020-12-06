@@ -1,12 +1,12 @@
 <template>
   <div v-if="question" class="text-left">
-    <p class="display-1"> {{ question.title }} </p>
+    <p id="title"> {{ question.title }} </p>
     <p class="my-1"> Posted By : {{ question.poster }} </p>
     <p class="my-1"> Created At : {{ timeAgoFormat(question.createdDate) }} </p>
     <router-link
     class="btn btn-outline-dark shadow-none my-3"
     v-bind:to="`/user/${question.id}/calendar`">
-    Schedule Session
+    <small>Schedule Session</small>
     </router-link>
     <p class="text-large"> {{ question.description }}</p>
   </div>
@@ -42,6 +42,9 @@ export default {
 
 <style>
 .text-large {
-  font-size: 120%;
+  font-size: 100%;
+}
+#title {
+  font-size: 180%;
 }
 </style>
