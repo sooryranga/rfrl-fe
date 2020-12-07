@@ -4,7 +4,7 @@ import Vue from 'vue';
 import {BootstrapVue, IconsPlugin} from 'bootstrap-vue';
 import VueCroppie from 'vue-croppie';
 import 'croppie/croppie.css'; // import the croppie css manually
-
+import 'vue-cal/dist/vuecal.css';
 
 import App from './App.vue';
 import router from './router';
