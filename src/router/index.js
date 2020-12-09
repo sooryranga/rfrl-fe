@@ -29,6 +29,11 @@ Vue.use(VueRouter);
 
 const routes = [
   {
+    path: '/chat',
+    name: 'chat',
+    component: () => import('@/components/Chat.vue'),
+  },
+  {
     path: '/questions/:questionId?',
     name: 'questions',
     component: () => import('@/components/Questions.vue'),
@@ -64,8 +69,8 @@ const routes = [
     component: () => import('@/components/SignUp.vue'),
   },
   {
-    path: '/user/:userId/calendar',
-    name: 'Calendar',
+    path: '/scheduled-session/:questionId',
+    name: 'schedule-session',
     component: () => import('@/components/Calendar.vue'),
   },
   {

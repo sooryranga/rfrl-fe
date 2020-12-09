@@ -3,11 +3,11 @@
     <p id="title"> {{ question.title }} </p>
     <p class="my-1"> Posted By : {{ question.poster }} </p>
     <p class="my-1"> Created At : {{ timeAgoFormat(question.createdDate) }} </p>
-    <router-link
+    <button
     class="btn btn-outline-dark shadow-none my-3"
-    v-bind:to="`/user/${question.id}/calendar`">
+    v-on:click="toCalendar">
     <small>Schedule Session</small>
-    </router-link>
+    </button>
     <p class="text-large"> {{ question.description }}</p>
   </div>
 </template>
@@ -32,6 +32,16 @@ export default {
   methods: {
     timeAgoFormat: function(newDate) {
       return timeAgo.format(newDate);
+    },
+    toCalendar: function() {
+      this.$router.push(
+          {
+            name: 'schedule-session',
+            params: {
+              questionId: this.questionId,
+            },
+          },
+      );
     },
   },
   mounted: function() {
