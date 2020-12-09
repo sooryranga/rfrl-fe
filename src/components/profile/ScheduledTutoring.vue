@@ -2,7 +2,7 @@
   <div v-if="isLoggedInUser" id="scheduledTutoring" class="p-3 my-3 bg-white">
     <div class="row">
       <div class="col">
-        <h5 class="text-left my-2">Scheduled Tutoring</h5>
+        <h6 class="text-left my-2">Scheduled Tutoring</h6>
       </div>
     </div>
     <div v-if="scheduledSessions.length">

@@ -3,7 +3,7 @@
     <div class="row mb-2">
       <div class="col-auto mr-auto my-auto">
         <div>
-          <h4 class="m-0">Questions Asked Near You</h4>
+          <h5 class="m-0">Questions Asked Near You</h5>
           <p class="m-0">{{questions.length}} found</p>
         </div>
       </div>
@@ -22,7 +22,7 @@
           <div v-on:click="routeToQuestion(index)" class="col">
             <div class="border"
             v-bind:class="[index == questions.length ? 'border-top-0' : '']">
-              <p class="m-0 h5">{{shortenTitle(question.title)}}</p>
+              <p class="m-0 h6">{{shortenTitle(question.title)}}</p>
               <p class="m-0">{{question.poster}}</p>
               <p class="m-0">
               <small>{{timeAgoFormat(question.createdDate)}} · {{question.applicants}} Applicants</small>
