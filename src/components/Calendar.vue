@@ -98,40 +98,38 @@ export default {
           draggable: false,
         },
       ],
+      question: null,
     };
   },
-  mounted() {},
+  mounted() {
+    if (this.$route.params?.questionId) {
+      this.question = this.getQuestion(this.$route.params?.questionId);
+    }
+  },
   methods: {
     createEvent() {
       if (this.checkOverlaps(this.selectedEvent)) {
-        console.log('overrlaps');
         this.deleteEventFunction();
       } else {
         this.showEventCreationDialog = true;
-      }
-    },
-    getErrors(event) {
-      if (this.checkOverlaps(event)) {
-        return 'This session overlaps with other events. Please reschedule';
       }
     },
     onEventCreate(event, deleteEventFunction) {
       this.selectedEvent = event;
       this.deleteEventFunction = deleteEventFunction;
 
-      event.title = 'Session Request';
+      if (this.question) {
+        event.title = this.question.title.slice(0, 50) + ' Session';
+      }
       return event;
     },
     checkOverlaps(event) {
-      console.log(this.events);
       const s = Date.parse(event.start);
       const e = Date.parse(event.end);
       for (let i=0; i < this.events.length; i++) {
         const event2 = this.events[i];
         const s2 = Date.parse(event2.start);
         const e2 = Date.parse(event2.end);
-        console.log('s,e', s, e);
-        console.log('s2, e2', s2, e2);
         if (s < s2 && e > s2) {
           return true;
         } else if (s < e2 && e > e2) {
@@ -153,7 +151,7 @@ export default {
       this.deleteEvent = null;
     },
   },
-  computed: mapGetters(['currentUser']),
+  computed: mapGetters('questions', ['getQuestion']),
 };
 </script>
 
@@ -165,7 +163,7 @@ export default {
 .scheduled{background: #3a3b3d; color:white}
 
 #calendar{
-  height: calc(100% - 80px);
+  height: calc(100% - 5px);
 }
 .modal-mask {
   position: fixed;
