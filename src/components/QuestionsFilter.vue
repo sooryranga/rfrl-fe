@@ -1,7 +1,7 @@
 <template>
   <div class="row justify-content-center">
     <div class="col-2 my-auto">
-      <h4 class="m-0">Filters:</h4>
+      <h5 class="m-0">Filters:</h5>
     </div>
     <div class="col-3">
       <multiselect

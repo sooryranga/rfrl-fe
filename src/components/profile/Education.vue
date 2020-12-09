@@ -8,13 +8,13 @@
     ></education-editor>
     <div class="row">
       <div class="col">
-        <h3 class="text-left ml-4 my-2"> Education </h3>
+        <h4 class="text-left ml-4 my-2"> Education </h4>
       </div>
       <div class="col-2 my-auto addHover">
         <span
           v-if="isLoggedInUser"
           v-on:click="add"
-          class="material-icons md-36 md-dark btn-outline-light btn"
+          class="material-icons md-24 md-dark btn-outline-light btn"
         >add</span>
       </div>
     </div>
@@ -26,9 +26,9 @@
         <div class="col my-auto text-left">
           <h5>{{education.institution}}</h5>
           <h6>{{education.degree}}</h6>
-          <p>{{education.fieldOfStudy}}</p>
-          <p><small>{{education.start.getFullYear()}}-{{education.end.getFullYear()}}</small></p>
-          <hr class="my-0"/>
+          <p class="m-0">{{education.fieldOfStudy}}</p>
+          <p class="m-0"><small>{{education.start.getFullYear()}}-{{education.end.getFullYear()}}</small></p>
+          <hr class="my-1"/>
         </div>
         <div class="col-1 hover-to-show mr-4" v-if="isLoggedInUser">
           <span v-on:click="edit(index)" class="material-icons md-dark btn-outline-light btn">create</span>

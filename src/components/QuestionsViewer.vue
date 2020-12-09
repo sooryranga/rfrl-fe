@@ -1,13 +1,13 @@
 <template>
   <div v-if="question" class="text-left">
-    <p class="display-1"> {{ question.title }} </p>
+    <p id="title"> {{ question.title }} </p>
     <p class="my-1"> Posted By : {{ question.poster }} </p>
     <p class="my-1"> Created At : {{ timeAgoFormat(question.createdDate) }} </p>
-    <router-link
+    <button
     class="btn btn-outline-dark shadow-none my-3"
-    v-bind:to="`/user/${question.id}/calendar`">
-    Schedule Session
-    </router-link>
+    v-on:click="toCalendar">
+    <small>Schedule Session</small>
+    </button>
     <p class="text-large"> {{ question.description }}</p>
   </div>
 </template>
@@ -33,6 +33,16 @@ export default {
     timeAgoFormat: function(newDate) {
       return timeAgo.format(newDate);
     },
+    toCalendar: function() {
+      this.$router.push(
+          {
+            name: 'schedule-session',
+            params: {
+              questionId: this.questionId,
+            },
+          },
+      );
+    },
   },
   mounted: function() {
     this.question = this.getQuestion(this.questionId);
@@ -42,6 +52,9 @@ export default {
 
 <style>
 .text-large {
-  font-size: 120%;
+  font-size: 100%;
+}
+#title {
+  font-size: 180%;
 }
 </style>

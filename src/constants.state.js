@@ -59,10 +59,44 @@ const tutorReview = () => {
   };
 };
 
+const chatRoomState = ()=>{
+  return {
+    roomId: null, // String or Number
+    roomName: 'Room 1', // String
+    lastMessage: {
+      content: 'Last message received', // String
+      sender_id: 1234,
+      timestamp: '10:20',
+      date: 123242424,
+      seen: false,
+      new: true,
+    },
+    users: [
+      {
+        _id: 1234,
+        username: 'John Doe',
+        status: {
+          state: 'online',
+          last_changed: 'today, 14:30',
+        },
+      },
+      {
+        _id: 4321,
+        username: 'Doe John',
+        status: {
+          state: 'online',
+          last_changed: 'today, 14:44',
+        },
+      },
+    ],
+  };
+};
+
 export {
   profileState,
   documentState,
   educationState,
   tutoredStudentsState,
   tutorReview,
+  chatRoomState,
 };

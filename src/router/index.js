@@ -1,8 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import RequestTutorModal from '@/components/RequestTutorModal.vue';
-import CalendarExtension from '@/components/CalendarExtension';
-import CalendarEvent from '@/components/CalendarEvent';
 import instantMessaging from '@/components/InstantMessaging';
 import VideoMessaging from '@/components/VideoMessaging.vue';
 import Education from '@/components/profile/Education.vue';
@@ -13,10 +11,9 @@ import ProfileAbout from '@/components/profile/About.vue';
 import ScheduledTutoring from '@/components/profile/ScheduledTutoring.vue';
 import AnsweredQuestions from '@/components/profile/AnsweredQuestions.vue';
 import AskedQuestions from '@/components/profile/AskedQuestions.vue';
+import VueCal from 'vue-cal';
 
 Vue.component('request-tutor-modal', RequestTutorModal);
-Vue.component('calendar-extension', CalendarExtension);
-Vue.component('ds-event', CalendarEvent);
 Vue.component('instant-messaging', instantMessaging);
 Vue.component('video-messaging', VideoMessaging);
 Vue.component('education', Education);
@@ -27,10 +24,15 @@ Vue.component('profile-about', ProfileAbout);
 Vue.component('scheduled-tutoring', ScheduledTutoring);
 Vue.component('answered-questions', AnsweredQuestions);
 Vue.component('asked-questions', AskedQuestions);
-
+Vue.component('vue-cal', VueCal);
 Vue.use(VueRouter);
 
 const routes = [
+  {
+    path: '/chat',
+    name: 'chat',
+    component: () => import('@/components/Chat.vue'),
+  },
   {
     path: '/questions/:questionId?',
     name: 'questions',
@@ -67,8 +69,8 @@ const routes = [
     component: () => import('@/components/SignUp.vue'),
   },
   {
-    path: '/user/:userId/calendar',
-    name: 'Calendar',
+    path: '/scheduled-session/:questionId',
+    name: 'schedule-session',
     component: () => import('@/components/Calendar.vue'),
   },
   {

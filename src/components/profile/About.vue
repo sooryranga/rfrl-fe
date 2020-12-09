@@ -13,8 +13,8 @@
         </div>
       </div>
       <div class="col">
-        <h3 class="text-left">{{profile.name}}</h3>
-        <h4 class="text-left text-uppercase"> About </h4>
+        <h4 class="text-left">{{profile.name}}</h4>
+        <h5 class="text-left text-uppercase"> About </h5>
         <p class="text-left">{{profile.about}}</p>
       </div>
       <div class="col-2" v-if="isLoggedInUser">
@@ -87,3 +87,4 @@ export default {
   },
 };
 </script>
+
