@@ -2,7 +2,7 @@ import {v4 as uuidv4} from 'uuid';
 
 const profileState = () => {
   return {
-    id: uuidv4(),
+    id: '6R0MijpK6M4AIrwaaCY212312safdasd21e',
     name: null,
     birthDay: null,
     profileImage: null,

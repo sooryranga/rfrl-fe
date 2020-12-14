@@ -23,7 +23,7 @@
             <div class="border"
             v-bind:class="[index == questions.length ? 'border-top-0' : '']">
               <p class="m-0 h6">{{shortenTitle(question.title)}}</p>
-              <p class="m-0">{{question.poster}}</p>
+              <p class="m-0">{{question.posterName}}</p>
               <p class="m-0">
               <small>{{timeAgoFormat(question.createdDate)}} · {{question.applicants}} Applicants</small>
               </p>

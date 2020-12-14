@@ -31,7 +31,7 @@ const routes = [
   {
     path: '/chat',
     name: 'chat',
-    component: () => import('@/components/Chat.vue'),
+    component: () => import('@/components/ChatContainer.vue'),
   },
   {
     path: '/questions/:questionId?',
