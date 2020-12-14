@@ -13,6 +13,8 @@ import {
 } from '@/constants.mutations.js';
 import {profileState} from '@/constants.state.js';
 
+import {usersRef} from '@/firestore';
+
 const state ={
   profile: profileState(),
 };
@@ -22,8 +24,15 @@ const getters = {
 };
 
 const actions = {
-  [PROFILE_PICTURE]({commit}, image) {
+  async [PROFILE_PICTURE]({commit}, image) {
     commit(SET_PROFILE_IMAGE, image);
+    await usersRef.doc(state.profile.id).set(
+        {
+          _id: state.profile.id,
+          username: state.profile.name,
+          avatar: image,
+        },
+    );
   },
   [NAME]({commit}, name) {
     commit(SET_NAME, name);

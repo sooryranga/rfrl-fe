@@ -1,73 +1,32 @@
 <template>
-  <div class="window-container container-lg mx-auto">
-    <div class="chat-forms">
-      <form @submit.prevent="createRoom" v-if="addNewRoom">
-        <input
-          type="text"
-          placeholder="Add username to create a room"
-          v-model="addRoomUsername"
-        />
-        <button type="submit" :disabled="disableForm || !addRoomUsername">
-          Create Room
-        </button>
-        <button class="button-cancel" @click="addNewRoom = false">
-          Cancel
-        </button>
-      </form>
-
-      <form @submit.prevent="addRoomUser" v-if="inviteRoomId">
-        <input
-          type="text"
-          placeholder="Add user to the room"
-          v-model="invitedUsername"
-        />
-        <button type="submit" :disabled="disableForm || !invitedUsername">
-          Add User
-        </button>
-        <button class="button-cancel" @click="inviteRoomId = null">
-          Cancel
-        </button>
-      </form>
-
-      <form @submit.prevent="deleteRoomUser" v-if="removeRoomId">
-        <select v-model="removeUserId">
-          <option default value="">Select User</option>
-          <option v-for="user in removeUsers" :key="user._id" :value="user._id">
-            {{ user.username }}
-          </option>
-        </select>
-        <button type="submit" :disabled="disableForm || !removeUserId">
-          Remove User
-        </button>
-        <button class="button-cancel" @click="removeRoomId = null">
-          Cancel
-        </button>
-      </form>
+  <div class="window-container h-100">
+    <div class="row" style="height: calc(100% - 30px)">
+      <chat-window
+        height="100%"
+        :theme="theme"
+        :styles="styles"
+        :currentUserId="currentUserId"
+        :rooms="loadingRooms ? [] : rooms"
+        :loadingRooms="loadingRooms"
+        :messages="messages"
+        :messagesLoaded="messagesLoaded"
+        :roomMessage="roomMessage"
+        :showAudio="showAudio"
+        :showAddRoom="showAddRoom"
+        :showReactionEmojis="showReactionEmojis"
+        :showEmojis="showEmojis"
+        :menuActions="menuActions"
+        :messageActions="messageActions"
+        @fetchMessages="fetchMessages"
+        @sendMessage="sendMessage"
+        @openFile="openFile"
+        @menuActionHandler="menuActionHandler"
+        @messageActionHandler="messageActionHandler"
+        @sendMessageReaction="sendMessageReaction"
+        @typingMessage="typingMessage"
+      >
+      </chat-window>
     </div>
-
-    <chat-window
-      height="calc(100vh - 80px)"
-      :theme="theme"
-      :styles="styles"
-      :currentUserId="currentProfile.id"
-      :rooms="loadingRooms ? [] : rooms"
-      :loadingRooms="loadingRooms"
-      :messages="messages"
-      :messagesLoaded="messagesLoaded"
-      :menuActions="menuActions"
-      :roomMessage="roomMessage"
-      @fetchMessages="fetchMessages"
-      @sendMessage="sendMessage"
-      @editMessage="editMessage"
-      @deleteMessage="deleteMessage"
-      @openFile="openFile"
-      @addRoom="addRoom"
-      @menuActionHandler="menuActionHandler"
-      @messageActionHandler="messageActionHandler"
-      @sendMessageReaction="sendMessageReaction"
-      @typingMessage="typingMessage"
-    >
-    </chat-window>
   </div>
 </template>
 
@@ -78,11 +37,10 @@ import {
   messagesRef,
   usersRef,
   filesRef,
-  deleteDbField,
 } from '@/firestore';
 import {parseTimestamp, isSameDay} from '@/utils';
+
 import ChatWindow from 'vue-advanced-chat';
-import {mapGetters} from 'vuex';
 import 'vue-advanced-chat/dist/vue-advanced-chat.css';
 
 export default {
@@ -90,12 +48,20 @@ export default {
     ChatWindow,
   },
 
-  computed: {...mapGetters('profile', ['currentProfile'])},
-
-  props: ['theme'],
+  props: ['currentUserId', 'theme'],
 
   data() {
     return {
+      menuActions: [
+        {
+          name: 'deleteRoom',
+          title: 'Delete Chat',
+        },
+      ],
+      showReactionEmojis: false,
+      showEmojis: false,
+      showAddRoom: false,
+      showAudio: false,
       perPage: 20,
       rooms: [],
       allUsers: [],
@@ -111,19 +77,17 @@ export default {
       listeners: [],
       typingMessageCache: '',
       disableForm: false,
-      addNewRoom: null,
-      addRoomUsername: '',
       inviteRoomId: null,
-      invitedUsername: '',
       removeRoomId: null,
       removeUserId: '',
       removeUsers: [],
-      menuActions: [
-        {name: 'inviteUser', title: 'Invite User'},
-        {name: 'removeUser', title: 'Remove User'},
-        {name: 'deleteRoom', title: 'Delete Room'},
+      styles: {container: {borderRadius: '2px'}},
+      messageActions: [
+        {
+          name: 'replyMessage',
+          title: 'Reply',
+        },
       ],
-      styles: {container: {borderRadius: '4px'}},
       // ,dbRequestCount: 0
     };
   },
@@ -161,7 +125,7 @@ export default {
       const query = roomsRef.where(
           'users',
           'array-contains',
-          this.currentProfile.id,
+          this.currentUserId,
       );
 
       const rooms = await query.get();
@@ -206,7 +170,7 @@ export default {
         const room = roomList[key];
 
         const roomContacts = room.users.filter(
-            (user) => user._id !== this.currentProfile.id,
+            (user) => user._id !== this.currentUserId,
         );
 
         room.roomName =
@@ -241,6 +205,7 @@ export default {
           .orderBy('timestamp', 'desc')
           .limit(1)
           .onSnapshot((messages) => {
+            // eslint-disable-line
             messages.forEach((message) => {
               const lastMessage = this.formatLastMessage(message.data());
               this.rooms[index].lastMessage = lastMessage;
@@ -261,10 +226,9 @@ export default {
     formatLastMessage(message) {
       if (!message.timestamp) return;
       const date = new Date(message.timestamp.seconds * 1000);
-      const timestampFormat = isSameDay(
-          date,
-          new Date(),
-      ) ? 'HH:mm' : 'DD/MM/YY';
+      const timestampFormat = (
+        isSameDay(date, new Date()) ? 'HH:mm' : 'DD/MM/YY'
+      );
 
       let timestamp = parseTimestamp(message.timestamp, timestampFormat);
       if (timestampFormat === 'HH:mm') timestamp = `Today, ${timestamp}`;
@@ -278,12 +242,10 @@ export default {
           content,
           timestamp,
           date: message.timestamp.seconds,
-          seen: (
-            message.senderId === this.currentProfile.id ? message.seen : null
-          ),
+          seen: message.sender_id === this.currentUserId ? message.seen : null,
           new:
-            message.senderId !== this.currentProfile.id &&
-            (!message.seen || !message.seen[this.currentProfile.id]),
+            message.sender_id !== this.currentUserId &&
+            (!message.seen || !message.seen[this.currentUserId]),
         },
       };
     },
@@ -333,8 +295,8 @@ export default {
     listenMessages(messages, room) {
       messages.forEach((message) => {
         const formattedMessage = this.formatMessage(room, message);
-        const messageIndex = this.messages.findIndex(
-            (m) => m._id === message.id,
+        const messageIndex = (
+          this.messages.findIndex((m) => m._id === message.id)
         );
 
         if (messageIndex === -1) {
@@ -349,28 +311,28 @@ export default {
 
     markMessagesSeen(room, message) {
       if (
-        message.data().senderId !== this.currentProfile.id &&
-        (!message.data().seen || !message.data().seen[this.currentProfile.id])
+        message.data().sender_id !== this.currentUserId &&
+        (!message.data().seen || !message.data().seen[this.currentUserId])
       ) {
         messagesRef(room.roomId)
             .doc(message.id)
             .update({
-              [`seen.${this.currentProfile.id}`]: new Date(),
+              [`seen.${this.currentUserId}`]: new Date(),
             });
       }
     },
 
     formatMessage(room, message) {
       const senderUser = room.users.find(
-          (user) => message.data().senderId === user._id,
+          (user) => message.data().sender_id === user._id,
       );
 
-      const {senderId, timestamp} = message.data();
+      const {sender_id, timestamp} = message.data(); // eslint-disable-line
 
       return {
         ...message.data(),
         ...{
-          senderId,
+          sender_id,
           _id: message.id,
           seconds: timestamp.seconds,
           timestamp: parseTimestamp(timestamp, 'HH:mm'),
@@ -382,7 +344,7 @@ export default {
 
     async sendMessage({content, roomId, file, replyMessage}) {
       const message = {
-        senderId: this.currentProfile.id,
+        sender_id: this.currentUserId,
         content,
         timestamp: new Date(),
       };
@@ -394,17 +356,13 @@ export default {
           type: file.type,
           url: file.localUrl,
         };
-        if (file.audio) {
-          message.file.audio = true;
-          message.file.duration = file.duration;
-        }
       }
 
       if (replyMessage) {
         message.replyMessage = {
           _id: replyMessage._id,
           content: replyMessage.content,
-          senderId: replyMessage.senderId,
+          sender_id: replyMessage.sender_id,
         };
 
         if (replyMessage.file) {
@@ -421,41 +379,9 @@ export default {
       window.open(message.file.url, '_blank');
     },
 
-    async editMessage({messageId, newContent, roomId, file}) {
-      const newMessage = {edited: new Date()};
-      newMessage.content = newContent;
-
-      if (file) {
-        newMessage.file = {
-          name: file.name,
-          size: file.size,
-          type: file.type,
-          url: file.url || file.localUrl,
-        };
-        if (file.audio) {
-          newMessage.file.audio = true;
-          newMessage.file.duration = file.duration;
-        }
-      } else {
-        newMessage.file = deleteDbField;
-      }
-
-      await messagesRef(roomId)
-          .doc(messageId)
-          .update(newMessage);
-
-      if (file) this.uploadFile({file, messageId, roomId});
-    },
-
-    async deleteMessage({messageId, roomId}) {
-      await messagesRef(roomId)
-          .doc(messageId)
-          .update({deleted: new Date()});
-    },
-
     async uploadFile({file, messageId, roomId}) {
       const uploadFileRef = filesRef
-          .child(this.currentProfile.id)
+          .child(this.currentUserId)
           .child(messageId)
           .child(`${file.name}.${file.type}`);
 
@@ -490,8 +416,8 @@ export default {
 
     async sendMessageReaction({reaction, remove, messageId, roomId}) {
       const dbAction = remove ?
-        firebase.firestore.FieldValue.arrayRemove(this.currentProfile.id) :
-        firebase.firestore.FieldValue.arrayUnion(this.currentProfile.id);
+        firebase.firestore.FieldValue.arrayRemove(this.currentUserId) :
+        firebase.firestore.FieldValue.arrayUnion(this.currentUserId);
 
       await messagesRef(roomId)
           .doc(messageId)
@@ -512,8 +438,8 @@ export default {
       this.typingMessageCache = message;
 
       const dbAction = message ?
-        firebase.firestore.FieldValue.arrayUnion(this.currentProfile.id) :
-        firebase.firestore.FieldValue.arrayRemove(this.currentProfile.id);
+        firebase.firestore.FieldValue.arrayUnion(this.currentUserId) :
+        firebase.firestore.FieldValue.arrayRemove(this.currentUserId);
 
       roomsRef.doc(roomId).update({
         typingUsers: dbAction,
@@ -534,16 +460,16 @@ export default {
     updateUserOnlineStatus() {
       const userStatusRef = firebase
           .database()
-          .ref('/status/' + this.currentProfile.id);
+          .ref('/status/' + this.currentUserId);
 
       const isOfflineData = {
         state: 'offline',
-        lastChanged: firebase.database.ServerValue.TIMESTAMP,
+        last_changed: firebase.database.ServerValue.TIMESTAMP,
       };
 
       const isOnlineData = {
         state: 'online',
-        lastChanged: firebase.database.ServerValue.TIMESTAMP,
+        last_changed: firebase.database.ServerValue.TIMESTAMP,
       };
 
       firebase
@@ -571,19 +497,20 @@ export default {
                 if (!snapshot || !snapshot.val()) return;
 
                 const timestampFormat = isSameDay(
-                    new Date(snapshot.val().lastChanged),
+                    new Date(snapshot.val().last_changed),
                     new Date(),
                 ) ?
                 'HH:mm' :
                 'DD MMMM, HH:mm';
 
                 const timestamp = parseTimestamp(
-                    new Date(snapshot.val().lastChanged),
+                    new Date(snapshot.val().last_changed),
                     timestampFormat,
                 );
 
-                const lastChanged =
-                timestampFormat === 'HH:mm' ? `today, ${timestamp}` : timestamp;
+                const lastChanged = (
+                timestampFormat === 'HH:mm' ? `today, ${timestamp}` : timestamp
+                );
 
                 user.status = {...snapshot.val(), lastChanged};
 
@@ -598,26 +525,15 @@ export default {
       });
     },
 
-    addRoom() {
-      this.resetForms();
-      this.addNewRoom = true;
-    },
-
     async createRoom() {
       this.disableForm = true;
 
       const {id} = await usersRef.add({username: this.addRoomUsername});
       await usersRef.doc(id).update({_id: id});
-      await roomsRef.add({users: [id, this.currentProfile.id]});
+      await roomsRef.add({users: [id, this.currentUserId]});
 
-      this.addNewRoom = false;
       this.addRoomUsername = '';
       this.fetchRooms();
-    },
-
-    inviteUser(roomId) {
-      this.resetForms();
-      this.inviteRoomId = roomId;
     },
 
     async addRoomUser() {
@@ -638,9 +554,9 @@ export default {
     removeUser(roomId) {
       this.resetForms();
       this.removeRoomId = roomId;
-      this.removeUsers = this.rooms.find(
-          (room) => room.roomId === roomId,
-      ).users;
+      this.removeUsers = (
+        this.rooms.find((room) => room.roomId === roomId).users
+      );
     },
 
     async deleteRoomUser() {
@@ -678,10 +594,7 @@ export default {
 
     resetForms() {
       this.disableForm = false;
-      this.addNewRoom = null;
       this.addRoomUsername = '';
-      this.inviteRoomId = null;
-      this.invitedUsername = '';
       this.removeRoomId = null;
       this.removeUserId = '';
     },
