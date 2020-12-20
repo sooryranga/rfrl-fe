@@ -74,10 +74,10 @@ const routes = [
     component: () => import('@/components/Calendar.vue'),
   },
   {
-    path: '/conference/:userId',
+    path: '/conference/:conferenceId',
     name: 'tutoring-session',
     redirect: (to) => {
-      return '/conference/' + to.params.userId +'/code';
+      return '/conference/' + to.params.conferenceId +'/code';
     },
     component: () => import('@/components/TutoringSession.vue'),
     children: [
