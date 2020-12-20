@@ -22,7 +22,9 @@
             class="row mb-1"
             v-for="session in dateSession.sessions"
             v-bind:key="session.id">
-            <div class="btn btn-outline-dark w-100">
+            <router-link
+            class="btn btn-outline-dark w-100"
+            :to="{name: 'tutoring-session', params: {conferenceId: session.conferenceID}}">
               <div class="row">
                 <div class="col-6 my-auto">
                   <div>{{session.startTime.toLocaleTimeString()}}</div>
@@ -31,7 +33,7 @@
                  Session with {{currentProfile.isTutor ? session.mentee.name : sessnion.mentor.name}}
                 </div>
               </div>
-            </div>
+            </router-link>
           </div>
         </div>
       </div>
@@ -104,16 +106,19 @@ export default {
       startTime: new Date(),
       mentor: {name: 'Arun'},
       mentee: {name: 'Sathi'},
+      conferenceID: '1',
     });
     this.scheduledSessions.push({
       startTime: new Date(),
       mentor: {name: 'Arun'},
       mentee: {name: 'Soory'},
+      conferenceID: '2',
     });
     this.scheduledSessions.push({
       startTime: new Date('2020/11/26'),
       mentor: {name: 'Arun'},
       mentee: {name: 'TJ'},
+      conferenceID: '3',
     });
   },
 };
