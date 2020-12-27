@@ -223,11 +223,12 @@ export default {
       };
     },
 
-    fetchMessages({room, options = {}}) {
+    async fetchMessages({room, options = {}}) {
       if (options.reset) this.resetMessages();
 
-      const messages = this.fetchAndSetMessages(room);
+      const messages = await this.fetchAndSetMessages(room);
       this.messages = messages;
+      this.messagesLoaded = true;
     },
 
     // currently not supported

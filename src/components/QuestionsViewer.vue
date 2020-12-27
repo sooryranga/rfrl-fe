@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex';
+import {mapActions, mapGetters} from 'vuex';
 import TimeAgo from 'javascript-time-ago';
 import {
   messagesRef,
@@ -79,6 +79,8 @@ export default {
     };
   },
   methods: {
+    ...mapActions('chatRooms', ['createRoom']),
+
     timeAgoFormat(newDate) {
       return timeAgo.format(newDate);
     },
@@ -97,6 +99,8 @@ export default {
           this.showError = false;
         }.bind(this), 2000);
       }
+
+      const roomId = this.createRoom([this.question.userId]);
 
       const message = {
         sender_id: this.currentProfile.id,

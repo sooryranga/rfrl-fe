@@ -98,10 +98,6 @@ export default {
       const user3 = this.users[2];
       await usersRef.doc(user3._id).set(user3);
 
-      console.log(
-          await roomsRef.add({users: [this.currentProfile.id, user1._id]}),
-      );
-      await roomsRef.add({users: [this.currentProfile.id, user2._id]});
       await roomsRef.add({users: [this.currentProfile.id, user3._id]});
 
       this.updatingData = false;
