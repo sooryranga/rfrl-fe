@@ -52,7 +52,7 @@ const actions = {
 const mutations = {
   [SET_LOGGED_IN](state) {
     if (!state.loggedIn) {
-      state.auth.loggedIn = true;
+      state.loggedIn = true;
     }
   },
   [SET_GOOGLE_AUTH](state, token) {

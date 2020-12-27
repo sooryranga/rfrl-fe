@@ -4,6 +4,7 @@ import authentication from './modules/authentication';
 import questions from './modules/questions';
 import profile from './modules/profile';
 import chatRooms from './modules/chatRooms';
+import roomMessages from './modules/roomMessages';
 
 // Load Vuex
 Vue.use(Vuex);
@@ -15,5 +16,6 @@ export default new Vuex.Store({
     questions,
     profile,
     chatRooms,
+    roomMessages,
   },
 });
