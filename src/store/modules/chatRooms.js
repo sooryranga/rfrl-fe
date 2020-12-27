@@ -40,7 +40,7 @@ async function updateUsers(commit, getters) {
   ).get();
   users.forEach((user) => {
     const userData = user.data();
-    userData.id = user.id;
+    userData._id = user.id;
     allUsers[user.id] = userData;
   });
 
@@ -57,15 +57,15 @@ async function snapshotRoomChanges(commit, getters, snapshot) {
   const rooms = Object.assign(getters.rooms);
   snapshot.docChanges().forEach(function(change) {
     const room = change.doc.data();
-    room.id = change.id;
+    room._id = change.id;
     if (change.type === 'added') {
-      rooms[room.id] = room;
+      rooms[room._id] = room;
     }
     if (change.type === 'modified') {
-      rooms[room.id] = room;
+      rooms[room._id] = room;
     }
     if (change.type === 'removed') {
-      delete rooms[room.id];
+      delete rooms[room._id];
     }
   });
   commit(SET_ROOMS, rooms);
@@ -116,7 +116,7 @@ const actions = {
     const roomIdtoRoom = {};
     rooms.forEach((room) => {
       const roomData = room.data();
-      roomData.id = room.id;
+      roomData._id = room.id;
       roomIdtoRoom[room.id] = roomData;
     });
 
@@ -135,7 +135,7 @@ const actions = {
         [...otherUserIds, currentUserId],
     );
     if (existingRoom) {
-      return existingRoom.id;
+      return existingRoom._id;
     }
     return id = await roomsRef.add({users: [otherUserId, currentUserId]});
   },
