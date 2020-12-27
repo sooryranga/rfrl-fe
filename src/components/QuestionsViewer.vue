@@ -55,7 +55,6 @@
 import {mapGetters} from 'vuex';
 import TimeAgo from 'javascript-time-ago';
 import {
-  roomsRef,
   messagesRef,
 } from '@/firestore';
 
@@ -98,17 +97,7 @@ export default {
           this.showError = false;
         }.bind(this), 2000);
       }
-      let roomId;
-      try {
-        roomId = await roomsRef
-            .where('users', 'array-contains', this.question.userId)
-            .where('users', 'array-contains', this.currentProfile.id)
-            .get().id;
-      } catch (err) {
-        roomId = await roomsRef.add(
-            {users: [this.question.userId, this.currentProfile.id]},
-        );
-      }
+
       const message = {
         sender_id: this.currentProfile.id,
         content: this.introduction,
