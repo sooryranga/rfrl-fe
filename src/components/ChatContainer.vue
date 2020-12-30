@@ -1,13 +1,13 @@
 <template>
   <div class="container-xl h-100">
-    <div class="row">
+    <div class="row" style="height:4%">
       <div class="col">
         <button @click="resetData">Clear Data</button>
         <button @click="addData" :disabled="updatingData">Add Data</button>
       </div>
     </div>
-    <div class="row h-100">
-      <div class="col">
+    <div class="row" style="height:96%">
+      <div class="col h-100">
         <chat
         :currentUserId="currentProfile.id"
         :theme="theme"
@@ -98,7 +98,10 @@ export default {
       const user3 = this.users[2];
       await usersRef.doc(user3._id).set(user3);
 
-      await roomsRef.add({users: [this.currentProfile.id, user3._id]});
+      const roomId = '6jMsIXUrBHBj7o2cRlau';
+      await roomsRef.doc(roomId).add(
+          {users: [this.currentProfile.id, user3._id], timestamp: new Date()},
+      );
 
       this.updatingData = false;
     },

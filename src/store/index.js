@@ -9,8 +9,7 @@ import roomMessages from './modules/roomMessages';
 // Load Vuex
 Vue.use(Vuex);
 
-// Create store
-export default new Vuex.Store({
+const store = new Vuex.Store({
   modules: {
     authentication,
     questions,
@@ -19,3 +18,8 @@ export default new Vuex.Store({
     roomMessages,
   },
 });
+
+window.store = store;
+
+// Create store
+export default store;
