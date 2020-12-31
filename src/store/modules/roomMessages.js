@@ -8,7 +8,6 @@ import {
 import {parseTimestamp} from '@/utils';
 
 const PER_PAGE = 20;
-const UPDATE_VERSION = 'updateVersion';
 
 const state = {
   roomMessage: {}, // Available rooms in the whole chat
@@ -18,6 +17,12 @@ const state = {
 };
 
 const getters = {
+  messagesByRoomId(state) {
+    return {
+      messages: state.roomMessage,
+      meta: state.meta,
+    };
+  },
   getMessagesForRoom(state) {
     return (roomId) => {
       return {
@@ -27,7 +32,7 @@ const getters = {
     };
   },
   latestMessage(state) {
-    return state.roomMessage.latestMessage;
+    return state.latestMessage;
   },
   getMetaForMessage(state) {
     return (roomId) => {
@@ -76,8 +81,6 @@ function snapshotMessagesAdded(getters, commit, room, snapshot) {
     const message = change.doc.data();
     message._id = change.doc.id;
 
-    console.log('snapshotMessagesAdded', message);
-
     if (change.type !== 'added') {
       console.error('Expected only added messages');
       return;
@@ -90,10 +93,10 @@ function snapshotMessagesAdded(getters, commit, room, snapshot) {
 
   const existingMessages = getters.getMessagesForRoom(room._id);
   const messages = existingMessages.messages.concat(formattedMessages);
-  console.log(messages);
   commit(SET_MESSAGES, {roomId: room._id, messages: messages});
-  commit(SET_LATEST_MESSAGE, {roomId: room._id, message: lastMessage});
-  commit(UPDATE_VERSION, room._id);
+  if (lastMessage) {
+    commit(SET_LATEST_MESSAGE, {roomId: room._id, message: lastMessage});
+  }
 }
 
 
@@ -103,10 +106,6 @@ const actions = {
     let start = meta?.start;
     let end = meta?.end;
     let started = meta?.started;
-
-    if (started) {
-      return getters.getMessagesForRoom(room._id).messages;
-    }
 
     const formattedMessages = [
       ...getters.getMessagesForRoom(room._id).messages,
@@ -129,27 +128,30 @@ const actions = {
     });
 
     if (start) end = start;
-    start = messages.docs[0];
+    start = messages.docs[messages.docs.length-1];
 
     if (!started) {
-      console.log(start);
       const unsubscribe = await messagesRef(room._id)
           .orderBy('timestamp')
-          .startAfter(start)
+          .startAfter(messages.docs[0])
           .onSnapshot((snapshot) => {
             snapshotMessagesAdded(getters, commit, room, snapshot);
           });
       commit(SET_MESSAGE_LISTENER, {roomId: room._id, listener: unsubscribe});
 
       if (!messages.empty) {
-        const lastMessage = messages.docs[0];
-        commit(SET_LATEST_MESSAGE, {roomId: room._id, message: lastMessage});
+        const lastMessage = messages.docs[0].data();
+        lastMessage._id = messages.docs[0].id;
+        commit(
+            SET_LATEST_MESSAGE,
+            {roomId: room._id, message: lastMessage},
+        );
       }
       started = true;
     }
     const version = 0;
-    commit(SET_MESSAGES, {roomId: room._id, messages: formattedMessages});
     commit(SET_META, {roomId: room._id, meta: {start, end, started, version}});
+    commit(SET_MESSAGES, {roomId: room._id, messages: formattedMessages});
 
     return formattedMessages;
   },
@@ -157,11 +159,9 @@ const actions = {
 
 
 const mutations = {
-  [UPDATE_VERSION](state, roomId) {
-    state.meta[roomId].version += 1;
-  },
   [SET_MESSAGES](state, payload) {
     Vue.set(state.roomMessage, payload.roomId, payload.messages);
+    state.meta[payload.roomId].version += 1;
   },
   [SET_MESSAGE_LISTENER](state, payload) {
     if (state[payload.roomId]) {
