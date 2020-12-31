@@ -106,15 +106,16 @@ const actions = {
     let start = meta?.start;
     let end = meta?.end;
     let started = meta?.started;
+    const version = meta?.version || 0;
 
     const formattedMessages = [
       ...getters.getMessagesForRoom(room._id).messages,
     ];
 
-    if (end && !start) return formattedMessages;
+    if (end && !start) return {messages: formattedMessages, loaded: true};
 
     const ref = messagesRef(room._id);
-    const query = ref.orderBy('timestamp', 'desc').limit(PER_PAGE);
+    let query = ref.orderBy('timestamp', 'desc').limit(PER_PAGE);
 
     if (start) query = query.startAfter(start);
 
@@ -149,11 +150,11 @@ const actions = {
       }
       started = true;
     }
-    const version = 0;
+
     commit(SET_META, {roomId: room._id, meta: {start, end, started, version}});
     commit(SET_MESSAGES, {roomId: room._id, messages: formattedMessages});
 
-    return formattedMessages;
+    return {messages: formattedMessages, loaded: messages.empty};
   },
 };
 

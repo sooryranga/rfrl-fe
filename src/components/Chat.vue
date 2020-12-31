@@ -120,10 +120,8 @@ export default {
         if (this.messageVersion >= version) {
           return;
         }
-        this.messagesLoaded = false;
         this.messages = [...messages];
         this.messageVersion = version;
-        this.messagesLoaded = true;
       },
       deep: true,
     },
@@ -252,12 +250,12 @@ export default {
 
     async fetchMessages({room, options = {}}) {
       if (options.reset) this.resetMessages();
-      console.log('called');
-      this.messagesLoaded = false;
       this.selectedRoom = room.roomId;
-      const messages = await this.fetchAndSetMessages(room);
+      const {messages, loaded} = await this.fetchAndSetMessages(room);
       this.messages = messages;
-      this.messagesLoaded = true;
+      if (loaded) {
+        this.messagesLoaded = loaded;
+      }
     },
 
     // currently not supported
