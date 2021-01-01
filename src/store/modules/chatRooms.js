@@ -23,7 +23,7 @@ const state = {
  */
 async function updateUsers(commit, getters) {
   const rooms = Object.values(getters.rooms);
-  const allUsers = getters.users;
+  const allUsers = {...getters.users};
   const roomUserIds = [];
   rooms.forEach((room) => {
     room.users.forEach((userId) => {
@@ -33,18 +33,21 @@ async function updateUsers(commit, getters) {
     });
   });
 
+  if (roomUserIds.length === 0) return;
+
   const users = await usersRef.where(
       firebase.firestore.FieldPath.documentId(),
       'in',
       roomUserIds,
   ).get();
+
   users.forEach((user) => {
     const userData = user.data();
     userData._id = user.id;
     allUsers[user.id] = userData;
   });
 
-  commit(SET_USERS, users);
+  commit(SET_USERS, allUsers);
 }
 
 /**
@@ -73,19 +76,22 @@ async function snapshotRoomChanges(commit, getters, snapshot) {
 }
 
 const getters = {
-  getRoomExistsWithUsers(state, userIds) {
-    const userSet = new Set(userIds);
-    const rooms = Object.values(state.room);
+  getRoomExistsWithUsers(state) {
+    return (userIds) => {
+      const userSet = new Set(userIds);
+      const rooms = Object.values(state.rooms);
 
-    for (let i =0; i< rooms.length; i++) {
-      const room = rooms[i];
-      const userSet2 = new Set(room.users);
-      if (isEqual(userSet, userSet2)) {
-        return room;
+      for (let i =0; i< rooms.length; i++) {
+        const room = rooms[i];
+        const userSet2 = new Set(room.users);
+        console.log(userSet2, userSet);
+        if (isEqual(userSet, userSet2)) {
+          return room;
+        }
       }
-    }
 
-    return null;
+      return null;
+    };
   },
   isAutoUpdateRooms(state) {
     return state.autoUpdateRooms;
@@ -107,7 +113,7 @@ const actions = {
       return getters.rooms;
     }
     const currentUserId = rootGetters['profile/currentProfile'].id;
-    const query = roomsRef.where(
+    let query = roomsRef.where(
         'users',
         'array-contains',
         currentUserId,
@@ -121,8 +127,9 @@ const actions = {
       roomIdtoRoom[room.id] = roomData;
     });
 
+    if (!rooms.empty) query = query.startAfter(rooms.docs[rooms.docs.length-1]);
+
     const listener = await query
-        .startAfter(rooms.docs[rooms.docs.length-1])
         .onSnapshot(async (snapshot) => {
           await snapshotRoomChanges(commit, getters, snapshot);
         });
@@ -142,7 +149,7 @@ const actions = {
     if (existingRoom) {
       return existingRoom._id;
     }
-    return id = await roomsRef.add({users: [otherUserId, currentUserId]});
+    return (await roomsRef.add({users: [...otherUserIds, currentUserId]})).id;
   },
 };
 

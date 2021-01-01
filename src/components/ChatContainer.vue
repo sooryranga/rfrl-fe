@@ -99,7 +99,7 @@ export default {
       await usersRef.doc(user3._id).set(user3);
 
       const roomId = '6jMsIXUrBHBj7o2cRlau';
-      await roomsRef.doc(roomId).add(
+      await roomsRef.doc(roomId).set(
           {users: [this.currentProfile.id, user3._id], timestamp: new Date()},
       );
 

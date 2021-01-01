@@ -132,12 +132,15 @@ const actions = {
     start = messages.docs[messages.docs.length-1];
 
     if (!started) {
-      const unsubscribe = await messagesRef(room._id)
-          .orderBy('timestamp')
-          .startAfter(messages.docs[0])
-          .onSnapshot((snapshot) => {
-            snapshotMessagesAdded(getters, commit, room, snapshot);
-          });
+      let query = await messagesRef(room._id)
+          .orderBy('timestamp');
+
+      if (!messages.empty) query = query.startAfter(messages.docs[0]);
+
+      const unsubscribe = query.onSnapshot((snapshot) => {
+        snapshotMessagesAdded(getters, commit, room, snapshot);
+      });
+
       commit(SET_MESSAGE_LISTENER, {roomId: room._id, listener: unsubscribe});
 
       if (!messages.empty) {
