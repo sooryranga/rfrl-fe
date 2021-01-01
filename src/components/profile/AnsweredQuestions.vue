@@ -1,5 +1,5 @@
 <template>
-  <div v-if="profile.isTutor" id="questions" class="p-3 my-1 bg-white">
+  <div v-if="profile && profile.isTutor" id="questions" class="p-3 my-1 bg-white">
     <div class="row mb-0">
       <div class="col">
         <h5 class="text-left my-2" >Answered Questions</h5>
@@ -66,7 +66,8 @@ export default {
       text: "What does the graph look like in a square pde? and does it have to confine to a periodical nature, can it have asymptotes? Can you solve second order square pde without a computer simulation?", // eslint-disable-line
       tags: [{name: 'Math'}, {name: 'Calculus'}],
     });
-    if (this.profileId === this.currentProfileId) {
+
+    if (this.profileId === this.currentProfile.id) {
       this.profile = this.currentProfile;
     } else {
       this.profile = this.currentProfile;
