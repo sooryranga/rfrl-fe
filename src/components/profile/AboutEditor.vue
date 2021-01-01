@@ -54,7 +54,6 @@ export default {
   methods: {
     'save': function() {
       // Save file to bucket and update src
-      console.log(this.about, this.currentProfile.about);
       const state = {
         name: null,
         about: null,

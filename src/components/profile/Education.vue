@@ -88,7 +88,6 @@ export default {
     },
     'edit': function(index) {
       this.editingIndex = index;
-      console.log(this.localEducation[index]);
       this.editingItem = this.localEducation[index];
       this.editorOpen = true;
     },

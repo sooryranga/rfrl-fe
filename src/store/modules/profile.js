@@ -67,8 +67,6 @@ const actions = {
     commit(SET_DOCUMENT, {index, newDocument});
   },
   async [ADD_EDUCATION]({commit}, {index, newEducation}) {
-    console.log(index);
-    console.log(newEducation);
     commit(SET_EDUCATION, {index, newEducation});
   },
 };
