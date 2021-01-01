@@ -11,6 +11,7 @@
         <chat
         :currentUserId="currentProfile.id"
         :theme="theme"
+        :roomId="roomId"
         v-if="showChat"
         />
       </div>
@@ -32,10 +33,17 @@ export default {
     ...mapGetters('profile', ['currentProfile']),
   },
 
+  mounted() {
+    if (this.$route.params?.roomId) {
+      this.roomId = this.$route.params?.roomId;
+    }
+  },
+
   data() {
     return {
       theme: 'light',
       showChat: true,
+      roomId: null,
       users: [
         {
           _id: '6R0MijpK6M4AIrwaaCY2',

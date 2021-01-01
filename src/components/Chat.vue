@@ -18,6 +18,7 @@
           :showEmojis="showEmojis"
           :menuActions="menuActions"
           :messageActions="messageActions"
+          :roomId="roomId"
           @fetchMessages="fetchMessages"
           @sendMessage="sendMessage"
           @openFile="openFile"
@@ -51,7 +52,7 @@ export default {
     ChatWindow,
   },
 
-  props: ['currentUserId', 'theme'],
+  props: ['currentUserId', 'theme', 'roomId'],
 
   data() {
     return {
@@ -126,29 +127,8 @@ export default {
       deep: true,
     },
     latestMessage: {
-      handler: function(latestMessages) {
-        this.loadingRooms = true;
-        const rooms = {};
-        this.rooms.forEach((room) => {
-          rooms[room._id] = {...room};
-        });
-        const roomIds = Object.keys(latestMessages);
-
-        for (let i=0; i < roomIds.length; i++) {
-          const roomId = roomIds[i];
-          if (!rooms[roomId]) {
-            console.error(
-                'Room id from latest messages is not found within local state',
-                roomId,
-            );
-            continue;
-          }
-          rooms[roomId].lastMessage = this.formatLastMessage(
-              latestMessages[roomId],
-          );
-        }
-        this.rooms = Object.values(rooms);
-        this.loadingRooms = false;
+      handler: function(latestMessage) {
+        this.updateRoomsWithLatestMessage(latestMessage);
       },
       deep: true,
     },
@@ -158,6 +138,31 @@ export default {
     ...mapGetters('chatRooms', ['users']),
     ...mapActions('chatRooms', ['fetchAndSetRooms']),
     ...mapActions('roomMessages', ['fetchAndSetMessages']),
+
+    updateRoomsWithLatestMessage(latestMessages) {
+      this.loadingRooms = true;
+      const rooms = {};
+      this.rooms.forEach((room) => {
+        rooms[room._id] = {...room};
+      });
+      const roomIds = Object.keys(latestMessages);
+
+      for (let i=0; i < roomIds.length; i++) {
+        const roomId = roomIds[i];
+        if (!rooms[roomId]) {
+          console.error(
+              'Room id from latest messages is not found within local state',
+              roomId,
+          );
+          continue;
+        }
+        rooms[roomId].lastMessage = this.formatLastMessage(
+            latestMessages[roomId],
+        );
+      }
+      this.rooms = Object.values(rooms);
+      this.loadingRooms = false;
+    },
 
     resetRooms() {
       this.loadingRooms = true;
@@ -217,6 +222,7 @@ export default {
       this.rooms = formattedRooms;
       this.loadingRooms = false;
 
+      this.updateRoomsWithLatestMessage(this.latestMessage);
       // this.listenUsersOnlineStatus();
       // this.listenRoomsTypingUsers(query);
       // setTimeout(() => console.log('TOTAL', this.dbRequestCount), 2000)
