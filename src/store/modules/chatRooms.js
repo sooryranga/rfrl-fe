@@ -3,7 +3,7 @@ import {
   roomsRef,
   usersRef,
 } from '@/firestore';
-import {isEqual} from 'lodash.isequal';
+import isEqual from 'lodash.isequal';
 
 import {
   SET_ROOMS, SET_USERS, SET_AUTOUPDATEROOMS, SET_ROOM_LISTENER,
@@ -84,7 +84,7 @@ const getters = {
       for (let i =0; i< rooms.length; i++) {
         const room = rooms[i];
         const userSet2 = new Set(room.users);
-        console.log(userSet2, userSet);
+
         if (isEqual(userSet, userSet2)) {
           return room;
         }
@@ -113,6 +113,7 @@ const actions = {
       return getters.rooms;
     }
     const currentUserId = rootGetters['profile/currentProfile'].id;
+
     let query = roomsRef.where(
         'users',
         'array-contains',
@@ -120,6 +121,7 @@ const actions = {
     ).orderBy('timestamp');
 
     const rooms = await query.get();
+
     const roomIdtoRoom = {};
     rooms.forEach((room) => {
       const roomData = room.data();
@@ -149,7 +151,12 @@ const actions = {
     if (existingRoom) {
       return existingRoom._id;
     }
-    return (await roomsRef.add({users: [...otherUserIds, currentUserId]})).id;
+    const room = await roomsRef.add({
+      users: [...otherUserIds, currentUserId],
+      timestamp: new Date(),
+    });
+
+    return room.id;
   },
 };
 
