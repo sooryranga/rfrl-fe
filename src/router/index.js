@@ -27,7 +27,7 @@ Vue.use(VueRouter);
 
 const routes = [
   {
-    path: '/chat',
+    path: '/chat/:roomId?',
     name: 'chat',
     component: () => import('@/components/ChatContainer.vue'),
   },

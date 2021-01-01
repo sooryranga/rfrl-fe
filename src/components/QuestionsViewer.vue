@@ -112,9 +112,9 @@ export default {
 
       this.$router.push(
           {
-            name: 'schedule-session',
+            name: 'chat',
             params: {
-              questionId: this.questionId,
+              roomId: roomId,
             },
           },
       );
