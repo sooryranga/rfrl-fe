@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isLoggedInUser" id="scheduledTutoring" class="p-3 my-3 bg-white">
+  <div v-if="isLoggedInUser" id="scheduledTutoring" class="p-2 my-1 bg-white">
     <div class="row">
       <div class="col">
         <h6 class="text-left my-2">Scheduled Tutoring</h6>

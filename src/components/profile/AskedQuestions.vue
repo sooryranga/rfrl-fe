@@ -1,5 +1,5 @@
 <template>
-  <div id="questions" class="p-3 my-1 bg-white">
+  <div id="questions" class="p-2 my-1 bg-white">
     <div class="row mb-0">
       <div class="col">
         <h5 class="text-left my-2" >Asked Questions</h5>
