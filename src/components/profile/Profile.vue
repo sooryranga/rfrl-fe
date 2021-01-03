@@ -1,16 +1,18 @@
 <template>
-  <div class="row w-75 mx-auto">
-    <div class="col-7 overflowContainer">
-      <profile-about v-bind:profile-id="$route.params.userId"></profile-about>
-      <education v-bind:profile-id="$route.params.userId"></education>
-      <documents v-bind:profile-id="$route.params.userId"></documents>
-      <tutor-dashboard v-bind:profile-id="$route.params.userId"></tutor-dashboard>
-      <tutor-review v-bind:profile-id="$route.params.userId"></tutor-review>
-    </div>
-    <div class="col">
-      <scheduled-tutoring v-bind:profile-id="$route.params.userId"></scheduled-tutoring>
-      <answered-questions v-bind:profile-id="$route.params.userId"></answered-questions>
-      <asked-questions v-bind:profile-id="$route.params.userId"></asked-questions>
+  <div class="container-xl h-100">
+    <div class="row">
+      <div class="col-7 overflowContainer">
+        <profile-about v-bind:profile-id="$route.params.userId"></profile-about>
+        <education v-bind:profile-id="$route.params.userId"></education>
+        <documents v-bind:profile-id="$route.params.userId"></documents>
+        <tutor-dashboard v-bind:profile-id="$route.params.userId"></tutor-dashboard>
+        <tutor-review v-bind:profile-id="$route.params.userId"></tutor-review>
+      </div>
+      <div class="col overflowContainer">
+        <scheduled-tutoring v-bind:profile-id="$route.params.userId"></scheduled-tutoring>
+        <answered-questions v-bind:profile-id="$route.params.userId"></answered-questions>
+        <asked-questions v-bind:profile-id="$route.params.userId"></asked-questions>
+      </div>
     </div>
   </div>
 </template>
