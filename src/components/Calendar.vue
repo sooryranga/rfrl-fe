@@ -84,9 +84,17 @@ export default {
   name: 'calendar',
   data: function() {
     return {
+      question: null,
+      session: null,
       selectedEvent: null,
       showEventCreationDialog: false,
-      events: [
+      events: [],
+    };
+  },
+  mounted() {
+    if (this.$route.params?.userId) {
+      this.question = this.getQuestion(this.$route.params?.questionId);
+      this.events = [
         {
           start: '2020-11-20 14:00',
           end: '2020-11-20 17:30',
@@ -97,13 +105,21 @@ export default {
           resizable: false,
           draggable: false,
         },
-      ],
-      question: null,
-    };
-  },
-  mounted() {
-    if (this.$route.params?.questionId) {
-      this.question = this.getQuestion(this.$route.params?.questionId);
+      ];
+    } else if (this.$route.params?.sessionId) {
+      this.session = this.getSession(this.$route.params?.sessionId);
+      this.events = [
+        {
+          start: '2020-11-20 14:00',
+          end: '2020-11-20 17:30',
+          title: 'Boring event',
+          content: 'Hello',
+          class: 'blue-event',
+          deletable: true,
+          resizable: false,
+          draggable: false,
+        },
+      ];
     }
   },
   methods: {

@@ -85,6 +85,7 @@ export default {
       removeUserId: '',
       messageVersion: 0,
       removeUsers: [],
+      unsubscribeMutations: null,
       styles: {container: {borderRadius: '2px'}},
       messageActions: [
         {
@@ -99,6 +100,18 @@ export default {
   mounted() {
     this.fetchRooms();
     this.updateUserOnlineStatus();
+
+    this.unsubscribeMutations = this.$store.subscribe((mutation, state)=>{
+      if (mutation.type != 'roomMessages/set_messages') return;
+      if (!this.selectedRoom) return;
+      const messages = this.messagesByRoomId.messages[this.selectedRoom];
+      const version = this.messagesByRoomId.meta[this.selectedRoom].version;
+      if (this.messageVersion >= version) {
+        return;
+      }
+      this.messages = [...messages];
+      this.messageVersion = version;
+    });
   },
 
   computed: {
@@ -109,23 +122,11 @@ export default {
   },
 
   destroyed() {
+    this.unsubscribeMutations();
     this.resetRooms();
   },
 
   watch: {
-    messagesByRoomId: {
-      handler: function(messagePayload) {
-        if (!this.selectedRoom) return;
-        const messages = messagePayload.messages[this.selectedRoom];
-        const version = messagePayload.meta[this.selectedRoom].version;
-        if (this.messageVersion >= version) {
-          return;
-        }
-        this.messages = [...messages];
-        this.messageVersion = version;
-      },
-      deep: true,
-    },
     latestMessage: {
       handler: function(latestMessage) {
         this.updateRoomsWithLatestMessage(latestMessage);
@@ -173,6 +174,7 @@ export default {
     resetMessages() {
       this.messages = [];
       this.messagesLoaded = false;
+      if (this.selectedRoom) this.$emit('newroom', this.selectedRoom);
     },
 
     async fetchRooms() {
@@ -256,8 +258,8 @@ export default {
     },
 
     async fetchMessages({room, options = {}}) {
-      if (options.reset) this.resetMessages();
       this.selectedRoom = room.roomId;
+      if (options.reset) this.resetMessages();
       const {messages, loaded} = await this.fetchAndSetMessages(room);
       this.messages = messages;
       if (loaded) {

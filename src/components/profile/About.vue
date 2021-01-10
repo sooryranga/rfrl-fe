@@ -49,7 +49,7 @@ export default {
     },
     'bookTutorRoute': function() {
       return {
-        name: 'Calendar',
+        name: 'profile-calendar',
         params: {userId: this.profile.id},
       };
     },

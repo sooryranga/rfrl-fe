@@ -53,22 +53,27 @@ const routes = [
   },
   {
     path: '/about',
-    name: 'About',
+    name: 'about',
     component: () => import('@/components/About.vue'),
   },
   {
     path: '/login',
-    name: 'Login',
+    name: 'login',
     component: () => import('@/components/Login.vue'),
   },
   {
     path: '/signup',
-    name: 'SignUp',
+    name: 'signup',
     component: () => import('@/components/SignUp.vue'),
   },
   {
-    path: '/scheduled-session/:questionId',
-    name: 'schedule-session',
+    path: '/profile/:userId/calendar',
+    name: 'profile-calendar',
+    component: () => import('@/components/Calendar.vue'),
+  },
+  {
+    path: '/session/:sessionId/calendar',
+    name: 'session-calendar',
     component: () => import('@/components/Calendar.vue'),
   },
   {

@@ -75,24 +75,41 @@ function formatMessage(room, message) {
  * @param {object} snapshot
  */
 function snapshotMessagesAdded(getters, commit, room, snapshot) {
+  console.log('snapshotMessagesAdded called');
   const formattedMessages = [];
   let lastMessage = null;
+
+  const existingMessages = getters.getMessagesForRoom(room._id);
+  const idToIndex = {};
+  existingMessages.messages.forEach((message, i)=> {
+    idToIndex[message._id] = i;
+  });
+
+  let needToSet = false;
+
   snapshot.docChanges().forEach(function(change) {
     const message = change.doc.data();
     message._id = change.doc.id;
 
-    if (change.type !== 'added') {
-      console.error('Expected only added messages');
+    if (change.type === 'removed') {
+      console.error('Cannot delete messages');
       return;
     }
 
     lastMessage = message;
     const formattedMessage = formatMessage(room, message);
-    formattedMessages.unshift(formattedMessage);
-  });
 
-  const existingMessages = getters.getMessagesForRoom(room._id);
+    if (change.doc.id in idToIndex) {
+      existingMessages[idToIndex[change.doc.id]] = formattedMessage;
+    } else {
+      formattedMessages.unshift(formattedMessage);
+    }
+    needToSet = true;
+  });
+  if (!needToSet) return;
+
   const messages = existingMessages.messages.concat(formattedMessages);
+  console.log(messages, formattedMessages, '2');
   commit(SET_MESSAGES, {roomId: room._id, messages: messages});
   if (lastMessage) {
     commit(SET_LATEST_MESSAGE, {roomId: room._id, message: lastMessage});
@@ -164,6 +181,7 @@ const actions = {
 
 const mutations = {
   [SET_MESSAGES](state, payload) {
+    console.log(payload.messages);
     Vue.set(state.roomMessage, payload.roomId, payload.messages);
     state.meta[payload.roomId].version += 1;
   },

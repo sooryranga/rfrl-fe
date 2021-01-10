@@ -4,7 +4,7 @@
       align-items-center p-1 px-md-4
       bg-white border-bottom shadow-sm
     " id="topnavbar">
-      <div class="container-lg" id="navbar2">
+      <div class="container-xl" id="navbar2">
         <div class="row my-2">
           <div class="col-4">
             <div class="row">
