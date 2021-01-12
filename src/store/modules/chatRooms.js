@@ -99,8 +99,8 @@ const getters = {
   users(state) {
     return state.users;
   },
-  getUser(state, id) {
-    return state.users[id];
+  getUser(state) {
+    return (id) => state.users[id];
   },
   rooms(state) {
     return state.rooms;
