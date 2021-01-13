@@ -49,7 +49,7 @@
     </div>
   </transition>
   <div class='row h-100'>
-    <div class='col-3 p-0'>
+    <div class='col-4 p-0'>
       <div>
         <p> {{$route.params.userId}} </p>
       </div>
@@ -60,13 +60,13 @@
       active-view="week"
       hide-view-selector
       :snap-to-time="15"
-      :editable-events="{ title: false, drag: false, resize: false, delete: false, create: true }"
+      :editable-events="{ title: false, drag: false, resize: false, delete: true, create: create }"
       :on-event-create="onEventCreate"
       :drag-to-create-event="true"
       @event-drag-create="createEvent"
       :drag-to-create-threshold="30"
       :disable-views="['years', 'year', 'month', 'day']">
-      <template v-slot:title="{ title, view }">
+      <template v-slot:title="{view }">
         <span v-if="view.id === 'week'">
           {{ view.startDate.toLocaleString('default', { month: 'long', year: 'numeric'}) }}
         </span>
@@ -79,48 +79,63 @@
 
 <script>
 import {mapGetters} from 'vuex';
+import {v4 as uuidv4} from 'uuid';
+
+const STATE = Object.freeze({
+  user: 'user',
+  pickDates: 'pickDates',
+  chooseDate: 'chooseDate',
+});
 
 export default {
   name: 'calendar',
+  props: {
+    sessionId: {
+      type: String,
+      required: false,
+    },
+    userId: {
+      type: String,
+      required: false,
+    },
+    saveEvent: {
+      type: Function,
+      required: true,
+    },
+    deleteEvent: {
+      type: Function,
+      required: true,
+    },
+  },
   data: function() {
     return {
       question: null,
       session: null,
       selectedEvent: null,
+      state: STATE.pickDates,
+      sessionCount: 0,
       showEventCreationDialog: false,
       events: [],
+      locallyCreated: [],
+      unauthenticated: false,
     };
   },
+  computed: {
+    create: function() {
+      return this.state === STATE.pickDates || this.state === STATE.user;
+    },
+    newSessionName: function() {
+      if (this.state === STATE.user) return 'Personnal Events';
+      return 'Session ' + this.sessionCount + 1;
+    },
+    ...mapGetters('profile', ['currentProfile']),
+  },
   mounted() {
-    if (this.$route.params?.userId) {
-      this.question = this.getQuestion(this.$route.params?.questionId);
-      this.events = [
-        {
-          start: '2020-11-20 14:00',
-          end: '2020-11-20 17:30',
-          title: 'Boring event',
-          content: 'Hello',
-          class: 'blue-event',
-          deletable: true,
-          resizable: false,
-          draggable: false,
-        },
-      ];
-    } else if (this.$route.params?.sessionId) {
-      this.session = this.getSession(this.$route.params?.sessionId);
-      this.events = [
-        {
-          start: '2020-11-20 14:00',
-          end: '2020-11-20 17:30',
-          title: 'Boring event',
-          content: 'Hello',
-          class: 'blue-event',
-          deletable: true,
-          resizable: false,
-          draggable: false,
-        },
-      ];
+    if (this.sessionId) {
+      this.setUpSession();
+      return;
     }
+    this.setUpUser();
   },
   methods: {
     createEvent() {
@@ -130,13 +145,41 @@ export default {
         this.showEventCreationDialog = true;
       }
     },
+    setUpUser() {
+      if (this.userId != this.currentProfile.id) {
+        this.unauthenticated = true;
+        this.error = 'Unauthorized to view other users calendar';
+      }
+      this.events = this.getEventsForUser(this.currentProfile.id);
+    },
+    setUpSession() {
+      // this.session = this.getSession(this.sessionId);
+      // this.state = this.session.state;
+
+      // const userIds = this.session.users.map((user) => user.id);
+      // userEvents = this.getEventsForSession(this.sessionId);
+
+      // this.events = [
+      //   {
+      //     start: '2021-01-12 14:00',
+      //     end: '2021-01-12 17:30',
+      //     title: 'Boring event',
+      //     content: 'Hello',
+      //     class: 'blue-event',
+      //     deletable: false,
+      //     resizable: false,
+      //     draggable: false,
+      //   },
+      // ];
+    },
     onEventCreate(event, deleteEventFunction) {
       this.selectedEvent = event;
       this.deleteEventFunction = deleteEventFunction;
 
-      if (this.question) {
-        event.title = this.question.title.slice(0, 50) + ' Session';
-      }
+      event.title = this.newSessionName;
+      event.id = uuidv4();
+      event.createdAt = new Date();
+
       return event;
     },
     checkOverlaps(event) {
@@ -162,12 +205,15 @@ export default {
     },
     saveEventCreation() {
       this.events.push(this.selectedEvent);
+      if (this.state === STATE.pickDates) {
+        this.createdEvents.push({...this.selectedEvent});
+      }
+      this.saveEvent({...this.selectedEvent});
       this.showEventCreationDialog = false;
       this.selectedEvent = null;
       this.deleteEvent = null;
     },
   },
-  computed: mapGetters('questions', ['getQuestion']),
 };
 </script>
 

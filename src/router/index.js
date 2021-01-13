@@ -69,11 +69,13 @@ const routes = [
   {
     path: '/profile/:userId/calendar',
     name: 'profile-calendar',
+    props: true,
     component: () => import('@/components/Calendar.vue'),
   },
   {
     path: '/session/:sessionId/calendar',
     name: 'session-calendar',
+    props: true,
     component: () => import('@/components/Calendar.vue'),
   },
   {
