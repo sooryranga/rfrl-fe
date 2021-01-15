@@ -58,6 +58,7 @@
 
 <script>
 import {mapGetters} from 'vuex';
+import {SessionService} from '@/api/SessionService';
 
 export default {
   name: 'scheduled-tutoring',
@@ -132,7 +133,11 @@ export default {
 
       this.$router.push({
         name: 'session-calendar',
-        params: {sessionId: this.pendingSession.id},
+        params: {
+          sessionId: this.pendingSession.id,
+          saveEvent: this.saveEventCallBack,
+          deleteEvent: this.deleteEventCallBack,
+        },
       });
     },
     modify: function() {
@@ -141,6 +146,17 @@ export default {
     deleteSession: function() {
       // this.deletePendingSession(this.pendingSession.id)
       this.pendingSession = null;
+    },
+    saveEventCallBack: async function(session) {
+      if (!session.id) {
+        await SessionService.create(this.roomId, session);
+      } else {
+        await SessionService.save(session.id, session);
+      }
+    },
+    deleteEventCallBack: async function(session) {
+      if (!session.id) return;
+      await SessionService.delete(session.id);
     },
   },
   mounted: function() {

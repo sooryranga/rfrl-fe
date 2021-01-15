@@ -51,7 +51,7 @@
   <div class='row h-100'>
     <div class='col-4 p-0'>
       <div>
-        <p> {{$route.params.userId}} </p>
+
       </div>
     </div>
     <div class='col' id="calendar">
@@ -139,11 +139,18 @@ export default {
   },
   methods: {
     createEvent() {
-      if (this.checkOverlaps(this.selectedEvent)) {
+      console.log(this.validateNewEvent());
+      if (!this.validateNewEvent()) {
         this.deleteEventFunction();
       } else {
         this.showEventCreationDialog = true;
       }
+    },
+    validateNewEvent(event) {
+      return (
+        !this.checkOverlaps(this.selectedEvent) &&
+        this.checkEventInFuture(this.selectedEvent)
+      );
     },
     setUpUser() {
       if (this.userId != this.currentProfile.id) {
@@ -197,6 +204,10 @@ export default {
       }
       return false;
     },
+    checkEventInFuture(event) {
+      const s = Date.parse(event.start);
+      return s >= Date.now();
+    },
     cancelEventCreation() {
       this.showEventCreationDialog = false;
       this.selectedEvent = null;
@@ -206,8 +217,9 @@ export default {
     saveEventCreation() {
       this.events.push(this.selectedEvent);
       if (this.state === STATE.pickDates) {
-        this.createdEvents.push({...this.selectedEvent});
+        this.locallyCreated.push({...this.selectedEvent});
       }
+      console.log(this.saveEvent);
       this.saveEvent({...this.selectedEvent});
       this.showEventCreationDialog = false;
       this.selectedEvent = null;
