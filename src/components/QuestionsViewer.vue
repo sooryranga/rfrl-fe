@@ -90,14 +90,17 @@ export default {
     cancel() {
       this.showModal = false;
     },
+    setError(error) {
+      this.error = error;
+      this.showError = true;
+      setTimeout(function() {
+        this.error = null;
+        this.showError = false;
+      }.bind(this), 2000);
+    },
     async save() {
       if (this.introduction == null) {
-        this.error = 'You need to introduce your self to the mentee!';
-        this.showError = true;
-        setTimeout(function() {
-          this.error = null;
-          this.showError = false;
-        }.bind(this), 2000);
+        this.setError('You need to introduce your self to the mentee!');
       }
 
       const roomId = await this.createRoom([this.question.userId]);
