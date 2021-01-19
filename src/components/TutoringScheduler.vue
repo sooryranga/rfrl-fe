@@ -7,24 +7,34 @@
     </transition>
     <div class="row justify-content-between">
       <div class="col my-auto">
-        <div v-if="pendingSession === null">
-          <div class="float-left">
-            <p class="float-left my-2"> Schedule Tutoring </p>
+        <div class="row" v-if="pendingSession === null">
+          <div class="col my-auto">
+            <div>
+              <p class="m-0"> Schedule Tutoring </p>
+            </div>
           </div>
-          <div class="float-right">
-            <button v-on:click="create(true)" v-if="currentProfile.isTutor" class="btn btn-outline-dark mr-2">
+          <div class="col h-100">
+            <button
+            v-on:click="create(true)"
+            v-if="currentProfile.isTutor"
+            class="btn btn-outline-dark mr-2 float-right">
               Tutor
             </button>
-            <button v-on:click="create(false)" v-if="otherUserIsTutor" class="btn btn-outline-dark">
+            <button
+            v-on:click="create(false)"
+            v-if="otherUserIsTutor"
+            class="btn btn-outline-dark float-right">
               Learn from
             </button>
           </div>
         </div>
-        <div v-else-if="pendingSession.by === currentProfile.id">
-          <div class="float-left">
-            <p class="float-left my-2"> Waiting for response </p>
+        <div class="row h-100" v-else-if="pendingSession.by === currentProfile.id">
+          <div class="col my-auto">
+            <div>
+              <p class="m-0 float-left"> Waiting for response</p>
+            </div>
           </div>
-          <div class="float-right">
+          <div class="col-5 float-right h-100">
             <span v-on:click="modify" class="material-icons btn btn-outline-dark mr-2">
               create
             </span>
@@ -92,24 +102,37 @@ export default {
     };
   },
   watch: {
-    roomId: function(roomId) {
+    roomId: async function(roomId) {
+      await this.setNewRoom();
+    },
+  },
+  methods: {
+    ...mapGetters('chatRooms', ['rooms', 'getUser']),
+    async setNewRoom() {
       const currentRoom = this.rooms()[this.roomId];
       // user = this.getUsers(currentRoom.users)
-      // this.pendingSession = this.getSessionForUser(currentRoom.users)
 
       const users = {};
       for (let i = 0; i < currentRoom.users.length; i++) {
         const userId = currentRoom.users[i];
         users[userId] = this.getUser()(userId);
       }
-
       this.users = users;
+
+      try {
+        this.pendingSession = await SessionService.getPrendingSession(
+            this.roomId,
+        );
+      } catch (error) {
+        this.pendingSession = {
+          id: '542db2df-60d8-4313-895a-96098d043512',
+          users: this.users,
+          tutorId: this.currentProfile.id,
+          by: this.currentProfile.id,
+        };
+      }
     },
-  },
-  methods: {
-    ...mapGetters('chatRooms', ['rooms', 'getUser']),
-    create: function(tutor) {
-      // this.createPendingSession(this.userId)
+    create: async function(tutor) {
       if (this.users.length > 2 && !tutor) {
         this.error = 'Only tutor can schedule a session in a group!';
         this.showError = true;
@@ -124,13 +147,24 @@ export default {
       if (tutor) {
         tutorId = this.currentProfile.id;
       }
-      this.pendingSession = {
-        id: '1917bcf4-ef39-45e6-8a62-2ac12143ec36',
-        users: this.users,
+      const pendingSession = {
+        users: {...this.users},
         tutorId,
         by,
       };
-
+      try {
+        this.pendingSession = await SessionService.create(
+            this.roomId,
+            pendingSession,
+        );
+      } catch (error) {
+        console.error(error);
+        this.pendingSession = {
+          ...pendingSession,
+          id: 'e2777493-62c5-469f-bd9b-0b36abbb3e52',
+        };
+      }
+      console.log(this.pendingSession);
       this.$router.push({
         name: 'session-calendar',
         params: {
@@ -141,11 +175,22 @@ export default {
       });
     },
     modify: function() {
-
+      this.$router.push({
+        name: 'session-calendar',
+        params: {
+          localSession: this.pendingSession,
+          sessionId: this.pendingSession.id,
+          saveEvent: this.saveEventCallBack,
+          deleteEvent: this.deleteEventCallBack,
+        },
+      });
     },
-    deleteSession: function() {
-      // this.deletePendingSession(this.pendingSession.id)
-      this.pendingSession = null;
+    deleteSession: async function() {
+      try {
+        await SessionService.delete(this.pendingSession.id);
+      } catch (error) {
+        this.pendingSession = null;
+      }
     },
     saveEventCallBack: async function(session) {
       if (!session.id) {
@@ -159,7 +204,9 @@ export default {
       await SessionService.delete(session.id);
     },
   },
-  mounted: function() {
+  mounted: async function() {
+    if (!this.roomId) return;
+    await this.setNewRoom();
   },
 };
 </script>

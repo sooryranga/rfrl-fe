@@ -63,14 +63,22 @@
         </div>
         <div class="ml-4 row flex-grow-1">
           <div v-if="relatedEvents.length" class="col">
-            <div v-for="(event) in relatedEvents" v-bind:key="event.id" class="row my-2">
+            <div
+              v-for="(event) in relatedEvents"
+              v-on:click="setCurrentCalendarDate(new Date(event.start))"
+              v-bind:key="event.id" class="row my-2">
               <div class="col text-left my-auto">
                 {{event.title}}
               </div>
               <div class="col-2 text-left my-auto">
                 <small class="text-secondary">{{dateToString(event.start)}}</small>
               </div>
-              <div class="col-1 mr-4">
+              <div v-if="canSelect(event)" class="col-1 mr-4">
+                <input
+                v-on:click="selectEvent(event)"
+                type="checkbox" class="custom-control-input">
+              </div>
+              <div v-if="canDelete(event)" class="col-1 mr-4">
                 <button
                 type="button"
                 class="btn btn-default btn-dark btn-circle"
@@ -83,8 +91,17 @@
             </div>
           </div>
         </div>
-        <div id="save">
-          <button class="btn btn-default btn-dark"> Save </button>
+        <div id="save" class="my-3 py-3">
+          <button
+            v-on:click="saveSession"
+            class="btn btn-default btn-dark mr-4">
+            Save Events
+          </button>
+          <button
+            class="btn btn-default btn-dark"
+            v-on:click="$router.go(-1)">
+            Quit
+          </button>
         </div>
       </div>
     </div>
@@ -93,19 +110,30 @@
       :events="events"
       active-view="week"
       hide-view-selector
+      today-button
       :snap-to-time="15"
       :editable-events="{ title: false, drag: false, resize: false, delete: true, create: create }"
       :on-event-create="onEventCreate"
       :drag-to-create-event="true"
-      @event-drag-create="createEvent"
-      @event-delete="deleteLocalyCreatedEvent"
+      :selected-date="selectedDate"
       :drag-to-create-threshold="30"
-      :disable-views="['years', 'year', 'month', 'day']">
-      <template v-slot:title="{view }">
-        <span v-if="view.id === 'week'">
-          {{ view.startDate.toLocaleString('default', { month: 'long', year: 'numeric'}) }}
-        </span>
-      </template>
+      :disable-views="['years', 'year', 'month', 'day']"
+      @event-drag-create="createEvent"
+      @event-delete="deleteLocalyCreatedEvent">
+        <template v-slot:title="{view}">
+          <span v-if="view.id === 'week'">
+            {{ view.startDate.toLocaleString('default', { month: 'long', year: 'numeric'}) }}
+          </span>
+        </template>
+        <template v-slot:today-button>
+          <!-- Using Vuetify -->
+          <button
+            v-on:click="setCurrentCalendarDate(new Date())"
+            type="button"
+            class="btn btn-outline-dark">
+            Today
+          </button>
+        </template>
       </vue-cal>
    </div>
   </div>
@@ -115,11 +143,14 @@
 <script>
 import {mapGetters} from 'vuex';
 import {v4 as uuidv4} from 'uuid';
+import {SessionService} from '@/api/SessionService';
 
 const STATE = Object.freeze({
   user: 'user',
   createEvents: 'createEvents',
   chooseDate: 'chooseDate',
+  selectOne: 'selectOne',
+  selectMultiple: 'selectMultiple',
 });
 
 export default {
@@ -141,6 +172,11 @@ export default {
       type: Function,
       required: true,
     },
+    // delete
+    localSession: {
+      type: Object,
+      required: false,
+    },
   },
   data: function() {
     return {
@@ -153,6 +189,7 @@ export default {
       events: [],
       locallyCreated: [],
       unauthenticated: false,
+      selectedDate: new Date(),
       showError: false,
     };
   },
@@ -176,7 +213,7 @@ export default {
     },
     newSessionName: function() {
       if (this.state === STATE.user) return 'Personnal Events';
-      return 'Session ' + this.sessionCount + 1;
+      return 'Session ' + this.sessionCount;
     },
     ...mapGetters('profile', ['currentProfile']),
   },
@@ -188,6 +225,25 @@ export default {
     this.setUpUser();
   },
   methods: {
+    async saveSession(event) {
+      if (!this.locallyCreated.length) {
+        this.setError('Schedule events to save');
+        return;
+      }
+      this.session.scheduledDates = this.locallyCreated;
+      await this.saveEvent(this.session);
+      console.log(this.session);
+      return this.$router.go(-1);
+    },
+    canDelete(event) {
+      return this.state === STATE.createEvents;
+    },
+    canSelect(event) {
+      return (
+        this.state === STATE.selectOne ||
+        this.state === STATE.selectMultiple
+      );
+    },
     deleteEventAction(deletedEvent) {
       this.events = this.events.filter(
           (event) => event._eid != deletedEvent._eid,
@@ -224,6 +280,9 @@ export default {
         this.showError = false;
       }.bind(this), 2000);
     },
+    setCurrentCalendarDate(date) {
+      this.selectedDate = date;
+    },
     setUpUser() {
       if (this.userId != this.currentProfile.id) {
         this.unauthenticated = true;
@@ -232,30 +291,64 @@ export default {
       this.events = this.getEventsForUser(this.currentProfile.id);
     },
     setUpSession() {
-      // this.session = this.getSession(this.sessionId);
+      try {
+        this.session = SessionService.getSession(this.sessionId);
+      } catch (error) {
+        console.error(error);
+        this.session.selectedEvents = new Set();
+        this.session = this.localSession;
+        this.session.scheduledDates = [
+          {
+            '_eid': '278_1',
+            'start': new Date('2021-01-21T18:00:00.000Z'),
+            'startTimeMinutes': 780,
+            'end': new Date('2021-01-21T22:15:00.000Z'),
+            'endTimeMinutes': 1035,
+            'title': 'Session 0',
+            'content': '',
+            'background': false,
+            'allDay': false,
+            'segments': null,
+            'repeat': null,
+            'daysCount': 1,
+            'deletable': true,
+            'deleting': false,
+            'titleEditable': true,
+            'resizable': true,
+            'resizing': false,
+            'draggable': true,
+            'dragging': false,
+            'draggingStatic': false,
+            'focused': false,
+            'class': '',
+            'split': null,
+            'id': 'c88a8aa5-f009-45a8-ac6b-01964fdccfc0',
+            'createdAt': new Date('2021-01-19T03:07:12.397Z'),
+          },
+        ];
+      }
       // this.state = this.session.state;
 
       // const userIds = this.session.users.map((user) => user.id);
       // userEvents = this.getEventsForSession(this.sessionId);
 
-      // this.events = [
-      //   {
-      //     start: '2021-01-12 14:00',
-      //     end: '2021-01-12 17:30',
-      //     title: 'Boring event',
-      //     content: 'Hello',
-      //     class: 'blue-event',
-      //     deletable: false,
-      //     resizable: false,
-      //     draggable: false,
-      //   },
-      // ];
+      this.events = [...this.session.scheduledDates];
+      this.locallyCreated = [...this.session.scheduledDates];
+    },
+    selectEvent(event) {
+      this.session.selectedEvents =;
+      if (this.state === STATE.selectOne) {
+        
+      } else {
+        this.session.selectedEvents
+      }
     },
     onEventCreate(event, deleteEventFunction) {
       this.selectedEvent = event;
       this.deleteEventFunction = deleteEventFunction;
 
       event.title = this.newSessionName;
+      this.sessionCount += 1;
       event.id = uuidv4();
       event.createdAt = new Date();
 
@@ -295,12 +388,11 @@ export default {
       this.deleteEventFunction();
     },
     saveEventCreation() {
+      console.log({...this.selectedEvent});
       this.events.push(this.selectedEvent);
       if (this.state === STATE.createEvents) {
         this.locallyCreated.push({...this.selectedEvent});
       }
-      console.log(this.saveEvent);
-      this.saveEvent({...this.selectedEvent});
       this.showEventCreationDialog = false;
       this.selectedEvent = null;
       this.deleteEvent = null;
@@ -310,12 +402,6 @@ export default {
 </script>
 
 <style scoped>
-.selectable{list-style-type: none;}
-.selectablerows{ border-top: 0px; border-left: 0px; border-right: 0px;}
-.selectablerows.ui-selecting { background: #93969a; }
-.selectablerows.ui-selected { border-bottom:0px }
-.scheduled{background: #3a3b3d; color:white}
-
 #calendar{
   height: calc(100% - 5px);
 }
