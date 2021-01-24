@@ -1,6 +1,6 @@
 <template>
   <transition name="modal">
-    <div class="modal-mask text-left">
+    <div class="modal-mask ">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header">

@@ -8,7 +8,7 @@
     ></education-editor>
     <div class="row">
       <div class="col">
-        <h4 class="text-left ml-4 my-2"> Education </h4>
+        <h4 class=" ml-4 my-2"> Education </h4>
       </div>
       <div class="col-2 my-auto addHover">
         <span
@@ -23,7 +23,7 @@
         <div class="col-3 my-auto">
           <img class="institutionLogo" v-bind:src="education.institutionLogo"/>
         </div>
-        <div class="col my-auto text-left">
+        <div class="col my-auto ">
           <h5>{{education.institution}}</h5>
           <h6>{{education.degree}}</h6>
           <p class="m-0">{{education.fieldOfStudy}}</p>

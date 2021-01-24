@@ -1,6 +1,6 @@
 <template>
   <div :v-if="currentProfile.isTutor" class="shadow p-3 my-1 bg-white">
-    <h3 class="text-left ml-4 my-2"> Tutoring Dashboard </h3>
+    <h3 class=" ml-4 my-2"> Tutoring Dashboard </h3>
     <div class="mt-4" id="tutorStatus">
       <!-- Chart showing previous tutoring session -->
     </div>
@@ -11,8 +11,8 @@
             <img v-bind:src="student.image" class="studentPicture"/>
           </div>
           <div class="col my-auto">
-            <h5 class="text-left mb-1">{{student.name}}</h5>
-            <p class="text-left mb-0"><small>{{student.lastTutoredDate.toDateString()}}</small></p>
+            <h5 class=" mb-1">{{student.name}}</h5>
+            <p class=" mb-0"><small>{{student.lastTutoredDate.toDateString()}}</small></p>
             <hr class="my-0"/>
           </div>
         </div>

@@ -5,25 +5,25 @@
         {{error}}
       </div>
     </transition>
+    <div class="row">
+      <div class="col">
+        <h6 class="my-2">Schedule Tutoring</h6>
+      </div>
+    </div>
     <div class="row justify-content-between">
       <div class="col my-auto">
         <div class="row" v-if="pendingSession === null">
-          <div class="col my-auto">
-            <div>
-              <p class="m-0"> Schedule Tutoring </p>
-            </div>
-          </div>
           <div class="col h-100">
             <button
             v-on:click="create(true)"
             v-if="currentProfile.isTutor"
-            class="btn btn-outline-dark mr-2 float-right">
+            class="btn btn-outline-dark mx-2 float-left">
               Tutor
             </button>
             <button
             v-on:click="create(false)"
             v-if="otherUserIsTutor"
-            class="btn btn-outline-dark float-right">
+            class="btn btn-outline-dark float-left">
               Learn from
             </button>
           </div>
@@ -31,10 +31,10 @@
         <div class="row h-100" v-else-if="pendingSession.by === currentProfile.id">
           <div class="col my-auto">
             <div>
-              <p class="m-0 float-left"> Waiting for response</p>
+              <p class="m-0"> Waiting for response</p>
             </div>
           </div>
-          <div class="col-5 float-right h-100">
+          <div class="h-100">
             <span v-on:click="modify" class="material-icons btn btn-outline-dark mr-2">
               create
             </span>
@@ -72,12 +72,14 @@ import {SessionService} from '@/api/SessionService';
 
 export default {
   name: 'scheduled-tutoring',
+
   props: {
     'roomId': {
       type: String,
       required: true,
     },
   },
+
   computed: {
     wantsToLearnFromYou: function() {
       return 'Students wants to learn from you';
@@ -94,6 +96,7 @@ export default {
     },
     ...mapGetters('profile', ['currentProfile']),
   },
+
   data: function() {
     return {
       pendingSession: null,
@@ -101,11 +104,13 @@ export default {
       showError: false,
     };
   },
+
   watch: {
     roomId: async function(roomId) {
       await this.setNewRoom();
     },
   },
+
   methods: {
     ...mapGetters('chatRooms', ['rooms', 'getUser']),
     async setNewRoom() {
@@ -168,6 +173,7 @@ export default {
       this.$router.push({
         name: 'session-calendar',
         params: {
+          localSession: this.pendingSession,
           sessionId: this.pendingSession.id,
           saveEvent: this.saveEventCallBack,
           deleteEvent: this.deleteEventCallBack,
@@ -204,6 +210,7 @@ export default {
       await SessionService.delete(session.id);
     },
   },
+
   mounted: async function() {
     if (!this.roomId) return;
     await this.setNewRoom();

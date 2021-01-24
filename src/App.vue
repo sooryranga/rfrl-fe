@@ -3,6 +3,7 @@
     <div class="
       align-items-center p-1 px-md-4
       bg-white border-bottom shadow-sm
+      text-center
     " id="topnavbar">
       <div class="container-xl" id="navbar2">
         <div class="row my-2">
@@ -73,7 +74,7 @@ export default {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
+  text-align: left;
   color: #2c3e50;
   flex-flow: column;
   height: 100%;
@@ -87,7 +88,7 @@ p {
   height: 65px;
 }
 #content{
-  height: calc(100vh - 65px);
+  height: calc(100vh - 66px);
 }
 html, body {
   height: 100%;

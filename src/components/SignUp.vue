@@ -23,7 +23,7 @@
           </button>
         </div>
         <hr class="mt-4 mb-4"/>
-        <form class="text-left">
+        <form class="">
           <div class="form-group">
             <label for="exampleInputEmail1">Email address</label>
             <input

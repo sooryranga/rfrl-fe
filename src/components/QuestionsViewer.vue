@@ -1,7 +1,7 @@
 <template>
-  <div v-if="question" class="text-left">
+  <div v-if="question" class="">
     <transition name="modal">
-      <div v-if="showModal" class="modal-mask text-left">
+      <div v-if="showModal" class="modal-mask ">
         <transition name="fade">
           <div v-if="showError" class="alert alert-danger fade-in" role="alert">
             {{error}}
