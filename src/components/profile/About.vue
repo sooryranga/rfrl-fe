@@ -13,9 +13,9 @@
         </div>
       </div>
       <div class="col">
-        <h4 class="text-left">{{profile.name}}</h4>
-        <h5 class="text-left text-uppercase"> About </h5>
-        <p class="text-left">{{profile.about}}</p>
+        <h4 class="">{{profile.name}}</h4>
+        <h5 class=" text-uppercase"> About </h5>
+        <p class="">{{profile.about}}</p>
       </div>
       <div class="col-2" v-if="isLoggedInUser">
         <span v-on:click="edit" class="material-icons md-dark btn-outline-light btn">create</span>

@@ -8,7 +8,7 @@
     ></document-editor>
     <div class="row">
       <div class="col">
-        <h4 class="text-left ml-4 my-2"> Documents </h4>
+        <h4 class=" ml-4 my-2"> Documents </h4>
       </div>
       <div class="col-2 my-auto addHover">
         <span
@@ -22,7 +22,7 @@
       <div v-for="(document, index) in localDocuments" v-bind:key="document.id" class="card">
         <div>
           <embed v-bind:src="document.src" class="documentEmbed">
-          <div class="card-body text-left py-1 documentBody">
+          <div class="card-body  py-1 documentBody">
             <h6 class="card-title">{{document.name}}</h6>
             <p class="card-text">{{document.description}}</p>
           </div>

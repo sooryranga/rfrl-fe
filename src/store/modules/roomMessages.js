@@ -174,14 +174,16 @@ const actions = {
     commit(SET_META, {roomId: room._id, meta: {start, end, started, version}});
     commit(SET_MESSAGES, {roomId: room._id, messages: formattedMessages});
 
-    return {messages: formattedMessages, loaded: messages.empty};
+    return {
+      messages: formattedMessages,
+      loaded: messages.docs.length < PER_PAGE,
+    };
   },
 };
 
 
 const mutations = {
   [SET_MESSAGES](state, payload) {
-    console.log(payload.messages);
     Vue.set(state.roomMessage, payload.roomId, payload.messages);
     state.meta[payload.roomId].version += 1;
   },

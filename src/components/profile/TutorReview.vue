@@ -1,7 +1,7 @@
 <template>
   <div :v-if="profile.isTutor" id="review" class="shadow p-3 my-3 bg-white">
     <div class="row">
-      <h3 class="text-left ml-4 my-2"> Student Review </h3>
+      <h3 class=" ml-4 my-2"> Student Review </h3>
     </div>
     <div class="mt-4" v-if="profile.tutorReviews">
       <div id="averageReview">
@@ -26,14 +26,14 @@
               <img v-bind:src="review.studentImage" class="studentImage"/>
             </div>
             <div class="col my-auto">
-              <h5 class="text-left mb-1">{{review.studentName}}</h5>
+              <h5 class=" mb-1">{{review.studentName}}</h5>
             </div>
           </div>
           <div id="reviewStars" class="row">
             <div class="col-3">
               <p class="my-0">STARTS DIV</p>
             </div>
-            <div class="col-4 text-left">
+            <div class="col-4 ">
               <p class="my-0 font-weight-bold">{{review.title}}</p>
               <p class="my-0"><small>{{review.createdDate.toDateString()}}</small></p>
               <p class="my-0">{{review.description}}</p>

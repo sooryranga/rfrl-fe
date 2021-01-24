@@ -1,8 +1,8 @@
 <template>
-  <div v-if="isLoggedInUser" id="scheduledTutoring" class="p-2 my-1 bg-white">
+  <div id="scheduledTutoring">
     <div class="row">
       <div class="col">
-        <h6 class="text-left my-2">Scheduled Tutoring</h6>
+        <h6 class="my-2">Scheduled Tutoring</h6>
       </div>
     </div>
     <div v-if="scheduledSessions.length">
@@ -14,33 +14,35 @@
             {{dateSession.date.getDate()}}
           </div>
         </div>
-        <div class="col-2 my-1">
-          <div>{{dateSession.date.getMonth()}} {{toDay(dateSession.date.getDay())}}</div>
+        <div class="col-3 my-1">
+          <div class="text-center">{{dateSession.date.getMonth()}} {{toDay(dateSession.date.getDay())}}</div>
         </div>
         <div class="col align-middle" id="sessions">
           <div
             class="row mb-1"
             v-for="session in dateSession.sessions"
             v-bind:key="session.id">
-            <router-link
+            <button
             class="btn btn-outline-dark w-100"
-            :to="{name: 'tutoring-session', params: {conferenceId: session.conferenceID}}">
+            v-on:click="goToEvent(session)">
               <div class="row">
                 <div class="col-6 my-auto">
-                  <div>{{session.startTime.toLocaleTimeString()}}</div>
+                  <div><p class="m-0">{{session.startTime.toLocaleTimeString()}}</p></div>
                 </div>
-                <div class="col text-left my-auto">
-                 Session with {{currentProfile.isTutor ? session.mentee.name : sessnion.mentor.name}}
+                <div class="col my-auto">
+                  <p class="m-0">
+                    With {{currentProfile.id === session.mentor.id ? session.mentee.name : session.mentor.name}}
+                  </p>
                 </div>
               </div>
-            </router-link>
+            </button>
           </div>
         </div>
       </div>
     </div>
     <div v-else>
       <div class="mt-4">
-        <p class="text-left"> You haven't scheduled tutoring yet. Give it a try! </p>
+        <p> You haven't scheduled tutoring yet. Give it a try! </p>
       </div>
     </div>
   </div>
@@ -49,11 +51,19 @@
 <script>
 import {mapGetters} from 'vuex';
 import {dayOfWeekMapping} from '@/utils.js';
+import {SessionService} from '@/api/SessionService.js';
 
 export default {
   name: 'scheduled-tutoring',
   props: {
-    'profileId': String,
+    'profileId': {
+      type: String,
+      required: false,
+    },
+    'roomId': {
+      type: String,
+      required: false,
+    },
   },
   data: function() {
     return {
@@ -62,9 +72,6 @@ export default {
   },
   computed: {
     ...mapGetters('profile', ['currentProfile']),
-    'isLoggedInUser': function() {
-      return this.currentProfile.id == this.profileId;
-    },
     'dateScheduledSessions': function() {
       if (this.scheduledSessions.length == 0) {
         return [];
@@ -89,7 +96,13 @@ export default {
     },
   },
   methods: {
-    'isToday': function(checkingDate) {
+    goToEvent(session) {
+      this.$router.push({
+        name: 'session-info',
+        params: {sessionId: session.id, localSession: session},
+      });
+    },
+    isToday(checkingDate) {
       const today = new Date();
       return (
         today.getFullYear() === checkingDate.getFullYear() &&
@@ -97,29 +110,45 @@ export default {
         today.getDate() === checkingDate.getDate()
       );
     },
-    'toDay': function(day) {
+    toDay(day) {
       return dayOfWeekMapping[day];
     },
+    async importSessionForUser() {
+      this.scheduledSessions = await SessionService.getSessionForProfile(
+          this.profileId,
+      );
+    },
+    async importSessionForRoom() {
+      this.scheduledSessions = await SessionService.getScheduledSessions(
+          this.roomId,
+      );
+    },
   },
-  mounted: function() {
-    this.scheduledSessions.push({
-      startTime: new Date(),
-      mentor: {name: 'Arun'},
-      mentee: {name: 'Sathi'},
-      conferenceID: '1',
-    });
-    this.scheduledSessions.push({
-      startTime: new Date(),
-      mentor: {name: 'Arun'},
-      mentee: {name: 'Soory'},
-      conferenceID: '2',
-    });
-    this.scheduledSessions.push({
-      startTime: new Date('2020/11/26'),
-      mentor: {name: 'Arun'},
-      mentee: {name: 'TJ'},
-      conferenceID: '3',
-    });
+  mounted: async function() {
+    try {
+      if (this.profileId) await importSessionForUser();
+      if (this.roomId) await importSessionForRoom();
+    } catch (error) {
+      console.error(error);
+      this.scheduledSessions.push({
+        startTime: new Date(),
+        mentor: {id: this.currentProfile.id, name: 'Arun'},
+        mentee: {name: 'Sathi'},
+        id: '1',
+      });
+      this.scheduledSessions.push({
+        startTime: new Date('2021/2/26'),
+        mentor: {id: this.currentProfile.id, name: 'Arun'},
+        mentee: {name: 'Soory'},
+        id: '2',
+      });
+      this.scheduledSessions.push({
+        startTime: new Date('2021/11/26'),
+        mentor: {id: '622bccca-2449-4774-a926-dfb984dc530d', name: 'Arun'},
+        mentee: {name: 'TJ'},
+        id: '3',
+      });
+    }
   },
 };
 </script>

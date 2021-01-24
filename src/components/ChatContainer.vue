@@ -1,25 +1,36 @@
 <template>
-  <div class="container-xl h-100">
-    <div class="row" style="height:4%">
+  <div class="container-xl pt-3 h-100">
+    <!-- <div class="row" style="height:4%">
       <div class="col">
         <button @click="resetData">Clear Data</button>
         <button @click="addData" :disabled="updatingData">Add Data</button>
       </div>
-    </div>
-    <div class="row" style="height:96%">
+    </div> -->
+    <div class="row h-100">
       <div class="col-8 h-100">
         <chat
         :currentUserId="currentProfile.id"
         :theme="theme"
-        :roomId="roomId"
+        :roomId="selectedRoom"
         v-if="showChat"
-        @newroom="setNewRoom"
+        @newRoom="setNewRoom"
         />
       </div>
       <div class="col h-100">
-        <tutoring-scheduler
-        :roomId="roomId"
-        />
+        <div class="row">
+          <div class="col">
+            <tutoring-scheduler
+            :roomId="roomId"
+            />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <scheduled-tutoring
+            v-bind:profile-id="currentProfile.id"
+            />
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -43,7 +54,7 @@ export default {
 
   mounted() {
     if (this.$route.params?.roomId) {
-      this.roomId = this.$route.params?.roomId;
+      this.selectedRoom = this.$route.params?.roomId;
     }
   },
 
@@ -51,7 +62,7 @@ export default {
     return {
       theme: 'light',
       showChat: true,
-      roomId: null,
+      selectedRoom: null,
       users: [
         {
           _id: '6R0MijpK6M4AIrwaaCY2',

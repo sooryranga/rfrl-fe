@@ -6,7 +6,7 @@
     </div>
   </transition>
   <transition name="modal">
-    <div v-if="showEventCreationDialog" class="modal-mask text-left">
+    <div v-if="showEventCreationDialog" class="modal-mask ">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -58,7 +58,7 @@
       <div  id="eventList" class="shadow p-3 h-100 bg-white d-flex flex-column">
         <div class="row">
           <div class="col">
-            <h4 class="text-left ml-4 my-2"> {{title}} </h4>
+            <h4 class=" ml-4 my-2"> {{title}} </h4>
           </div>
         </div>
         <div class="ml-4 row flex-grow-1">
@@ -67,18 +67,18 @@
               v-for="(event) in relatedEvents"
               v-on:click="setCurrentCalendarDate(new Date(event.start))"
               v-bind:key="event.id" class="row my-2">
-              <div class="col text-left my-auto">
+              <div class="col  my-auto">
                 {{event.title}}
               </div>
-              <div class="col-2 text-left my-auto">
+              <div class="col-2  my-auto">
                 <small class="text-secondary">{{dateToString(event.start)}}</small>
               </div>
-              <div v-if="canSelect(event)" class="col-1 mr-4">
+              <div v-if="canSelect(event)" class="col-2 mr-4">
                 <input
-                v-on:click="selectEvent(event)"
-                type="checkbox" class="custom-control-input">
+                v-on:click="selectEventFromOptions(event)"
+                type="checkbox">
               </div>
-              <div v-if="canDelete(event)" class="col-1 mr-4">
+              <div v-if="canDelete(event)" class="col-2 mr-4">
                 <button
                 type="button"
                 class="btn btn-default btn-dark btn-circle"
@@ -93,6 +93,7 @@
         </div>
         <div id="save" class="my-3 py-3">
           <button
+            v-if="canSave"
             v-on:click="saveSession"
             class="btn btn-default btn-dark mr-4">
             Save Events
@@ -200,7 +201,7 @@ export default {
     title: function() {
       if (this.state === STATE.createEvents) {
         return 'Picked Dates';
-      } else if (this.state === STATE.chooseDate) {
+      } else if (this.state === STATE.selectOne) {
         return 'Choose a Date from this List';
       }
       return 'Schedule';
@@ -225,14 +226,16 @@ export default {
     this.setUpUser();
   },
   methods: {
-    async saveSession(event) {
+    async saveSession() {
+      if (this.state === STATE.selectMultiple) {
+        return await this.selectMultipleEventsFromOptions();
+      }
       if (!this.locallyCreated.length) {
         this.setError('Schedule events to save');
         return;
       }
       this.session.scheduledDates = this.locallyCreated;
       await this.saveEvent(this.session);
-      console.log(this.session);
       return this.$router.go(-1);
     },
     canDelete(event) {
@@ -244,15 +247,21 @@ export default {
         this.state === STATE.selectMultiple
       );
     },
+    canSave() {
+      return (
+        this.state === STATE.selectMultiple ||
+        this.state === STATE.chooseDate
+      );
+    },
     deleteEventAction(deletedEvent) {
       this.events = this.events.filter(
-          (event) => event._eid != deletedEvent._eid,
+          (event) => event.id != deletedEvent.id,
       );
       this.deleteLocalyCreatedEvent(deletedEvent);
     },
     deleteLocalyCreatedEvent(deletedEvent) {
       this.locallyCreated = this.locallyCreated.filter(
-          (event) => event._eid != deletedEvent._eid,
+          (event) => event.id != deletedEvent.id,
       );
     },
     dateToString(date) {
@@ -294,36 +303,36 @@ export default {
       try {
         this.session = SessionService.getSession(this.sessionId);
       } catch (error) {
-        console.error(error);
-        this.session.selectedEvents = new Set();
         this.session = this.localSession;
+        this.session.selectedEvents = new Set();
         this.session.scheduledDates = [
           {
-            '_eid': '278_1',
             'start': new Date('2021-01-21T18:00:00.000Z'),
-            'startTimeMinutes': 780,
             'end': new Date('2021-01-21T22:15:00.000Z'),
-            'endTimeMinutes': 1035,
             'title': 'Session 0',
-            'content': '',
-            'background': false,
-            'allDay': false,
-            'segments': null,
-            'repeat': null,
-            'daysCount': 1,
-            'deletable': true,
-            'deleting': false,
-            'titleEditable': true,
-            'resizable': true,
-            'resizing': false,
-            'draggable': true,
-            'dragging': false,
-            'draggingStatic': false,
-            'focused': false,
-            'class': '',
-            'split': null,
             'id': 'c88a8aa5-f009-45a8-ac6b-01964fdccfc0',
-            'createdAt': new Date('2021-01-19T03:07:12.397Z'),
+            'createdAt': '2021-01-19T03:07:12.397Z',
+          },
+          {
+            'start': new Date('2021-01-23T13:15:00.000Z'),
+            'end': new Date('2021-01-23T19:00:00.000Z'),
+            'title': 'Session 0',
+            'id': 'e6c154be-4d2a-4f44-96c7-8a303b92d66b',
+            'createdAt': '2021-01-21T03:35:30.482Z',
+          },
+          {
+            'start': new Date('2021-01-22T11:15:00.000Z'),
+            'end': new Date('2021-01-22T15:00:00.000Z'),
+            'title': 'Session 1',
+            'id': 'f57b00a2-c919-4f21-9edf-e3cb8cee8f43',
+            'createdAt': '2021-01-21T03:35:32.396Z',
+          },
+          {
+            'start': new Date('2021-01-22T06:00:00.000Z'),
+            'end': new Date('2021-01-22T09:45:00.000Z'),
+            'title': 'Session 2',
+            'id': '9a9796ca-ec0a-4965-b790-8b62940bbc0b',
+            'createdAt': '2021-01-21T03:35:34.326Z',
           },
         ];
       }
@@ -334,13 +343,32 @@ export default {
 
       this.events = [...this.session.scheduledDates];
       this.locallyCreated = [...this.session.scheduledDates];
+      this.state = STATE.selectMultiple;
     },
-    selectEvent(event) {
-      this.session.selectedEvents =;
+    async selectMultipleEventsFromOptions() {
+      try {
+        await SessionService.selectSessionDates(
+            this.session.selectedEvents,
+            true,
+        );
+      } catch (error) {
+        console.error(error);
+      }
+      return this.$router.go(-1);
+    },
+    async selectEventFromOptions(event) {
       if (this.state === STATE.selectOne) {
-        
+        try {
+          await SessionService.selectSessionDates(this.sessionId, [event.id]);
+        } catch (error) {
+          console.error(error);
+        }
+        return this.$router.go(-1);
+      }
+      if (event.id in this.session.selectedEvents) {
+        this.session.selectedEvents.remove(event.id);
       } else {
-        this.session.selectedEvents
+        this.session.selectedEvents.add(event.id);
       }
     },
     onEventCreate(event, deleteEventFunction) {

@@ -9,7 +9,10 @@
         <tutor-review v-bind:profile-id="$route.params.userId"></tutor-review>
       </div>
       <div class="col overflowContainer">
-        <scheduled-tutoring v-bind:profile-id="$route.params.userId"></scheduled-tutoring>
+        <scheduled-tutoring
+          v-if="isLoggedInUser"
+          class="p-2 my-1 bg-white"
+          v-bind:profile-id="$route.params.userId"/>
         <answered-questions v-bind:profile-id="$route.params.userId"></answered-questions>
         <asked-questions v-bind:profile-id="$route.params.userId"></asked-questions>
       </div>

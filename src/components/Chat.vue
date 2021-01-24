@@ -2,6 +2,7 @@
   <div class="window-container h-100">
     <div class="row h-100">
       <div class="col h-100">
+        <!--@typingMessage="typingMessage"-->
         <chat-window
           height="100%"
           :theme="theme"
@@ -25,7 +26,6 @@
           @menuActionHandler="menuActionHandler"
           @messageActionHandler="messageActionHandler"
           @sendMessageReaction="sendMessageReaction"
-          @typingMessage="typingMessage"
         >
         </chat-window>
       </div>
@@ -175,7 +175,8 @@ export default {
       this.messages = [];
       this.messagesLoaded = false;
       this.messageVersion = 0;
-      if (this.selectedRoom) this.$emit('newroom', this.selectedRoom);
+      console.log('newRoom');
+      if (this.selectedRoom) this.$emit('newRoom', this.selectedRoom);
     },
 
     async fetchRooms() {
@@ -263,6 +264,7 @@ export default {
       if (options.reset) this.resetMessages();
       const {messages, loaded} = await this.fetchAndSetMessages(room);
       this.messages = messages;
+      console.log(loaded);
       if (loaded) {
         this.messagesLoaded = loaded;
       }
