@@ -5,30 +5,31 @@
         <h6 class="my-2">Scheduled Tutoring</h6>
       </v-col>
     </v-row>
-    <div v-if="scheduledSessions.length">
-      <v-row no-gutters class="mt-1" v-for="(dateSession,index) in dateScheduledSessions" v-bind:key="index">
-        <v-col cols="1" class="my-1 p-0" id="date">
+    <div v-if="scheduledSessions.length" class="w-100">
+      <v-row no-gutters class="mt-1 h-100" v-for="(dateSession,index) in dateScheduledSessions" v-bind:key="index">
+        <v-col cols="1" class="p-0 h-100" id="date">
           <v-btn
             x-small
             fab
             :color="isToday(dateSession.date) ?'primary' : 'transparent'"
-            class="m-0"
           >
           {{dateSession.date.getDate()}}
           </v-btn>
         </v-col>
         <v-col cols="3">
-          <div class="text-center">{{dateSession.date.getMonth()}} {{toDay(dateSession.date.getDay())}}</div>
+          <div class="text-center my-auto">{{dateSession.date.getMonth()}} {{toDay(dateSession.date.getDay())}}</div>
         </v-col>
-        <v-col class="align-middle" id="sessions">
-          <div
-            class="row mb-1"
+        <v-col class="align-middle h-100" id="sessions">
+          <v-row no-gutters
+            class="w-100 mb-1"
             v-for="session in dateSession.sessions"
             v-bind:key="session.id">
-            <button
-            class="btn btn-outline-dark w-100"
+            <v-btn
+            class="w-100"
+            outline
+            color="secondary"
             v-on:click="goToEvent(session)">
-              <div class="row">
+              <v-row no-gutters>
                 <div class="col-6 my-auto">
                   <div><p class="m-0">{{session.startTime.toLocaleTimeString()}}</p></div>
                 </div>
@@ -37,9 +38,9 @@
                     With {{currentProfile.id === session.mentor.id ? session.mentee.name : session.mentor.name}}
                   </p>
                 </div>
-              </div>
-            </button>
-          </div>
+              </v-row>
+            </v-btn>
+          </v-row>
         </v-col>
       </v-row>
     </div>
@@ -140,7 +141,7 @@ export default {
         id: '1',
       });
       this.scheduledSessions.push({
-        startTime: new Date('2021/2/26'),
+        startTime: new Date('2021/11/25'),
         mentor: {id: this.currentProfile.id, name: 'Arun'},
         mentee: {name: 'Soory'},
         id: '2',
