@@ -1,36 +1,34 @@
 <template>
-  <div class="window-container h-100">
-    <div class="row h-100">
-      <div class="col h-100">
-        <!--@typingMessage="typingMessage"-->
-        <chat-window
-          height="100%"
-          :theme="theme"
-          :styles="styles"
-          :currentUserId="currentUserId"
-          :rooms="loadingRooms ? [] : rooms"
-          :loadingRooms="loadingRooms"
-          :messages="messages"
-          :messagesLoaded="messagesLoaded"
-          :roomMessage="roomMessage"
-          :showAudio="showAudio"
-          :showAddRoom="showAddRoom"
-          :showReactionEmojis="showReactionEmojis"
-          :showEmojis="showEmojis"
-          :menuActions="menuActions"
-          :messageActions="messageActions"
-          :roomId="roomId"
-          @fetchMessages="fetchMessages"
-          @sendMessage="sendMessage"
-          @openFile="openFile"
-          @menuActionHandler="menuActionHandler"
-          @messageActionHandler="messageActionHandler"
-          @sendMessageReaction="sendMessageReaction"
-        >
-        </chat-window>
-      </div>
-    </div>
-  </div>
+  <v-row no-gutters class="w-100 h-100">
+    <v-col class="h-100">
+      <!--@typingMessage="typingMessage"-->
+      <chat-window
+        height="100%"
+        :theme="theme"
+        :styles="styles"
+        :currentUserId="currentUserId"
+        :rooms="loadingRooms ? [] : rooms"
+        :loadingRooms="loadingRooms"
+        :messages="messages"
+        :messagesLoaded="messagesLoaded"
+        :roomMessage="roomMessage"
+        :showAudio="showAudio"
+        :showAddRoom="showAddRoom"
+        :showReactionEmojis="showReactionEmojis"
+        :showEmojis="showEmojis"
+        :menuActions="menuActions"
+        :messageActions="messageActions"
+        :roomId="roomId"
+        @fetchMessages="fetchMessages"
+        @sendMessage="sendMessage"
+        @openFile="openFile"
+        @menuActionHandler="menuActionHandler"
+        @messageActionHandler="messageActionHandler"
+        @sendMessageReaction="sendMessageReaction"
+      >
+      </chat-window>
+    </v-col>
+  </v-row>
 </template>
 
 <script>
@@ -552,10 +550,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.window-container {
-  width: 100%;
-}
-
 .chat-forms {
   padding-bottom: 20px;
 

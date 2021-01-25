@@ -1,54 +1,92 @@
 <template>
-  <div id="app">
-    <div class="
-      align-items-center p-1 px-md-4
-      bg-white border-bottom shadow-sm
-      text-center
-    " id="topnavbar">
-      <div class="container-xl" id="navbar2">
-        <div class="row my-2">
-          <div class="col-4">
-            <div class="row">
-              <router-link class="p-2 col" to="/">TutorMe</router-link>
-            </div>
-          </div>
-          <div class="col">
-            <div class="row">
-              <router-link class="col p-2 text-dark" to="/">Home</router-link>
-              <router-link class="col p-2 text-dark" to="/questions">Ask Question</router-link>
-              <router-link class="col p-2 text-dark" to="/tutors">Find Tutor</router-link>
-              <router-link class="col p-2 text-dark" to="/chat">Messages</router-link>
-              <div v-if="loggedIn" class="col">
-                <div class="dropdown">
-                  <button
-                  class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
-                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <img id="navProfilePicture" v-bind:src="currentProfile.profileImage"/>
+  <v-app id="app">
+    <v-app-bar
+      app
+      elevation=4
+      height=50>
+      <v-container>
+        <v-row no-gutters>
+          <v-col class="my-auto col-auto">
+            <v-app-bar-title class="mx-auto" style="cursor: pointer" v-on:click="$router.push('/')">
+              {{appTitle}}
+            </v-app-bar-title>
+          </v-col>
+          <v-spacer></v-spacer>
+          <v-col class="col-auto mr-3">
+            <v-tabs optional center-active id="app-toolbar-tabs">
+              <v-tabs-slider color="primary"></v-tabs-slider>
+              <v-tab to="/">Home</v-tab>
+              <v-tab to="/questions">Ask Question</v-tab>
+              <v-tab to="/tutors">Find Tutor</v-tab>
+              <v-tab to="/chat">Messages</v-tab>
+            </v-tabs>
+          </v-col>
+          <v-col class="col-auto my-auto mx-auto">
+            <div class="text-center" v-if="loggedIn">
+              <v-menu offset-y>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    color="grey darken-3"
+                    dark
+                    v-bind="attrs"
+                    v-on="on"
+                  >
+                      <v-avatar
+                        size=30
+                        class="mr-3"
+                      >
+                        <img
+                          v-bind:src="currentProfile.profileImage"/>
+                      </v-avatar>
                     {{currentProfile.name}}
-                  </button>
-                  <div class="dropdown-menu dropdown-menu-left" aria-labelledby="dropdownMenuButton">
-                    <router-link
-                        class="dropdown-item text-dark"
-                        :to="profileLink">
-                      View Profile
-                    </router-link>
-                    <a class="dropdown-item" href="#">Settings & Privacy</a>
-                    <a class="dropdown-item" href="#">Sign Out</a>
-                  </div>
-                </div>
-              </div>
-              <div class="col align-items-center" v-else>
-                <router-link class="btn btn-dark mr-2" to="/signup">Sign Up</router-link>
-              </div>
+                  </v-btn>
+                </template>
+                <v-list>
+                  <v-list-item
+                    :key="index"
+                    :to="profileLink"
+                  >
+                    <v-list-item-title>View Profile</v-list-item-title>
+                  </v-list-item>
+                  <v-list-item
+                    :key="index"
+                    :to="profileLink"
+                  >
+                    <v-list-item-title>Settings</v-list-item-title>
+                  </v-list-item>
+                  <v-list-item
+                    :key="index"
+                    :to="profileLink"
+                  >
+                    <v-list-item-title>Sign Out</v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div id="content">
-      <router-view :key="$route.fullPath"/>
-    </div>
-  </div>
+            <div v-else>
+              <v-btn
+                color="secondary"
+                elevation="3"
+                to="/signup"
+              >
+                Sign Up
+              </v-btn>
+            </div>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-app-bar>
+    <!-- Sizes your content based upon application components -->
+    <v-main>
+
+      <!-- Provides the application the proper gutter -->
+      <v-container fluid class="p-0" id="content">
+
+        <!-- If using vue-router -->
+        <router-view :key="$route.fullPath"></router-view>
+      </v-container>
+    </v-main>
+  </v-app>
 </template>
 
 <script>
@@ -66,12 +104,17 @@ export default {
       };
     },
   },
+  data: function() {
+    return {
+      appTitle: 'TutorMe',
+    };
+  },
 };
 </script>
 
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: Avenir, Helvetica, Arial, sans-serif !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: left;
@@ -84,11 +127,8 @@ export default {
 p {
   font-size: 14px;
 }
-#topnavbar{
-  height: 65px;
-}
 #content{
-  height: calc(100vh - 66px);
+  height: calc(100vh - 40px);
 }
 html, body {
   height: 100%;
@@ -102,5 +142,8 @@ html, body {
   background-size: cover;
   background-position: top center;
   border-radius: 50%;
+}
+#app-toolbar-tabs .v-tabs-bar{
+  background-color: transparent;
 }
 </style>

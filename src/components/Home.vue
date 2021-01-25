@@ -1,14 +1,16 @@
 <template>
-  <div id="parent">
-    <div class="mx-auto my-auto text-center">
-      <h1>Got questions? Get Answers.</h1>
-      <h1><small class="text-muted">Your next favourite tutor is one message away!</small></h1>
-      <div class="form-group">
-        <router-link class="btn btn-outline-dark mr-lg-5" to="/questions">Ask Question</router-link>
-        <router-link class="btn btn-outline-dark" to="/tutors">Find Tutor</router-link>
-      </div>
-    </div>
-  </div>
+  <v-container class="h-100">
+    <v-row class="h-100">
+      <v-col class="mx-auto my-auto text-center">
+        <h1>Got questions? Get Answers.</h1>
+        <h1><small class="text-muted">Your next favourite tutor is one message away!</small></h1>
+        <div class="form-group">
+          <v-btn class="mr-5" to="/questions">Ask Question</v-btn>
+          <v-btn to="/tutors">Find Tutor</v-btn>
+        </div>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>

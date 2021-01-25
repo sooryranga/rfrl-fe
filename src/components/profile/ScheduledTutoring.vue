@@ -1,23 +1,26 @@
 <template>
-  <div id="scheduledTutoring">
-    <div class="row">
-      <div class="col">
+  <v-container>
+    <v-row no-gutters>
+      <v-col class="p-0">
         <h6 class="my-2">Scheduled Tutoring</h6>
-      </div>
-    </div>
+      </v-col>
+    </v-row>
     <div v-if="scheduledSessions.length">
-      <div class="row mt-1 h-100" v-for="(dateSession,index) in dateScheduledSessions" v-bind:key="index">
-        <div class="col-1 my-1" id="date">
-          <div
-            class="btn btn-default btn-circle"
-            v-bind:class="[isToday(dateSession.date) ?'btn-primary': 'btn-light']">
-            {{dateSession.date.getDate()}}
-          </div>
-        </div>
-        <div class="col-3 my-1">
+      <v-row no-gutters class="mt-1" v-for="(dateSession,index) in dateScheduledSessions" v-bind:key="index">
+        <v-col cols="1" class="my-1 p-0" id="date">
+          <v-btn
+            x-small
+            fab
+            :color="isToday(dateSession.date) ?'primary' : 'transparent'"
+            class="m-0"
+          >
+          {{dateSession.date.getDate()}}
+          </v-btn>
+        </v-col>
+        <v-col cols="3">
           <div class="text-center">{{dateSession.date.getMonth()}} {{toDay(dateSession.date.getDay())}}</div>
-        </div>
-        <div class="col align-middle" id="sessions">
+        </v-col>
+        <v-col class="align-middle" id="sessions">
           <div
             class="row mb-1"
             v-for="session in dateSession.sessions"
@@ -37,15 +40,15 @@
               </div>
             </button>
           </div>
-        </div>
-      </div>
+        </v-col>
+      </v-row>
     </div>
     <div v-else>
       <div class="mt-4">
         <p> You haven't scheduled tutoring yet. Give it a try! </p>
       </div>
     </div>
-  </div>
+  </v-container>
 </template>
 
 <script>
@@ -154,29 +157,4 @@ export default {
 </script>
 
 <style>
-.btn-circle {
-  width: 30px;
-  height: 30px;
-  text-align: center;
-  padding: 6px 0;
-  font-size: 12px;
-  line-height: 1.428571429;
-  border-radius: 15px;
-}
-.btn-circle.btn-lg {
-  width: 50px;
-  height: 50px;
-  padding: 10px 16px;
-  font-size: 18px;
-  line-height: 1.33;
-  border-radius: 25px;
-}
-.btn-circle.btn-xl {
-  width: 70px;
-  height: 70px;
-  padding: 10px 16px;
-  font-size: 24px;
-  line-height: 1.33;
-  border-radius: 35px;
-}
 </style>

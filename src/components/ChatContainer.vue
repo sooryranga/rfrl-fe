@@ -1,12 +1,12 @@
 <template>
-  <div class="container-xl pt-3 h-100">
+  <v-container class="p-0 h-100">
     <!-- <div class="row" style="height:4%">
       <div class="col">
         <button @click="resetData">Clear Data</button>
         <button @click="addData" :disabled="updatingData">Add Data</button>
       </div>
     </div> -->
-    <div class="row h-100">
+    <v-row no-guttters class="h-100 pt-3">
       <div class="col-8 h-100">
         <chat
         :currentUserId="currentProfile.id"
@@ -32,8 +32,8 @@
           </div>
         </div>
       </div>
-    </div>
-  </div>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
