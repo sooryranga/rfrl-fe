@@ -263,11 +263,11 @@ export default {
       this.selectedRoom = room.roomId;
       if (options.reset) this.resetMessages();
       const {messages, loaded} = await this.fetchAndSetMessages(room);
-      this.messages = messages;
-      console.log(loaded);
       if (loaded) {
         this.messagesLoaded = loaded;
       }
+      this.messages = messages;
+      console.log(loaded);
     },
 
     // currently not supported

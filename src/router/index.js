@@ -3,7 +3,7 @@ import VueRouter from 'vue-router';
 import instantMessaging from '@/components/InstantMessaging';
 import VideoMessaging from '@/components/VideoMessaging.vue';
 import Education from '@/components/profile/Education.vue';
-import Documents from '@/components/profile/Documents.vue';
+import Documents from '@/components/Documents.vue';
 import TutorDashboard from '@/components/profile/TutorDashboard.vue';
 import TutorReview from '@/components/profile/TutorReview.vue';
 import ProfileAbout from '@/components/profile/About.vue';

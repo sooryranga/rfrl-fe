@@ -45,7 +45,7 @@
         </div>
       </div>
     </div>
-    <div id="content">
+    <div id="content" class="w-100">
       <router-view :key="$route.fullPath"/>
     </div>
   </div>
