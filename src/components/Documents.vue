@@ -12,7 +12,7 @@
       </div>
       <div class="col-2 my-auto addHover">
         <span
-          v-if="isLoggedInUser"
+          v-if="allowToSave"
           v-on:click="add"
           class="material-icons md-24 md-dark btn-outline-light btn"
         >add</span>
@@ -27,11 +27,14 @@
             <p class="card-text">{{document.description}}</p>
           </div>
         </div>
-        <div v-if="isLoggedInUser" class="documentEditor hover-to-show mt-1">
+        <div v-if="allowToSave" class="documentEditor hover-to-show mt-1">
           <span v-on:click="edit(index)" class="material-icons md-dark btn-outline-light btn">create</span>
           <span class="material-icons md-dark btn-outline-light btn">drag_handle</span>
         </div>
       </div>
+    </div>
+    <div v-else style="height:50px" class="w-100 mx-auto my-auto">
+      <p>No documents to show</p>
     </div>
   </div>
 </template>
@@ -39,8 +42,9 @@
 <script>
 import {mapGetters, mapActions} from 'vuex';
 import {DOCUMENTS, ADD_DOCUMENT} from '@/constants.actions.js';
-import DocumentEditor from '@/components/profile/DocumentsEditor.vue';
+import DocumentEditor from '@/components/DocumentsEditor.vue';
 import {documentState} from '@/constants.state.js';
+import {DocumentService} from '@/api/DocumentService.js';
 
 
 export default {
@@ -56,11 +60,18 @@ export default {
   },
   props: {
     'profileId': String,
+    'sessionId': String,
   },
   computed: {
     ...mapGetters('profile', ['currentProfile']),
     'isLoggedInUser': function() {
       return this.currentProfile.id == this.profileId;
+    },
+    'isSessionDocuments': function() {
+      return this.sessionId != null;
+    },
+    'allowToSave': function() {
+      return this.isLoggedInUser || this.isSessionDocuments;
     },
   },
   methods: {
@@ -86,11 +97,15 @@ export default {
       this.editorOpen = false;
       this.saveItem(state);
     },
-    'saveItem': function(state) {
-      this[ADD_DOCUMENT]({
-        index: this.editingIndex,
-        newDocument: state,
-      });
+    'saveItem': async function(state) {
+      if (isLoggedInUser) {
+        await this[ADD_DOCUMENT]({
+          index: this.editingIndex,
+          newDocument: state,
+        });
+      } else {
+        await DocumentService.postForSession(this.sessionId, state);
+      }
 
       if (this.editingIndex != null) {
         this.localDocuments[this.editingIndex] = state;
@@ -101,12 +116,27 @@ export default {
       this.clearEditorState();
     },
   },
-  mounted: function() {
+  mounted: async function() {
     if (this.isLoggedInUser) {
       if (this.currentProfile.documents.length == 0) {
         this[DOCUMENTS]();
       }
       this.localDocuments.push(...this.currentProfile.documents);
+    } else if (this.sessionId) {
+      const documents = [];
+      try {
+        documents.push(...DocumentService.getForSession(this.sessionId));
+      } catch (error) {
+        console.error(error);
+        documents.push(...[
+          {id: 14, name: 'Home work', type: 'application/pdf', src: 'https://www.w3.org/wai/er/tests/xhtml/testfiles/resources/pdf/dummy.pdf', description: 'my resume is super big and nastymy resume is super big and nastymy resume is super big and nastymy resume is super big and nastymy resume is super big and nastymy resume is super big and nasty'}, // eslint-disable-line
+          {id: 15, name: 'Practice', type: 'image/jpeg', src: 'https://upload.wikimedia.org/wikipedia/commons/b/b6/image_created_with_a_mobile_phone.png', description: 'my grade report'}, // eslint-disable-line
+          {id: 15, name: 'Home work2', type: 'image/jpeg', src: 'https://upload.wikimedia.org/wikipedia/commons/b/b6/image_created_with_a_mobile_phone.png', description: 'my grade report'}, // eslint-disable-line
+        ]);
+      }
+      await this.localDocuments.push(
+          ...documents,
+      );
     }
   },
 };

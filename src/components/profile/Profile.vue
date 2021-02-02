@@ -10,6 +10,7 @@
       </div>
       <div class="col overflowContainer">
         <scheduled-tutoring
+          showName
           v-if="isLoggedInUser"
           class="p-2 my-1 bg-white"
           v-bind:profile-id="$route.params.userId"/>
