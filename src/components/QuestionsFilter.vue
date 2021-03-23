@@ -21,7 +21,7 @@
         @remove="changeTag" @select="changeTag" @close="updateTag"
         label="name" track-by="name" :preselect-first="false">
           <template slot="tag"><div></div></template>
-          <template slot="selection" slot-scope="{ values, search, isOpen }">
+          <template slot="selection" slot-scope="{ values, isOpen }">
             <span
             class="multiselect__single"
             v-if="values.length &amp;&amp; !isOpen">

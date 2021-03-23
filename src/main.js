@@ -5,6 +5,8 @@ import {BootstrapVue, IconsPlugin} from 'bootstrap-vue';
 import VueCroppie from 'vue-croppie';
 import 'croppie/croppie.css'; // import the croppie css manually
 import 'vue-cal/dist/vuecal.css';
+import {getToken} from '@/api/Auth';
+import ApiService from '@/api/ApiService';
 
 import App from './App.vue';
 import router from './router';
@@ -16,6 +18,14 @@ Vue.use(VueCroppie);
 Vue.use(BootstrapVue);
 // Optionally install the BootstrapVue icon components plugin
 Vue.use(IconsPlugin);
+
+ApiService.init();
+
+const token = getToken();
+
+if (token) {
+  ApiService.setHeader(token);
+};
 
 Vue.config.productionTip = false;
 

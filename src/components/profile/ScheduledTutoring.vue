@@ -123,9 +123,7 @@ export default {
       return dayOfWeekMapping[day];
     },
     async importSessionForUser() {
-      this.scheduledSessions = await SessionService.getSessionForProfile(
-          this.profileId,
-      );
+      this.scheduledSessions = await SessionService.getSessionForProfile();
     },
     async importSessionForRoom() {
       this.scheduledSessions = await SessionService.getScheduledSessions(
@@ -135,7 +133,7 @@ export default {
   },
   mounted: async function() {
     try {
-      if (this.profileId) await importSessionForUser();
+      if (this.profileId) await this.importSessionForUser();
       if (this.roomId) await importSessionForRoom();
     } catch (error) {
       console.error(error);

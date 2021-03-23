@@ -1,14 +1,14 @@
 import Vue from 'vue';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
-import JwtService from '@/common/jwt.service';
-import {API_URL} from '@/config';
+import {API_URL} from '@/conf';
 
 
 const ApiService = {
   init() {
     Vue.use(VueAxios, axios);
     Vue.axios.defaults.baseURL = API_URL;
+    Vue.axios.defaults.headers.common['Content-Type'] = 'application/json';
 
     Vue.axios.interceptors.response.use(function(response) {
       // 2xx cause this function to trigger
@@ -38,10 +38,11 @@ const ApiService = {
     });
   },
 
-  setHeader() {
+  setHeader(token) {
+    console.log('trstsdfgsd', token);
     Vue.axios.defaults.headers.common[
         'Authorization'
-    ] = `Token ${JwtService.getToken()}`;
+    ] = `Bearer ${token}`;
   },
 };
 
