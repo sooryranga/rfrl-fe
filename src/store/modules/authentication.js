@@ -13,6 +13,8 @@ import {
   LOGOUT,
 } from '@/constants.actions.js';
 
+import {AuthService} from '@/api/Auth';
+
 const blankAuth = {
   google: {token: null},
   linkedin: {token: null},
@@ -32,8 +34,10 @@ const getters = {
 };
 
 const actions = {
-  [GOOGLE_LOGIN]({commit}, token) {
-    commit(SET_GOOGLE_AUTH, token);
+  async [GOOGLE_LOGIN]({commit}, {token, name, imageUrl}) {
+    await AuthService.signupGoogle({token, name, imageUrl});
+
+    commit(SET_GOOGLE_AUTH, {token, name, imageUrl});
     commit(SET_LOGGED_IN);
   },
   [LINKED_IN_LOGIN]({commit}, token) {

@@ -1,11 +1,17 @@
 import Vue from 'vue';
 
 export const SessionService = {
-  async getSessionForProfile(profileId) {
-    return await Vue.axios.get(`session/`, {profileId, scheduled: true});
+  async getSessionForProfile() {
+    return await Vue.axios.get(
+        `sessions/`,
+        {state: 'scheduled'},
+    );
   },
   async getPrendingSession(roomId) {
-    return await Vue.axios.get(`session/`, {roomId, scheduled: false});
+    return await Vue.axios.get(
+        `session/`,
+        {room_id: roomId, state: 'scheduled'},
+    );
   },
   async getScheduledSessions(roomId) {
     return await Vue.axios.get(`session/`, {roomId, scheduled: true});

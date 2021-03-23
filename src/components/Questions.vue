@@ -9,21 +9,17 @@
     ></questions-filter>
     <div class="row h-100 w-100 mt-4">
       <div class="col-4">
-        <questions-selector
-          v-bind:questions="questions"
-        ></questions-selector>
+        <questions-selector></questions-selector>
       </div>
       <div class="col ml-4">
-        <questions-viewer
-          v-bind:questionId="questionId"
-        ></questions-viewer>
+        <questions-viewer></questions-viewer>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import {mapGetters} from 'vuex';
+import {mapActions} from 'vuex';
 import QuestionsFilter from '@/components/QuestionsFilter.vue';
 import QuestionsEditor from '@/components/QuestionsEditor.vue';
 import QuestionsSelector from '@/components/QuestionsSelector.vue';
@@ -37,13 +33,12 @@ export default {
     'questions-viewer': QuestionsViewer,
     'questions-editor': QuestionsEditor,
   },
-  computed: {...mapGetters('questions', ['questions'])},
+
   data: function() {
-    return {
-      questionId: null,
-    };
+    return {};
   },
   methods: {
+    ...mapActions('questions', ['getQuestions']),
     updateTag: function(tags) {
       console.log(tags);
     },
@@ -54,11 +49,8 @@ export default {
       console.log(datePosted);
     },
   },
-  beforeMount: function() {
-    this.questionId = (
-      this.$route.params?.questionId ||
-      this.questions[0].id
-    );
+  async beforeMount() {
+    await this.getQuestions();
   },
 };
 </script>
