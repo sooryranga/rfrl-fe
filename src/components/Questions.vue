@@ -1,5 +1,10 @@
 <template>
   <div id="question-div" class="mt-3 container-xl mx-auto">
+    <transition name="fade">
+      <div v-if="error" class="alert alert-danger fade-in" role="alert">
+        {{error}}
+      </div>
+    </transition>
     <questions-editor></questions-editor>
     <questions-filter
     class="mt-3"
@@ -19,7 +24,7 @@
 </template>
 
 <script>
-import {mapActions} from 'vuex';
+import {mapActions, mapGetters} from 'vuex';
 import QuestionsFilter from '@/components/QuestionsFilter.vue';
 import QuestionsEditor from '@/components/QuestionsEditor.vue';
 import QuestionsSelector from '@/components/QuestionsSelector.vue';
@@ -32,6 +37,10 @@ export default {
     'questions-selector': QuestionsSelector,
     'questions-viewer': QuestionsViewer,
     'questions-editor': QuestionsEditor,
+  },
+
+  computed: {
+    ...mapGetters('questions', ['error']),
   },
 
   data: function() {

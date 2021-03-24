@@ -13,22 +13,22 @@ export const QuestionService = {
     const response = await Vue.axios.get(`question/${questionID}`);
     return response.data;
   },
-  async create(questionPayload) {
+  async create({title, body, images, tags}) {
     payload = {
-      'title': questionPayload.title,
-      'body': questionPayload.body,
-      'images': questionPayload.images,
-      'tags': questionPayload.tags,
+      'title': title,
+      'body': body,
+      'images': images,
+      'tags': tags,
     };
     const response = await Vue.axios.post(`question/`, payload);
     return response.data;
   },
-  async update(id, questionPayload) {
+  async update(id, {title, body, images, tags}) {
     payload = {
-      'title': questionPayload.title,
-      'body': questionPayload.body,
-      'images': questionPayload.images,
-      'tags': questionPayload.tags,
+      'title': title,
+      'body': body,
+      'images': images,
+      'tags': tags,
     };
     return await Vue.axios.put(`question/${id}`, payload);
   },
