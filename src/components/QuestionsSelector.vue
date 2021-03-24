@@ -7,7 +7,7 @@
           <p class="m-0">{{questions.length}} found</p>
         </div>
       </div>
-      <div class="col-auto my-auto">
+      <div class="col-auto my-auto" v-on:click="openEditor">
         <span class="material-icons md-36">
           add
         </span>
@@ -52,7 +52,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions('questions', ['getQuestions']),
+    ...mapActions('questions', ['getQuestions', 'openEditor']),
     shortenTitle: function(title) {
       if (title.length > 120) {
         const t = title.splice(0, 115);
