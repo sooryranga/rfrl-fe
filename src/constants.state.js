@@ -53,7 +53,7 @@ const tutorReview = () => {
     studentImage: null,
     studentName: null,
     title: null,
-    createdDate: null,
+    createdAt: null,
     stars: null,
     description: null,
   };

@@ -37,3 +37,5 @@ export const DocumentService = {
     return await this._post(formData);
   },
 };
+
+export default DocumentService;

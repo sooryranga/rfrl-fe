@@ -41,13 +41,13 @@
     </transition>
     <p id="title"> {{ selectedQuestion.title }} </p>
     <p class="my-1"> Posted By : {{ selectedQuestion.posterName }} </p>
-    <p class="my-1"> Created At : {{ timeAgoFormat(selectedQuestion.createdDate) }} </p>
+    <p class="my-1"> Created At : {{ timeAgoFormat(selectedQuestion.createdAt) }} </p>
     <button
     class="btn btn-outline-dark shadow-none my-3"
     v-on:click="toCalendar">
     <small>Schedule Session</small>
     </button>
-    <p class="text-large"> {{ selectedQuestion.description }}</p>
+    <p class="text-large"> {{ selectedQuestion.body }}</p>
   </div>
 </template>
 

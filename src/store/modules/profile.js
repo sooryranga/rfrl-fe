@@ -59,8 +59,8 @@ const actions = {
   },
   async [TUTOR_REVIEW]({commit}) {
     commit(SET_TUTOR_REVIEW, [
-      {studentImage: 'https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png', studentName: 'Arun', id: 12, title: 'Good tutor', createdDate: new Date(), stars: 4.5, description: 'He taught me well'}, //eslint-disable-line
-      {studentImage: 'https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png', studentName: 'Soory',id: 1, title:'meh, there are other tutors', createdDate: new Date(), stars: 2.5, description: 'couldn\' speak english properly'}, // eslint-disable-line
+      {studentImage: 'https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png', studentName: 'Arun', id: 12, title: 'Good tutor', createdAt: new Date(), stars: 4.5, description: 'He taught me well'}, //eslint-disable-line
+      {studentImage: 'https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png', studentName: 'Soory',id: 1, title:'meh, there are other tutors', createdAt: new Date(), stars: 2.5, description: 'couldn\' speak english properly'}, // eslint-disable-line
     ]);
   },
   async [ADD_DOCUMENT]({commit}, {index, newDocument}) {

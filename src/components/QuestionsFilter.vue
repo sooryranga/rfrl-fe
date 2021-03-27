@@ -7,7 +7,7 @@
       <multiselect
       v-model="checkedDatePosted" :options="datePosted" :searchable="false"
       :close-on-select="true" :show-labels="true" :deselect-label="''"
-      @close="updateDatePosted"
+      @close="updatedAtPosted"
       placeholder="Date Posted" label="name" track-by="name"
       :select-label="''">
       </multiselect>
@@ -75,13 +75,13 @@ export default {
       this.$emit('updateTag', this.checkedTags);
       this.changedTags = false;
     },
-    updateDatePosted: function() {
+    updatedAtPosted: function() {
       const mergedQuery = {
         ...this.$route.query,
         checkedDatePosted: this.checkedDatePosted.key,
       };
       this.$router.push({query: mergedQuery});
-      this.$emit('updateDatePosted', this.checkedDatePosted);
+      this.$emit('updatedAtPosted', this.checkedDatePosted);
     },
     updateRemote: function() {
       this.isRemote = !this.isRemote;
