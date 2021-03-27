@@ -5,11 +5,11 @@
         {{error}}
       </div>
     </transition>
-    <questions-editor></questions-editor>
+    <questions-editor v-if="isEditorOpen"></questions-editor>
     <questions-filter
     class="mt-3"
     v-on:updateTag="updateTag"
-    v-on:updateDatePosted="updateDatePosted"
+    v-on:updatedAtPosted="updatedAtPosted"
     v-on:updateRemote="updateRemote"
     ></questions-filter>
     <div class="row h-100 w-100 mt-4">
@@ -40,7 +40,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters('questions', ['error']),
+    ...mapGetters('questions', ['isEditorOpen', 'error']),
   },
 
   data: function() {
@@ -54,7 +54,7 @@ export default {
     updateRemote: function(isRemote) {
       console.log(isRemote);
     },
-    updateDatePosted: function(datePosted) {
+    updatedAtPosted: function(datePosted) {
       console.log(datePosted);
     },
   },

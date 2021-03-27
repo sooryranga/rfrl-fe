@@ -13,7 +13,7 @@ import {
 const state = {
   error: null,
   selectedQuestionID: null,
-  questions: [],
+  questions: null,
   editorOpen: false,
   editorQuestionID: null,
 };
@@ -85,13 +85,15 @@ const actions = {
       commit(SET_ADD_QUESTION, question);
       return question;
     } catch (error) {
+      console.error(error);
       const errorString = getErrorMessageFromRequest(error);
       commit(SET_QUESTION_ERROR, errorString);
     }
   },
 
   async getQuestions({commit, getters}, options={set_selected: true}) {
-    const questions = getters.questions;
+    let questions = getters.questions;
+
     if (questions) {
       return questions;
     }
@@ -100,9 +102,10 @@ const actions = {
       questions = await QuestionService.getQuestions();
       commit(SET_QUESTIONS, questions);
     } catch (error) {
+      console.error(error);
       const errorString = getErrorMessageFromRequest(error);
       commit(SET_QUESTION_ERROR, errorString);
-      return null;
+      return [];
     }
 
     if (options.setSelected && questions) {
@@ -117,7 +120,7 @@ const actions = {
       return null;
     }
 
-    const selectedQuestion = getters.getSelectedQuestion();
+    const selectedQuestion = getters.selectedQuestion;
     if (selectedQuestion?.id == id) {
       return selectedQuestion;
     }
@@ -138,8 +141,9 @@ const actions = {
     }
 
     try {
-      question = await QuestionService.updateQuestion(id, payload);
+      question = await QuestionService.update(id, payload);
     } catch (err) {
+      console.error(err);
       const errorString = getErrorMessageFromRequest(error);
       commit(SET_QUESTION_ERROR, errorString);
       return null;
@@ -152,12 +156,15 @@ const actions = {
 
   async createQuestion({commit}, payload, options={}) {
     try {
-      question = await QuestionService.createQuestion(payload);
+      const question = await QuestionService.create(payload);
       commit(SET_ADD_QUESTION, question);
+      commit(SET_SELECT_QUESTION, question.id);
+      return true;
     } catch (err) {
-      const errorString = getErrorMessageFromRequest(error);
+      console.error(err);
+      const errorString = getErrorMessageFromRequest(err);
       commit(SET_QUESTION_ERROR, errorString);
-      return null;
+      return false;
     }
   },
 };
