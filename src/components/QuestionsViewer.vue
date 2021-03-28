@@ -40,11 +40,12 @@
       </div>
     </transition>
     <p id="title"> {{ selectedQuestion.title }} </p>
-    <p class="my-1"> Posted By : {{ selectedQuestion.posterName }} </p>
+    <p class="my-1"> Posted By : {{ selectedQuestion.from.firstName }} {{ selectedQuestion.from.lastName }} </p>
     <p class="my-1"> Created At : {{ timeAgoFormat(selectedQuestion.createdAt) }} </p>
     <button
     class="btn btn-outline-dark shadow-none my-3"
-    v-on:click="toCalendar">
+    v-if="canScheduleSession"
+    v-on:click="scheduleSession">
     <small>Schedule Session</small>
     </button>
     <p class="text-large"> {{ selectedQuestion.body }}</p>
@@ -65,6 +66,9 @@ export default {
   computed: {
     ...mapGetters('questions', ['selectedQuestion']),
     ...mapGetters('profile', ['currentProfile']),
+    canScheduleSession() {
+      return this.selectedQuestion.from.id != this.currentProfile.id;
+    },
   },
   data() {
     return {
@@ -76,11 +80,12 @@ export default {
   },
   methods: {
     ...mapActions('chatRooms', ['createRoom']),
+    ...mapActions('questions', ['applyToQuestion']),
 
     timeAgoFormat(newDate) {
       return timeAgo.format(newDate);
     },
-    toCalendar() {
+    scheduleSession() {
       this.showModal = true;
     },
     cancel() {
@@ -107,6 +112,7 @@ export default {
         timestamp: new Date(),
       };
 
+      await this.applyToQuestion(this.selectedQuestion.id);
       await messagesRef(roomId).add(message);
 
       this.$router.push(

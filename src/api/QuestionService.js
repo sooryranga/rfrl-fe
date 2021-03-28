@@ -30,13 +30,14 @@ export const QuestionService = {
     ));
     return questions;
   },
-  async getQuestionsForUser(userID) {
-    const response = await Vue.axios.get(`questions/${userID}/`);
+  async getQuestionsForUser(clientID) {
+    const response = await Vue.axios.get(`questions/${clientID}/`);
     const questionsResponse = response.data;
 
     const questions = questionsResponse.map((questionR) => (
       responseToQuestion(questionR)
     ));
+    console.log(questions);
     return questions;
   },
   async get(questionID) {
@@ -65,7 +66,7 @@ export const QuestionService = {
     return await Vue.axios.delete(`question/${id}`);
   },
   async apply(id) {
-    return await Vue.axios.post(`question/${id}/apply`);
+    await Vue.axios.post(`question/${id}/apply`);
   },
 };
 

@@ -1,44 +1,68 @@
 import {v1 as uuidv1} from 'uuid';
 
 import {
-  PROFILE_PICTURE, NAME, TUTORED_STUDENTS,
-  DOCUMENTS, EDUCATION, TUTOR_REVIEW,
-  ADD_DOCUMENT, ABOUT, ADD_EDUCATION,
+  TUTORED_STUDENTS, DOCUMENTS, EDUCATION, TUTOR_REVIEW,
+  ADD_DOCUMENT, ADD_EDUCATION,
+  GOOGLE_LOGIN, LINKED_IN_LOGIN, DEFAULT_LOGIN,
+  LOGOUT,
 } from '@/constants.actions.js';
 import {
-  SET_PROFILE, SET_PROFILE_IMAGE, SET_NAME,
+  SET_PROFILE, SET_UPDATE_PROFILE,
   SET_TUTORED_STUDENTS, SET_DOCUMENTS, SET_EDUCATION,
-  SET_TUTOR_REVIEW, SET_DOCUMENT, SET_ABOUT,
-  SET_EDUCATIONS,
+  SET_TUTOR_REVIEW, SET_DOCUMENT,
+  SET_EDUCATIONS, SET_LOGGED_IN, SET_GOOGLE_AUTH,
+  SET_LINKED_IN_AUTH, SET_DEFAULT_AUTH, SET_LOGGED_OUT,
 } from '@/constants.mutations.js';
+
+
 import {profileState} from '@/constants.state.js';
+import {Auth, Profile} from '@/api';
 
 import {usersRef} from '@/firestore';
 
-const state ={
+const blankState = {
+  google: {token: null},
+  linkedin: {token: null},
+  default: {username: null, passwordHash: null},
+  loggedIn: false,
   profile: profileState(),
 };
 
+const state ={
+  profile: profileState(),
+  google: {token: null},
+  linkedin: {token: null},
+  default: {username: null, passwordHash: null},
+  loggedIn: false,
+};
+
 const getters = {
-  'currentProfile': (state) => state.profile,
+  currentProfile: (state) => state.profile,
+  loggedIn: (state) => state.loggedIn,
 };
 
 const actions = {
-  async [PROFILE_PICTURE]({commit}, image) {
-    commit(SET_PROFILE_IMAGE, image);
-    await usersRef.doc(state.profile.id).set(
-        {
-          _id: state.profile.id,
-          username: state.profile.name,
-          avatar: image,
-        },
+  async updateProfile({commit, getters}, profile) {
+    if (!getters.loggedIn || !getters.currentProfile) {
+      throw Error('User is not logged in');
+    }
+
+    const updatedProfile = await Profile.ProfileService.update(
+        getters.currentProfile.id,
+        profile,
     );
-  },
-  [NAME]({commit}, name) {
-    commit(SET_NAME, name);
-  },
-  [ABOUT]({commit}, about) {
-    commit(SET_ABOUT, about);
+
+    if (profile.photo) {
+      await usersRef.doc(updatedProfile.id).set(
+          {
+            _id: updatedProfile.id,
+            username: updatedProfile.name,
+            avatar: updatedProfile.photo,
+          },
+      );
+    }
+
+    commit(SET_UPDATE_PROFILE, updatedProfile);
   },
   async [TUTORED_STUDENTS]({commit}) {
     commit(SET_TUTORED_STUDENTS, [
@@ -69,20 +93,37 @@ const actions = {
   async [ADD_EDUCATION]({commit}, {index, newEducation}) {
     commit(SET_EDUCATION, {index, newEducation});
   },
+  async loginAuthorized({commit}) {
+    const client = await Auth.AuthService.loginAuthorized();
+
+    commit(SET_LOGGED_IN);
+    commit(SET_PROFILE, client);
+  },
+  async [GOOGLE_LOGIN]({commit}, {token, name, imageUrl}) {
+    await Auth.AuthService.signupGoogle({token, name, imageUrl});
+
+    commit(SET_GOOGLE_AUTH, {token, name, imageUrl});
+    commit(SET_LOGGED_IN);
+  },
+  [LINKED_IN_LOGIN]({commit}, token) {
+    commit(SET_LINKED_IN_AUTH, token);
+    commit(SET_LOGGED_IN);
+  },
+  [DEFAULT_LOGIN]({commit}, username, password) {
+    commit(SET_DEFAULT_AUTH, username, password);
+    commit(SET_LOGGED_IN);
+  },
+  [LOGOUT]() {
+    commit(SET_LOGGED_OUT);
+  },
 };
 
 const mutations = {
   [SET_PROFILE](state, profile) {
-    state.profile = {...profile};
+    state.profile = {...blankState.profile, ...profile};
   },
-  [SET_PROFILE_IMAGE](state, imageSrc) {
-    state.profile.profileImage = imageSrc;
-  },
-  [SET_NAME](state, name) {
-    state.profile.name = name;
-  },
-  [SET_ABOUT](state, about) {
-    state.profile.about = about;
+  [SET_UPDATE_PROFILE](state, updatedProfile) {
+    state.profile = {...state.profile, ...updatedProfile};
   },
   [SET_TUTORED_STUDENTS](state, tutoredStudents) {
     state.profile.tutoredStudents = tutoredStudents;
@@ -109,6 +150,23 @@ const mutations = {
     } else {
       state.profile.documents.push(newDocument);
     };
+  },
+  [SET_LOGGED_IN](state) {
+    if (!state.loggedIn) {
+      state.loggedIn = true;
+    }
+  },
+  [SET_GOOGLE_AUTH](state, token) {
+    state.google.token = token;
+  },
+  [SET_LINKED_IN_AUTH](state, token) {
+    state.linkedin.token = token;
+  },
+  [SET_DEFAULT_AUTH](state, username, pass) {
+    state.default= {username: username, passwordHash: pass};
+  },
+  [SET_LOGGED_OUT](state) {
+    state = {...blankState};
   },
 };
 

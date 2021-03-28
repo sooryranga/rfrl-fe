@@ -12,10 +12,18 @@
           <div class="modal-body">
             <div class="row">
               <div class="col-2">
-                <p>Name</p>
+                <p>First Name</p>
               </div>
               <div class="col">
-                <input class="w-100" v-model="name" placeholder="Your Name">
+                <input class="w-100" v-model="firstName" placeholder="Kevin">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-2">
+                <p>Last Name</p>
+              </div>
+              <div class="col">
+                <input class="w-100" v-model="lastName" placeholder="Zhang">
               </div>
             </div>
             <div class="row">
@@ -38,13 +46,14 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex';
+import {mapGetters, mapActions} from 'vuex';
 
 export default {
   name: 'about-editor',
   data: function() {
     return {
-      name: null,
+      firstName: null,
+      lastName: null,
       about: null,
     };
   },
@@ -52,31 +61,40 @@ export default {
     ...mapGetters('profile', ['currentProfile']),
   },
   methods: {
-    'save': function() {
+    ...mapActions('profile', ['updateProfile']),
+    async save() {
       // Save file to bucket and update src
       const state = {
-        name: null,
+        firstName: null,
+        lastName: null,
         about: null,
       };
-      if (this.currentProfile.name != this.name) {
-        state.name = this.name;
+      if (this.currentProfile.firstName != this.firstName) {
+        state.firstName = this.firstName;
+      }
+      if (this.currentProfile.lastName != this.lastName) {
+        state.lastName = this.lastName;
       }
       if (this.currentProfile.about != this.about) {
         state.about = this.about;
       }
+
+      await this.updateProfile(state);
+
       this.$emit(
-          'saveEvent',
+          'closeEditor',
           state,
       );
     },
     'cancel': function() {
       this.$emit(
-          'cancelEvent',
+          'closeEditor',
       );
     },
   },
   mounted: function() {
-    this.name = this.currentProfile.name;
+    this.firstName = this.currentProfile.firstName;
+    this.lastName = this.currentProfile.lastName;
     this.about = this.currentProfile.about;
   },
 };

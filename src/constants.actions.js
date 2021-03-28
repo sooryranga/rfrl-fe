@@ -7,7 +7,6 @@ const LOGOUT = 'logout';
 // profile
 const PROFILE_PICTURE = 'profile_image';
 const NAME = 'name';
-const ABOUT = 'about';
 const TUTORED_STUDENTS = 'tutored_students';
 const DOCUMENTS = 'documents';
 const EDUCATION = 'education';
@@ -30,6 +29,5 @@ export {
   EDUCATION,
   TUTOR_REVIEW,
   ADD_DOCUMENT,
-  ABOUT,
   ADD_EDUCATION,
 };

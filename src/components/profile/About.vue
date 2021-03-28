@@ -2,19 +2,17 @@
   <div v-if="isLoggedInUser" class="shadow p-3 my-4 pt-5 pb-4 bg-white">
     <about-editor
       v-if="editorOpen"
-      v-on:saveEvent="saveEvent"
-      v-on:cancelEvent="cancelEvent"
+      v-on:closeEditor="closeEditor"
     ></about-editor>
     <div class="row">
       <div class="col-3">
-        <img class="profilePicture" v-bind:src="profile.profileImage"/>
+        <img class="profilePicture" v-bind:src="profile.photo"/>
         <div v-if="bookTutorButton">
           <router-link class="btn btn-dark p-2 mr-2"  :to="bookTutorRoute">Book Tutor</router-link>
         </div>
       </div>
       <div class="col">
-        <h4 class="">{{profile.name}}</h4>
-        <h5 class=" text-uppercase"> About </h5>
+        <h4 class="">{{profile.firstName}} {{profile.lastName}}</h4>
         <p class="">{{profile.about}}</p>
       </div>
       <div class="col-2" v-if="isLoggedInUser">
@@ -25,8 +23,7 @@
 </template>
 
 <script>
-import {mapGetters, mapActions} from 'vuex';
-import {NAME, PROFILE_PICTURE, ABOUT} from '@/constants.actions.js';
+import {mapGetters} from 'vuex';
 import AboutEditor from '@/components/profile/AboutEditor.vue';
 import {profileState} from '@/constants.state.js';
 
@@ -40,14 +37,14 @@ export default {
     };
   },
   props: {
-    'profileId': String,
+    profileId: String,
   },
   computed: {
     ...mapGetters('profile', ['currentProfile']),
-    'isLoggedInUser': function() {
+    isLoggedInUser() {
       return this.currentProfile.id == this.profileId;
     },
-    'bookTutorRoute': function() {
+    bookTutorRoute() {
       return {
         name: 'profile-calendar',
         params: {userId: this.profile.id},
@@ -62,26 +59,15 @@ export default {
     }
   },
   methods: {
-    ...mapActions('profile', [NAME, PROFILE_PICTURE, ABOUT]),
-    'bookTutorButton': function() {
-      return this.profile.isTutor &&
+    bookTutorButton() {
+      return this.profile.canBeTutor &&
       (this.profile.id === this.currentProfile.id);
     },
-    'cancelEvent': function() {
+    closeEditor() {
       this.editorOpen = false;
     },
-    'edit': function() {
+    edit() {
       this.editorOpen = true;
-    },
-    'saveEvent': function(state) {
-      if (state.name) {
-        this[NAME](state.name);
-      }
-
-      if (state.about) {
-        this[ABOUT](state.about);
-      }
-      this.editorOpen = false;
     },
   },
 };

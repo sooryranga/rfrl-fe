@@ -15,17 +15,29 @@
         <div class="row" v-if="pendingSession === null">
           <div class="col h-100">
             <button
-            v-on:click="create(true)"
-            v-if="currentProfile.isTutor"
+            v-on:click="create(this.currentProfile.id)"
             class="btn btn-outline-dark mx-2 float-left">
               Tutor
             </button>
             <button
-            v-on:click="create(false)"
-            v-if="otherUserIsTutor"
+            v-bind:class="{ tutorDropDownActive: 'dropdown-toggle' }"
+            v-on:click="selectTutor(false)"
             class="btn btn-outline-dark float-left">
               Learn from
             </button>
+
+            <div v-if="showDropDown" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <a v-for="(user, id) in selectableTutor" v-bind:key="id" class="dropdown-item">
+                <div class="row">
+                  <div class="col-2 my-2 mx-2">
+                    <img class="profilePicture" v-bind:src="user.photo"/>
+                  </div>
+                  <div class="col">
+                    {user.firstName}
+                  </div>
+                </div>
+              </a>
+            </div>
           </div>
         </div>
         <div class="row h-100" v-else-if="pendingSession.by === currentProfile.id">
@@ -47,7 +59,7 @@
           <p
           class="align-middle"
           v-if="this.pendingSession.tutorId != this.currentProfile.id">
-            {{pendingSession.tutor.name}} wants to tutor you
+            {{pendingSession.tutor.firstName}} wants to tutor you
           </p>
           <p
           class="align-middle"
@@ -81,18 +93,16 @@ export default {
   },
 
   computed: {
-    wantsToLearnFromYou: function() {
+    wantsToLearnFromYou() {
       return 'Students wants to learn from you';
     },
-    otherUserIsTutor: function() {
-      if (Object.keys(this.users) != 2) return false;
-      const keys = Object.keys(this.users);
-      for (const i = 0; i < keys.length; i++) {
-        const id = keys[i];
-        if (id === this.currentProfile.id) continue;
-        return this.users[id].isTutor || false;
-      }
-      return false;
+    tutorDropDownActive() {
+      return Object.keys(this.users).length > 2;
+    },
+    selectableTutor() {
+      const filteredTutors = {...this.users};
+      delete filteredTutors[this.currentProfile.id];
+      return filteredTutors;
     },
     ...mapGetters('profile', ['currentProfile']),
   },
@@ -102,6 +112,8 @@ export default {
       pendingSession: null,
       users: {},
       showError: false,
+      tutorID: null,
+      showDropDown: false,
     };
   },
 
@@ -113,6 +125,16 @@ export default {
 
   methods: {
     ...mapGetters('chatRooms', ['rooms', 'getUser']),
+    async selectTutor() {
+      if (Object.keys(this.users).length === 2) {
+        const otherUserId = Object.keys(this.users).filter(
+            (userID) => userID != this.currentProfile.id,
+        )[0];
+        return await create(otherUserId);
+      }
+
+      this.showDropDown = true;
+    },
     async setNewRoom() {
       const currentRoom = this.rooms()[this.roomId];
       // user = this.getUsers(currentRoom.users)
@@ -137,21 +159,13 @@ export default {
         };
       }
     },
-    create: async function(tutor) {
-      if (this.users.length > 2 && !tutor) {
-        this.error = 'Only tutor can schedule a session in a group!';
-        this.showError = true;
-        setTimeout(function() {
-          this.error = null;
-          this.showError = false;
-        }.bind(this), 2000);
+    async create(tutorID) {
+      if (this.showDropDown) {
+        this.showDropDown = false;
       }
 
       const by = this.currentProfile.id;
-      let tutorId = this.userId;
-      if (tutor) {
-        tutorId = this.currentProfile.id;
-      }
+
       const pendingSession = {
         users: {...this.users},
         tutorId,
@@ -243,5 +257,13 @@ export default {
   font-size: 24px;
   line-height: 1.33;
   border-radius: 35px;
+}
+.profilePicture{
+  background-size: cover;
+  background-position: top center;
+  border-radius:50%;
+  background-color: #fff;
+  height: 5vh;
+  width: 5vh;
 }
 </style>

@@ -91,7 +91,7 @@ const actions = {
     }
   },
 
-  async getQuestions({commit, getters}, options={set_selected: true}) {
+  async getQuestions({commit, getters}, options={setSelected: true}) {
     let questions = getters.questions;
 
     if (questions) {
@@ -134,7 +134,26 @@ const actions = {
     return null;
   },
 
-  async updateQuestion({dispatch, commit}, id, payload, option={}) {
+  async applyToQuestion({commit, getters}, questionID) {
+    try {
+      question.QuestionService.apply(questionID);
+    } catch (err) {
+      console.error(err);
+      const errorString = getErrorMessageFromRequest(error);
+      commit(SET_QUESTION_ERROR, errorString);
+      return null;
+    }
+
+    const question = getters.getQuestion(questionID);
+
+    commit(
+        SET_UPDATE_QUESTION,
+        {...question, applicants: question.applicants + 1},
+    );
+  },
+
+  async updateQuestion({dispatch, commit}, payload, option={}) {
+    const id = payload.id;
     const question = await dispatch('getQuestion', {id});
     if (question === null) {
       commit(SET_QUESTION_ERROR, 'Updating Question does not exist');

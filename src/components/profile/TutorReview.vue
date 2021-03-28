@@ -1,5 +1,5 @@
 <template>
-  <div :v-if="profile.isTutor" id="review" class="shadow p-3 my-3 bg-white">
+  <div :v-if="profile.canBeTutor" id="review" class="shadow p-3 my-3 bg-white">
     <div class="row">
       <h3 class=" ml-4 my-2"> Student Review </h3>
     </div>

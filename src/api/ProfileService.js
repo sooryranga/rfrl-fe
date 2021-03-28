@@ -1,3 +1,5 @@
+import Vue from 'vue';
+
 export const responseToProfile = (profileResponse) => {
   if (!profileResponse) return;
 
@@ -13,4 +15,20 @@ export const responseToProfile = (profileResponse) => {
   return profile;
 };
 
-export default {responseToProfile};
+export const ProfileService = {
+  async get(id) {
+    const response = await Vue.axios.get(`client/${id}/`);
+    return responseToProfile(response.data);
+  },
+  async update(id, profile) {
+    const response = await Vue.axios.put(`client/${id}/`, profile);
+    return responseToProfile(response.data);
+  },
+  async create(profile) {
+    const response = await Vue.axios.post(`client/`, profile);
+    return responseToProfile(response.data);
+  },
+};
+
+
+export default {responseToProfile, ProfileService};

@@ -67,10 +67,13 @@ export default {
       return timeAgo.format(newDate);
     },
     routeToQuestion: function(index) {
+      if (this.questions[index].id === this.$route?.params?.questionId) {
+        return;
+      }
       const questionId = this.questions[index].id;
       this.selectQuestion(questionId);
-      console.log(questionId);
-      this.$router.replace({
+
+      this.$router.push({
         params: {questionId: questionId},
         query: this.$route.query,
       });

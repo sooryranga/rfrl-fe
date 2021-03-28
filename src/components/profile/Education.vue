@@ -1,3 +1,4 @@
+
 <template>
   <div id="education" class="shadow p-3 my-3 bg-white">
     <education-editor
@@ -112,7 +113,7 @@ export default {
   },
   mounted: function() {
     if (this.isLoggedInUser) {
-      if (this.currentProfile.education.length == 0) {
+      if (this.currentProfile?.education?.length === 0) {
         this[EDUCATION]();
       }
       this.localEducation.push(...this.currentProfile.education);
