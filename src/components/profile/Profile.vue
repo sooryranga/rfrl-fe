@@ -25,12 +25,17 @@
 import {mapGetters} from 'vuex';
 import {profileState} from '@/constants.state.js';
 
+import AskedQuestions from '@/components/profile/AskedQuestions.vue';
+
 export default {
   name: 'tutor',
   data: function() {
     return {
       profile: profileState(),
     };
+  },
+  components: {
+    'asked-questions': AskedQuestions,
   },
   computed: {
     ...mapGetters('profile', ['currentProfile']),
@@ -48,7 +53,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .profilePicture{
   background-size: cover;
   background-position: top center;

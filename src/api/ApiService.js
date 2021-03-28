@@ -3,6 +3,8 @@ import axios from 'axios';
 import VueAxios from 'vue-axios';
 import {API_URL} from '@/conf';
 
+import {Auth} from '.';
+
 
 const ApiService = {
   init() {
@@ -20,9 +22,15 @@ const ApiService = {
       if (error.response) {
         // The request was made and the server responded with a status code
         // that falls out of the range of 2xx
+        const status = error.response.status;
+        const data = error.response?.data?.message;
         console.log(error.response.data);
         console.log(error.response.status);
         console.log(error.response.headers);
+
+        if (status === 401 && data === 'invalid or expired jwt') {
+          Auth.destroyToken();
+        }
       } else if (error.request) {
         // The request was made but no response was received
         // `error.request` is an instance of XMLHttpRequest

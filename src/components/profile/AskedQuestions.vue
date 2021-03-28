@@ -31,6 +31,8 @@
 </template>
 
 <script>
+import {Question} from '@/api';
+
 export default {
   name: 'asked-questions',
   props: {
@@ -49,17 +51,9 @@ export default {
       return text;
     },
   },
-  mounted: function() {
-    this.questions.push({
-      title: 'Math question',
-      text: 'What is 1+1?',
-      tags: [{name: 'Math'}, {name: 'Calculus'}],
-    });
-    this.questions.push({
-      title: 'Really long mmath question is here and is not afraid to flex ath question is here and is not afraid to flex',//eslint-disable-line
-      text: "What does the graph look like in a square pde? and does it have to confine to a periodical nature, can it have asymptotes? Can you solve second order square pde without a computer simulation?", // eslint-disable-line
-      tags: [{name: 'Math'}, {name: 'Calculus'}],
-    });
+  async mounted() {
+    this.questions = await Question
+        .QuestionService.getQuestionsForUser(this.profileId);
   },
 };
 </script>

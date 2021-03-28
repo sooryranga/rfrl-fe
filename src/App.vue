@@ -23,8 +23,8 @@
                   <button
                   class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <img id="navProfilePicture" v-bind:src="currentProfile.profileImage"/>
-                    {{currentProfile.name}}
+                    <img id="navProfilePicture" v-bind:src="currentProfile.photo"/>
+                    {{currentProfile.firstName}} {{currentProfile.lastName}}
                   </button>
                   <div class="dropdown-menu dropdown-menu-left" aria-labelledby="dropdownMenuButton">
                     <router-link
@@ -52,19 +52,24 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex';
+import {mapGetters, mapActions} from 'vuex';
 
 export default {
   name: 'tutor',
   computed: {
-    ...mapGetters('authentication', ['loggedIn']),
-    ...mapGetters('profile', ['currentProfile']),
+    ...mapGetters('profile', ['currentProfile', 'loggedIn']),
     profileLink: function() {
       return {
         name: 'profile',
         params: {userId: this.currentProfile.id},
       };
     },
+  },
+  methods: {
+    ...mapActions('profile', ['loginAuthorized']),
+  },
+  async mounted() {
+    await this.loginAuthorized();
   },
 };
 </script>

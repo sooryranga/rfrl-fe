@@ -5,6 +5,7 @@ const SET_DEFAULT_AUTH = 'default_auth';
 const SET_LOGGED_OUT = 'log_out';
 
 const SET_PROFILE = 'set_profile';
+const SET_UPDATE_PROFILE = 'set_update_profile';
 const SET_PROFILE_IMAGE = 'set_profile_image';
 const SET_NAME = 'set_name';
 const SET_TUTORED_STUDENTS = 'set_tutored_students';
@@ -54,6 +55,7 @@ export {
   SET_NEW_DOCUMENT,
   SET_ABOUT,
   SET_EDUCATIONS,
+  SET_UPDATE_PROFILE,
 
   // Mutations for chatRooms
   SET_ROOMS,

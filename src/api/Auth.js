@@ -19,34 +19,45 @@ export const destroyToken = () => {
 export const AuthService = {
   async googleLogin(token) {
     const response = await Vue.axios.post('login/', {type: 'google', token});
-    saveToken(response.data['token']);
+    saveToken(response.data?.token);
   },
   async linkedLogin(token) {
     const response = await Vue.axios.post('login/', {type: 'linkedin', token});
-    saveToken(response.data['token']);
+    saveToken(response.data?.token);
   },
   async login({email, password}) {
     const response = await Vue.axios.post(
         'login/',
         {type: 'email', email, password},
     );
-    saveToken(response.data['token']);
+    saveToken(response.data?.token);
+    return response.data?.client;
+  },
+  async loginAuthorized() {
+    if (!getToken()) {
+      return null;
+    }
+    const response = await Vue.axios.post(
+        'login-authorized/',
+    );
+    saveToken(response.data?.token);
+    return response.data?.client;
   },
   async signupGoogle({token, name, imageUrl}) {
     const response = await Vue.axios.post(
         'signup/',
-        {type: 'google', token, name, profileImageURL: imageUrl},
+        {type: 'google', token, name, photoURL: imageUrl},
     );
-    saveToken(response.data['token']);
+    saveToken(response.data?.token);
     return response;
   },
   async signupLinkedIn({token}) {
     const response = await Vue.axios.post('signup/', {type: 'linkedin', token});
-    saveToken(response.data['token']);
+    saveToken(response.data?.token);
   },
   async signupPassword({email, password}) {
     const response = await Vue.axios.post('signup/', {email, password});
-    saveToken(response.data['token']);
+    saveToken(response.data?.token);
   },
 };
 
