@@ -33,7 +33,7 @@
                       View Profile
                     </router-link>
                     <a class="dropdown-item" href="#">Settings & Privacy</a>
-                    <a class="dropdown-item" href="#">Sign Out</a>
+                    <a class="dropdown-item" v-on:click="logoutUser" href="#">Log Out</a>
                   </div>
                 </div>
               </div>
@@ -66,7 +66,11 @@ export default {
     },
   },
   methods: {
-    ...mapActions('profile', ['loginAuthorized']),
+    ...mapActions('profile', ['loginAuthorized', 'logout']),
+    async logoutUser() {
+      this.$router.push({name: 'home'});
+      await this.logout();
+    },
   },
   async mounted() {
     await this.loginAuthorized();

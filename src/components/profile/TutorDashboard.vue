@@ -3,7 +3,7 @@
     <h3 class=" ml-4 my-2"> Tutoring Dashboard </h3>
     <div id="previousStudentProfiles">
       <div id="studentPreview">
-        <div v-for="student in currentProfile.tutoredStudents" v-bind:key="student.currentProfileId" class="row mb-2">
+        <div v-for="student in currentProfile.tutoredStudents" v-bind:key="student.from.id" class="row mb-2">
           <div class="col-3 my-auto">
             <img v-bind:src="student.image" class="studentPicture"/>
           </div>

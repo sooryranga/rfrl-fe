@@ -44,13 +44,6 @@
 </template>
 
 <script>
-import {
-  GOOGLE_LOGIN,
-  LINKED_IN_LOGIN,
-  DEFAULT_LOGIN,
-  NAME,
-  PROFILE_PICTURE,
-} from '@/constants.actions.js';
 import {mapActions, mapGetters} from 'vuex';
 import queryString from 'query-string';
 
@@ -66,28 +59,32 @@ export default {
     };
   },
   methods: {
+    ...mapActions('profile', [
+      'googleLogin',
+      'linkedinLogin',
+      'emailLogin',
+    ]),
     loginToLinkedIn: function() {
       window.location.replace(this.linkedinOauthUrl);
     },
     loginToGoogle: function() {
       this.googleOauth.signIn();
     },
-    onGoogleSignIn: function(hasUser) {
+    async onGoogleSignIn(hasUser) {
       if (!hasUser) {
         console.log('Need to reauth');
         return;
       }
       const googleUser = this.googleOauth.currentUser.get();
-      const idToken = googleUser.getAuthResponse().id_token;
-
       const profile = googleUser.getBasicProfile();
+      const idToken = profile.getId();
       console.log('ID: ' + profile.getId());
       console.log('Name: ' + profile.getName());
       console.log('Image URL: ' + profile.getImageUrl());
       console.log('Email: ' + profile.getEmail());
       console.log('token: ' + idToken);
 
-      this[GOOGLE_LOGIN]({
+      await this.googleLogin({
         token: idToken,
         name: profile.getName(),
         profilePicture: profile.getImageUrl(),
@@ -100,15 +97,6 @@ export default {
           },
       );
     },
-    ...mapActions('profile', [
-      GOOGLE_LOGIN,
-      LINKED_IN_LOGIN,
-      DEFAULT_LOGIN,
-    ]),
-    ...mapActions('profile', [
-      NAME,
-      PROFILE_PICTURE,
-    ]),
   },
   computed: {
     linkedinOauthUrl: function() {

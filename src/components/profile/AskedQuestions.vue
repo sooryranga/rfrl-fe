@@ -52,8 +52,10 @@ export default {
     },
   },
   async mounted() {
-    this.questions = await Question
-        .QuestionService.getQuestionsForUser(this.profileId);
+    if (this.profileId) {
+      this.questions = await Question
+          .QuestionService.getQuestionsForUser(this.profileId);
+    }
   },
 };
 </script>

@@ -1,7 +1,4 @@
 // SignUp
-const GOOGLE_LOGIN = 'google_login';
-const LINKED_IN_LOGIN = 'linkedin_login';
-const DEFAULT_LOGIN = 'default_login';
 const LOGOUT = 'logout';
 
 // profile
@@ -16,9 +13,6 @@ const ADD_EDUCATION = 'add_education';
 
 export {
   // ACTION for authentication
-  GOOGLE_LOGIN,
-  LINKED_IN_LOGIN,
-  DEFAULT_LOGIN,
   LOGOUT,
 
   // ACTION for user
