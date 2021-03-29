@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import ApiService from '@/api/ApiService';
+import {Profile} from '@/api/';
 
 const ID_TOKEN_KEY = 'id_token';
 
@@ -20,18 +21,23 @@ export const AuthService = {
   async googleLogin(token) {
     const response = await Vue.axios.post('login/', {type: 'google', token});
     saveToken(response.data?.token);
+    const client = response.data?.client;
+    return Profile.responseToProfile(client);
   },
   async linkedLogin(token) {
     const response = await Vue.axios.post('login/', {type: 'linkedin', token});
     saveToken(response.data?.token);
+    const client = response.data?.client;
+    return Profile.responseToProfile(client);
   },
-  async login({email, password}) {
+  async loginEmail({email, password}) {
     const response = await Vue.axios.post(
         'login/',
         {type: 'email', email, password},
     );
     saveToken(response.data?.token);
-    return response.data?.client;
+    const client = response.data?.client;
+    return Profile.responseToProfile(client);
   },
   async loginAuthorized() {
     if (!getToken()) {
@@ -49,15 +55,20 @@ export const AuthService = {
         {type: 'google', token, name, photoURL: imageUrl},
     );
     saveToken(response.data?.token);
-    return response;
+    const client = response.data?.client;
+    return Profile.responseToProfile(client);
   },
   async signupLinkedIn({token}) {
     const response = await Vue.axios.post('signup/', {type: 'linkedin', token});
     saveToken(response.data?.token);
+    const client = response.data?.client;
+    return Profile.responseToProfile(client);
   },
   async signupPassword({email, password}) {
     const response = await Vue.axios.post('signup/', {email, password});
     saveToken(response.data?.token);
+    const client = response.data?.client;
+    return Profile.responseToProfile(client);
   },
 };
 

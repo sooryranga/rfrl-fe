@@ -42,7 +42,7 @@ const routes = [
   },
   {
     path: '/',
-    name: 'Home',
+    name: 'home',
     component: () => import('@/components/Home.vue'),
   },
   {

@@ -3,15 +3,13 @@ import {v1 as uuidv1} from 'uuid';
 import {
   TUTORED_STUDENTS, DOCUMENTS, EDUCATION, TUTOR_REVIEW,
   ADD_DOCUMENT, ADD_EDUCATION,
-  GOOGLE_LOGIN, LINKED_IN_LOGIN, DEFAULT_LOGIN,
-  LOGOUT,
 } from '@/constants.actions.js';
 import {
   SET_PROFILE, SET_UPDATE_PROFILE,
   SET_TUTORED_STUDENTS, SET_DOCUMENTS, SET_EDUCATION,
   SET_TUTOR_REVIEW, SET_DOCUMENT,
   SET_EDUCATIONS, SET_LOGGED_IN, SET_GOOGLE_AUTH,
-  SET_LINKED_IN_AUTH, SET_DEFAULT_AUTH, SET_LOGGED_OUT,
+  SET_LINKED_IN_AUTH, SET_EMAIL_AUTH, SET_LOGGED_OUT,
 } from '@/constants.mutations.js';
 
 
@@ -20,19 +18,19 @@ import {Auth, Profile} from '@/api';
 
 import {usersRef} from '@/firestore';
 
-const blankState = {
+const blankState = () => ({
   google: {token: null},
   linkedin: {token: null},
-  default: {username: null, passwordHash: null},
+  email: {email: null},
   loggedIn: false,
   profile: profileState(),
-};
+});
 
 const state ={
   profile: profileState(),
   google: {token: null},
   linkedin: {token: null},
-  default: {username: null, passwordHash: null},
+  email: {username: null},
   loggedIn: false,
 };
 
@@ -66,8 +64,8 @@ const actions = {
   },
   async [TUTORED_STUDENTS]({commit}) {
     commit(SET_TUTORED_STUDENTS, [
-      {profileId: uuidv1(), name: 'soory', lastTutoredDate: new Date(), image: 'https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png'},// eslint-disable-line
-      {profileId: uuidv1(), name: 'arun', lastTutoredDate: new Date(), image: 'https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png'},// eslint-disable-line
+      {from: {id:uuidv1()}, name: 'soory', lastTutoredDate: new Date(), image: 'https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png'},// eslint-disable-line
+      {from: {id:uuidv1()}, name: 'arun', lastTutoredDate: new Date(), image: 'https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png'},// eslint-disable-line
     ]);
   },
   async [DOCUMENTS]({commit}) {
@@ -96,31 +94,55 @@ const actions = {
   async loginAuthorized({commit}) {
     const client = await Auth.AuthService.loginAuthorized();
 
+    if (!client) {
+      return;
+    }
+
     commit(SET_LOGGED_IN);
     commit(SET_PROFILE, client);
   },
-  async [GOOGLE_LOGIN]({commit}, {token, name, imageUrl}) {
-    await Auth.AuthService.signupGoogle({token, name, imageUrl});
+  async googleLogin({commit}, {token, name, imageUrl}) {
+    const client = await Auth.AuthService.signupGoogle({token, name, imageUrl});
 
+    if (!client) {
+      return;
+    }
+
+    commit(SET_PROFILE, client);
     commit(SET_GOOGLE_AUTH, {token, name, imageUrl});
     commit(SET_LOGGED_IN);
   },
-  [LINKED_IN_LOGIN]({commit}, token) {
+  async linkedinLogin({commit}, token) {
+    const client = await Auth.AuthService.signupLinkedIn({token});
+
+    if (!client) {
+      return;
+    }
+
+    commit(SET_PROFILE, client);
     commit(SET_LINKED_IN_AUTH, token);
     commit(SET_LOGGED_IN);
   },
-  [DEFAULT_LOGIN]({commit}, username, password) {
-    commit(SET_DEFAULT_AUTH, username, password);
+  async emailLogin({commit}, email, password) {
+    const client = await Auth.AuthService.loginEmail({email, password});
+
+    if (!client) {
+      return;
+    }
+
+    commit(SET_PROFILE, client);
+    commit(SET_EMAIL_AUTH, email);
     commit(SET_LOGGED_IN);
   },
-  [LOGOUT]() {
+  logout({commit}) {
     commit(SET_LOGGED_OUT);
+    Auth.destroyToken();
   },
 };
 
 const mutations = {
   [SET_PROFILE](state, profile) {
-    state.profile = {...blankState.profile, ...profile};
+    state.profile = {...blankState().profile, ...profile};
   },
   [SET_UPDATE_PROFILE](state, updatedProfile) {
     state.profile = {...state.profile, ...updatedProfile};
@@ -162,11 +184,12 @@ const mutations = {
   [SET_LINKED_IN_AUTH](state, token) {
     state.linkedin.token = token;
   },
-  [SET_DEFAULT_AUTH](state, username, pass) {
-    state.default= {username: username, passwordHash: pass};
+  [SET_EMAIL_AUTH](state, email) {
+    state.default= {email};
   },
   [SET_LOGGED_OUT](state) {
-    state = {...blankState};
+    Object.assign(state, blankState());
+    console.log(state);
   },
 };
 

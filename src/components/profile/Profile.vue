@@ -53,7 +53,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .profilePicture{
   background-size: cover;
   background-position: top center;
