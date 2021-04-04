@@ -33,12 +33,12 @@ const routes = [
   {
     path: '/questions/:questionId?',
     name: 'questions',
-    component: () => import('@/components/Questions.vue'),
+    component: () => import('@/components/questions/Questions.vue'),
   },
   {
     path: '/tutors',
     name: 'Tutors',
-    component: () => import('@/components/Tutors.vue'),
+    component: () => import('@/components/tutorList//Tutors.vue'),
   },
   {
     path: '/',

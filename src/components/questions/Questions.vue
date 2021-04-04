@@ -25,10 +25,10 @@
 
 <script>
 import {mapActions, mapGetters} from 'vuex';
-import QuestionsFilter from '@/components/QuestionsFilter.vue';
-import QuestionsEditor from '@/components/QuestionsEditor.vue';
-import QuestionsSelector from '@/components/QuestionsSelector.vue';
-import QuestionsViewer from '@/components/QuestionsViewer.vue';
+import QuestionsFilter from '@/components/questions/QuestionsFilter.vue';
+import QuestionsEditor from '@/components/questions/QuestionsEditor.vue';
+import QuestionsSelector from '@/components/questions/QuestionsSelector.vue';
+import QuestionsViewer from '@/components/questions/QuestionsViewer.vue';
 
 export default {
   name: 'Questions',
