@@ -97,6 +97,19 @@ export const isSameDay = (d1, d2) => {
   );
 };
 
+export const getErrorMessageFromRequest = (error) => {
+  if (error.response) {
+    // Request made and server responded
+    return error.response.data['message'];
+  } else if (error.request) {
+    // The request was made but no response was received
+    return 'Something went wrong trying to call' + String(error.request);
+  } else {
+    // Something happened in setting up the request that triggered an Error
+    return error.message;
+  }
+};
+
 export {
   formatAMPM,
   phonenumber,

@@ -35,6 +35,9 @@ const SET_QUESTION_ERROR = 'set_question_error';
 const SET_UPDATE_QUESTION = 'set_update_question';
 const SET_QUESTION_EDITOR = 'set_question_editor';
 
+const SET_ADD_TUTORS = 'set_add_tutors';
+const SET_TUTORS_ERROR = 'set_add_tutors';
+
 export {
   // Mutations for authentication
   SET_LOGGED_IN,
@@ -77,4 +80,8 @@ export {
   SET_QUESTION_ERROR,
   SET_UPDATE_QUESTION,
   SET_QUESTION_EDITOR,
+
+  // Multations for tutors
+  SET_ADD_TUTORS,
+  SET_TUTORS_ERROR,
 };
