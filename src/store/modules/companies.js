@@ -3,8 +3,8 @@ import {Company} from '@/api';
 import {getErrorMessageFromRequest} from '@/utils';
 
 import {
-  SET_COMPANY,
-  SET_COMPANY_ERROR,
+  SET_COMPANIES,
+  SET_COMPANIES_ERROR,
 } from '@/constants.mutations.js';
 
 const state = {
@@ -19,19 +19,20 @@ const getters = {
 const actions = {
   async getCompanies({commit}) {
     try {
-      const companies = Company.CompanyService.getList();
-      commit(SET_COMPANY, companies);
+      const companies = await Company.CompanyService.getList();
+      commit(SET_COMPANIES, companies);
     } catch (err) {
-      commit(SET_COMPANY_ERROR, getErrorMessageFromRequest(err));
+      console.log(err);
+      commit(SET_COMPANIES_ERROR, getErrorMessageFromRequest(err));
     }
   },
 };
 
 const mutations = {
-  [SET_COMPANY](state, companies) {
+  [SET_COMPANIES](state, companies) {
     state.companies = companies;
   },
-  [SET_COMPANY_ERROR](state, error) {
+  [SET_COMPANIES_ERROR](state, error) {
     state.error = error;
   },
 };

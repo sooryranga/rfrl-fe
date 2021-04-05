@@ -2,27 +2,27 @@
   <div class="row justify-content-center">
     <div class="col-3">
       <multiselect
-      v-model="checkedDatePosted" :options="datePosted" :searchable="false"
+      v-model="checkedPrice" :options="tutorPrice" :searchable="false"
       :close-on-select="true" :show-labels="true" :deselect-label="''"
-      @close="updatedAtPosted"
-      placeholder="Date Posted" label="name" track-by="name"
+      @close="updatedPrice"
+      placeholder="Price" label="name" track-by="name"
       :select-label="''">
       </multiselect>
     </div>
     <div class="col-3">
         <multiselect
-        v-model="checkedTags" :options="tags" :multiple="true"
+        v-model="checkedCompanies" :options="companies" :multiple="true"
         :close-on-select="false" :clear-on-select="false"
-        :preserve-search="false" placeholder="Search for tags"
+        :preserve-search="false" placeholder="Search for companies"
         :select-label="''" :taggable="false" :deselect-label="''"
-        @remove="changeTag" @select="changeTag" @close="updateTag"
+        @remove="changeCompany" @select="changeCompany" @close="updatedCompany"
         label="name" track-by="name" :preselect-first="false">
           <template slot="tag"><div></div></template>
-          <template slot="selection" slot-scope="{ values, search, isOpen }">
+          <template slot="selection" slot-scope="{ values, isOpen }">
             <span
             class="multiselect__single"
             v-if="values.length &amp;&amp; !isOpen">
-              Tags ({{values.length}})
+              Companies ({{values.length}})
             </span>
           </template>
         </multiselect>
@@ -40,45 +40,49 @@
 </template>
 
 <script>
+import {mapActions, mapGetters} from 'vuex';
 import Multiselect from 'vue-multiselect';
-import {datePosted, tags, datePostedKeyValue, tagKeyValue} from '@/utils.js';
+import {tutorPrice, tutorPriceKeyValue, tagKeyValue} from '@/utils.js';
 
 export default {
   name: 'question-filter',
   data: function() {
     return {
-      tags,
-      datePosted,
-      checkedTags: [],
-      checkedDatePosted: datePosted[0],
+      tutorPrice,
+      checkedCompanies: [],
+      checkedPrice: tutorPrice[0],
       isRemote: false,
-      changedTags: false,
+      changedCompanies: false,
     };
+  },
+  computed: {
+    ...mapGetters('companies', ['companies']),
   },
   components: {
     Multiselect,
   },
   methods: {
-    changeTag: function() {
-      this.changedTags = true;
+    ...mapActions('companies', ['getCompanies']),
+    changeCompany: function() {
+      this.changedCompanies = true;
     },
-    updateTag: function() {
-      if (!this.changedTags) {
+    updatedCompany: function() {
+      if (!this.changedCompanies) {
         return;
       }
-      const keys= this.checkedTags.map((v) => v.key);
-      const mergedQuery = {...this.$route.query, checkedTag: keys};
+      const keys= this.checkedCompanies.map((v) => v.name);
+      const mergedQuery = {...this.$route.query, checkedCompany: keys};
       this.$router.push({query: mergedQuery});
-      this.$emit('updateTag', this.checkedTags);
-      this.changedTags = false;
+      this.$emit('updatedCompany', this.checkedCompanies);
+      this.changedCompanies = false;
     },
-    updatedAtPosted: function() {
+    updatedPrice: function() {
       const mergedQuery = {
         ...this.$route.query,
-        checkedDatePosted: this.checkedDatePosted.key,
+        checkedPrice: this.checkedPrice.key,
       };
       this.$router.push({query: mergedQuery});
-      this.$emit('updatedAtPosted', this.checkedDatePosted);
+      this.$emit('updatedPrice', this.checkedPrice);
     },
     updateRemote: function() {
       this.isRemote = !this.isRemote;
@@ -91,18 +95,19 @@ export default {
     },
   },
   mounted: function() {
-    let tagKeys = this.$route.query?.checkedTag || [];
+    this.getCompanies();
+    let tagKeys = this.$route.query?.checkedCompany || [];
     if (typeof tagKeys === 'string') {
       tagKeys = [tagKeys];
     }
     for (const key of tagKeys) {
       if (key in tagKeyValue) {
-        this.checkedTags.push(tagKeyValue[key]);
+        this.checkedCompanies.push(tagKeyValue[key]);
       }
     }
-    const datePostedKey = this.$route.query?.checkedDatePosted;
-    if (datePostedKey && datePostedKey in datePostedKeyValue) {
-      this.checkedDatePosted = datePostedKeyValue[datePostedKey];
+    const tutorPriceKey = this.$route.query?.checkedPrice;
+    if (tutorPriceKey && tutorPriceKey in tutorPriceKeyValue) {
+      this.checkedPrice = tutorPriceKeyValue[tutorPriceKey];
     }
 
     const isRemote = this.$route.query?.isRemote;

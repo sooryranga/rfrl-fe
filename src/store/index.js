@@ -5,6 +5,7 @@ import profile from './modules/profile';
 import chatRooms from './modules/chatRooms';
 import roomMessages from './modules/roomMessages';
 import tutors from './modules/tutors';
+import companies from './modules/companies';
 
 // Load Vuex
 Vue.use(Vuex);
@@ -16,6 +17,7 @@ const store = new Vuex.Store({
     chatRooms,
     roomMessages,
     tutors,
+    companies,
   },
 });
 
