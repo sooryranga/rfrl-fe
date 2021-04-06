@@ -39,15 +39,16 @@ export default {
   },
   computed: {
     ...mapGetters('profile', ['currentProfile']),
+    ...mapGetters('tutors', ['getTutor']),
     'isLoggedInUser': function() {
-      return this.currentProfile.id == this.$route.params.userId;
+      return this.currentProfile.id === this.$route.params.userId;
     },
   },
   beforeMount: function() {
-    if (this.$route.params.userId == this.currentProfile.id) {
+    if (this.$route.params.userId === this.currentProfile.id) {
       this.profile = this.currentProfile;
     } else {
-      this.profile = this.currentProfile;
+      this.profile = this.getTutor(this.$route.params.userId);
     }
   },
 };

@@ -1,5 +1,5 @@
 <template>
-  <div id="question-div" class="mt-3 container-xl mx-auto">
+  <div class="h-100 mt-3 container-xl mx-auto">
     <transition name="fade">
       <div v-if="error" class="alert alert-danger fade-in" role="alert">
         {{error}}
@@ -58,24 +58,17 @@ export default {
       console.log(datePosted);
     },
   },
-  async beforeMount() {
+  async mounted() {
+    await this.getQuestions();
+
     const questionID = this.$route.params?.questionId;
+    console.log(parseInt(questionID));
     if (questionID) {
       this.selectQuestion(parseInt(questionID));
     }
-
-    await this.getQuestions();
   },
 };
 </script>
 
 <style>
-#question-div{
-  flex-direction: column;
-  flex-grow: 1!important;
-  overflow: auto;
-  /* for Firefox */
-  min-height: 0;
-  flex: 0 1 auto!important;
-}
 </style>
