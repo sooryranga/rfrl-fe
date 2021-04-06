@@ -418,7 +418,7 @@ export default {
           .database()
           .ref('.info/connected')
           .on('value', (snapshot) => {
-            if (snapshot.val() == false) return;
+            if (snapshot.val() === false) return;
 
             userStatusRef
                 .onDisconnect()

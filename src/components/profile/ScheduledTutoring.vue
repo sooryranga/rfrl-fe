@@ -82,7 +82,7 @@ export default {
   computed: {
     ...mapGetters('profile', ['currentProfile']),
     'dateScheduledSessions': function() {
-      if (this.scheduledSessions.length == 0) {
+      if (this.scheduledSessions.length === 0) {
         return [];
       }
 

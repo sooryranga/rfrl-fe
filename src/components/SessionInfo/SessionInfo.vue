@@ -96,8 +96,8 @@ export default {
 
       return [...Array(8).keys()].filter((filterDay) => {
         if (filterDay === 0) return true;
-        if (day+1 === 8 && filterDay == 5) return false;
-        if (day-1 === 0 && filterDay == 3) return false;
+        if (day+1 === 8 && filterDay === 5) return false;
+        if (day-1 === 0 && filterDay === 3) return false;
         return day+1 < filterDay || day -1 > filterDay;
       });
     },

@@ -25,7 +25,7 @@ const getters = {
     return state.questions.find((question) => question.id==id);
   },
   selectedQuestion: (state) => {
-    if (state.selectedQuestionID == null) {
+    if (state.selectedQuestionID === null) {
       return null;
     }
     return state.questions.find(
@@ -103,15 +103,16 @@ const actions = {
   },
 
   selectQuestion({commit, getters}, id, option={}) {
-    if (id == null) {
+    if (id === null) {
       commit(SET_SELECT_QUESTION, null);
       return null;
     }
 
     const selectedQuestion = getters.selectedQuestion;
-    if (selectedQuestion?.id == id) {
+    if (selectedQuestion?.id === id) {
       return selectedQuestion;
     }
+
     const question = getters.getQuestion(id);
 
     if (question) {

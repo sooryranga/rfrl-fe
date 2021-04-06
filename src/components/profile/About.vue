@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isLoggedInUser" class="shadow p-3 my-4 pt-5 pb-4 bg-white">
+  <div class="shadow p-3 my-4 pt-5 pb-4 bg-white">
     <about-editor
       v-if="editorOpen"
       v-on:closeEditor="closeEditor"
@@ -41,8 +41,9 @@ export default {
   },
   computed: {
     ...mapGetters('profile', ['currentProfile']),
+    ...mapGetters('tutors', ['getTutor']),
     isLoggedInUser() {
-      return this.currentProfile.id == this.profileId;
+      return this.currentProfile.id === this.profileId;
     },
     bookTutorRoute() {
       return {
@@ -55,7 +56,7 @@ export default {
     if (this.isLoggedInUser) {
       this.profile = this.currentProfile;
     } else {
-      this.profile = this.currentProfile;
+      this.profile = this.getTutor(this.profileId);
     }
   },
   methods: {

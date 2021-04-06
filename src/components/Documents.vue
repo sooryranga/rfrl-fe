@@ -65,7 +65,7 @@ export default {
   computed: {
     ...mapGetters('profile', ['currentProfile']),
     'isLoggedInUser': function() {
-      return this.currentProfile.id == this.profileId;
+      return this.currentProfile.id === this.profileId;
     },
     'isSessionDocuments': function() {
       return this.sessionId != null;
@@ -118,7 +118,7 @@ export default {
   },
   mounted: async function() {
     if (this.isLoggedInUser) {
-      if (this.currentProfile.documents.length == 0) {
+      if (this.currentProfile.documents.length === 0) {
         this[DOCUMENTS]();
       }
       this.localDocuments.push(...this.currentProfile.documents);

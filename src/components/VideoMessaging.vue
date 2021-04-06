@@ -53,7 +53,7 @@ export default {
   },
   watch: {
     allowVideo: function(val, _) {
-      if (this.videoTrack != null && val == false) {
+      if (this.videoTrack != null && val === false) {
         if (this.localConnection && this.videoTrackSender) {
           this.localConnection.removeTrack(this.videoTrackSender);
           this.videoTrackSender = null;
@@ -216,7 +216,7 @@ export default {
       if (this.audioTrack) {
         this.localConnection.addTrack(this.audioTrack, this.stream);
         this.localConnection.getSenders().forEach((sender)=>{
-          if (sender.track == this.audioTrack) {
+          if (sender.track === this.audioTrack) {
             this.audioTrackSender = sender;
           }
         });
@@ -224,7 +224,7 @@ export default {
       if (this.videoTrack) {
         this.localConnection.addTrack(this.videoTrack, this.stream);
         this.localConnection.getSenders().forEach((sender)=>{
-          if (sender.track == this.videoTrack) {
+          if (sender.track === this.videoTrack) {
             this.videoTrackSender = sender;
           }
         });

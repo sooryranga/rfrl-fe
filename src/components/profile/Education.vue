@@ -63,10 +63,10 @@ export default {
   computed: {
     ...mapGetters('profile', ['currentProfile']),
     'isLoggedInUser': function() {
-      return this.currentProfile.id == this.profileId;
+      return this.currentProfile.id === this.profileId;
     },
     'profile': function() {
-      if (this.profileId == this.currentProfile.id) {
+      if (this.profileId === this.currentProfile.id) {
         return this.currentProfile;
       } else {
         return this.currentProfile;
