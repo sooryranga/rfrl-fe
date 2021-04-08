@@ -43,11 +43,17 @@ export const AuthService = {
     if (!getToken()) {
       return null;
     }
-    const response = await Vue.axios.post(
-        'login-authorized/',
-    );
-    saveToken(response.data?.token);
-    return response.data?.client;
+
+    try {
+      const response = await Vue.axios.post(
+          'login-authorized/',
+      );
+      saveToken(response.data?.token);
+      return response.data?.client;
+    } catch (err) {
+      destroyToken();
+      throw err;
+    }
   },
   async signupGoogle({token, name, imageUrl}) {
     const response = await Vue.axios.post(

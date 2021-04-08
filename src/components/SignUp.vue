@@ -35,7 +35,7 @@
             <label for="exampleInputPassword1">Password</label>
             <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
           </div>
-          <button type="submit" class="btn btn-primary mt-3">Register</button>
+          <button type="submit" class="btn btn-primary mt-3" v-on:click="loginToEmail">Register</button>
           </form>
       </div>
     </div>
@@ -55,7 +55,6 @@ export default {
       publicPath: process.env.BASE_URL,
       user: null,
       googleOauth: null,
-      google_client_id: '328728240170-60hudfjvelfulh27l2qvgt69lru146rb.apps.googleusercontent.com', // eslint-disable-line
     };
   },
   methods: {
@@ -69,6 +68,16 @@ export default {
     },
     loginToGoogle: function() {
       this.googleOauth.signIn();
+    },
+    async loginToEmail() {
+      await this.emailLogin();
+
+      this.$router.push(
+          {
+            name: 'profile',
+            params: {userId: this.currentProfile.id},
+          },
+      );
     },
     async onGoogleSignIn(hasUser) {
       if (!hasUser) {

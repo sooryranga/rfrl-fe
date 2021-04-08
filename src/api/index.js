@@ -1,4 +1,4 @@
-import Auth from './Auth';
+import Auth from './AuthService';
 import Document from './DocumentService';
 import Profile from './ProfileService';
 import Question from './QuestionService';

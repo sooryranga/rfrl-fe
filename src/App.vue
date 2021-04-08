@@ -68,8 +68,8 @@ export default {
   methods: {
     ...mapActions('profile', ['loginAuthorized', 'logout']),
     async logoutUser() {
-      this.$router.push({name: 'home'});
       await this.logout();
+      this.$router.push({name: 'home'});
     },
   },
   async mounted() {

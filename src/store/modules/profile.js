@@ -23,20 +23,27 @@ const blankState = () => ({
   linkedin: {token: null},
   email: {email: null},
   loggedIn: false,
+  type: null,
   profile: profileState(),
 });
+
+const GOOGLE = 'GOOGLE';
+const LINKED_IN = 'LINKED_IN';
+const EMAIL = 'EMAIL';
 
 const state ={
   profile: profileState(),
   google: {token: null},
   linkedin: {token: null},
   email: {username: null},
+  type: null,
   loggedIn: false,
 };
 
 const getters = {
   currentProfile: (state) => state.profile,
   loggedIn: (state) => state.loggedIn,
+  type: (state) => state.type,
 };
 
 const actions = {
@@ -134,7 +141,19 @@ const actions = {
     commit(SET_EMAIL_AUTH, email);
     commit(SET_LOGGED_IN);
   },
-  logout({commit}) {
+  async logout({commit, getters}) {
+    const loginType = getters.type;
+    console.log(loginType, 'this');
+    if (loginType === GOOGLE) {
+      console.log(loginType, 'this2');
+      const auth2 = gapi.auth2.getAuthInstance();
+      console.log(loginType, 'this3');
+      await auth2.signOut();
+      console.log(loginType, 'this4');
+      auth2.disconnect();
+      console.log(loginType, 'this5');
+    }
+
     commit(SET_LOGGED_OUT);
     Auth.destroyToken();
   },
@@ -180,16 +199,18 @@ const mutations = {
   },
   [SET_GOOGLE_AUTH](state, token) {
     state.google.token = token;
+    state.type = GOOGLE;
   },
   [SET_LINKED_IN_AUTH](state, token) {
     state.linkedin.token = token;
+    state.type = LINKED_IN;
   },
   [SET_EMAIL_AUTH](state, email) {
     state.default= {email};
+    state.type = EMAIL;
   },
   [SET_LOGGED_OUT](state) {
     Object.assign(state, blankState());
-    console.log(state);
   },
 };
 
