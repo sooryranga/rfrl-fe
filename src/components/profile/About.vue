@@ -33,7 +33,7 @@ export default {
   data: function() {
     return {
       'editorOpen': false,
-      'profile': profileState(),
+      'otherProfile': profileState(),
     };
   },
   props: {
@@ -51,12 +51,17 @@ export default {
         params: {userId: this.profile.id},
       };
     },
+    profile() {
+      if (this.isLoggedInUser) {
+        return this.currentProfile;
+      } else {
+        return this.otherProfile;
+      }
+    },
   },
   beforeMount: function() {
-    if (this.isLoggedInUser) {
-      this.profile = this.currentProfile;
-    } else {
-      this.profile = this.getTutor(this.profileId);
+    if (!this.isLoggedInUser) {
+      this.otherProfile = this.getTutor(this.profileId);
     }
   },
   methods: {
