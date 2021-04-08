@@ -10,7 +10,10 @@ import {
   SET_TUTOR_REVIEW, SET_DOCUMENT,
   SET_EDUCATIONS, SET_LOGGED_IN, SET_GOOGLE_AUTH,
   SET_LINKED_IN_AUTH, SET_EMAIL_AUTH, SET_LOGGED_OUT,
+  SET_AUTH_ERROR,
 } from '@/constants.mutations.js';
+
+import {getErrorMessageFromRequest} from '@/utils';
 
 
 import {profileState} from '@/constants.state.js';
@@ -38,12 +41,14 @@ const state ={
   email: {username: null},
   type: null,
   loggedIn: false,
+  error: null,
 };
 
 const getters = {
   currentProfile: (state) => state.profile,
   loggedIn: (state) => state.loggedIn,
   type: (state) => state.type,
+  error: (state) => state.error,
 };
 
 const actions = {
@@ -99,14 +104,17 @@ const actions = {
     commit(SET_EDUCATION, {index, newEducation});
   },
   async loginAuthorized({commit}) {
-    const client = await Auth.AuthService.loginAuthorized();
+    try {
+      const client = await Auth.AuthService.loginAuthorized();
+      if (!client) {
+        return;
+      }
 
-    if (!client) {
-      return;
+      commit(SET_LOGGED_IN);
+      commit(SET_PROFILE, client);
+    } catch (err) {
+      commit(SET_AUTH_ERROR, getErrorMessageFromRequest(err));
     }
-
-    commit(SET_LOGGED_IN);
-    commit(SET_PROFILE, client);
   },
   async googleLogin({commit}, {token, name, imageUrl}) {
     const client = await Auth.AuthService.signupGoogle({token, name, imageUrl});
@@ -119,7 +127,7 @@ const actions = {
     commit(SET_GOOGLE_AUTH, {token, name, imageUrl});
     commit(SET_LOGGED_IN);
   },
-  async linkedinLogin({commit}, token) {
+  async linkedinLogin({commit}, {token}) {
     const client = await Auth.AuthService.signupLinkedIn({token});
 
     if (!client) {
@@ -130,7 +138,7 @@ const actions = {
     commit(SET_LINKED_IN_AUTH, token);
     commit(SET_LOGGED_IN);
   },
-  async emailLogin({commit}, email, password) {
+  async emailLogin({commit}, {email, password}) {
     const client = await Auth.AuthService.loginEmail({email, password});
 
     if (!client) {
@@ -141,17 +149,28 @@ const actions = {
     commit(SET_EMAIL_AUTH, email);
     commit(SET_LOGGED_IN);
   },
+  async emailRegister({commit}, {email, password}) {
+    try {
+      const client = await Auth.AuthService.signupPassword({email, password});
+
+      if (!client) {
+        return;
+      }
+
+      commit(SET_PROFILE, client);
+      commit(SET_EMAIL_AUTH, email);
+      commit(SET_LOGGED_IN);
+    } catch (err) {
+      commit(SET_AUTH_ERROR, getErrorMessageFromRequest(err));
+      throw err;
+    }
+  },
   async logout({commit, getters}) {
     const loginType = getters.type;
-    console.log(loginType, 'this');
     if (loginType === GOOGLE) {
-      console.log(loginType, 'this2');
       const auth2 = gapi.auth2.getAuthInstance();
-      console.log(loginType, 'this3');
       await auth2.signOut();
-      console.log(loginType, 'this4');
       auth2.disconnect();
-      console.log(loginType, 'this5');
     }
 
     commit(SET_LOGGED_OUT);
@@ -211,6 +230,9 @@ const mutations = {
   },
   [SET_LOGGED_OUT](state) {
     Object.assign(state, blankState());
+  },
+  [SET_AUTH_ERROR](state, error) {
+    state.error = error;
   },
 };
 

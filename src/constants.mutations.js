@@ -3,6 +3,7 @@ const SET_GOOGLE_AUTH = 'google_auth';
 const SET_LINKED_IN_AUTH = 'linkedin_auth';
 const SET_EMAIL_AUTH = 'default_auth';
 const SET_LOGGED_OUT = 'log_out';
+const SET_AUTH_ERROR = 'set_auth_error';
 
 const SET_PROFILE = 'set_profile';
 const SET_UPDATE_PROFILE = 'set_update_profile';
@@ -48,6 +49,7 @@ export {
   SET_LINKED_IN_AUTH,
   SET_EMAIL_AUTH,
   SET_LOGGED_OUT,
+  SET_AUTH_ERROR,
 
   // Mutations for user
   SET_PROFILE,

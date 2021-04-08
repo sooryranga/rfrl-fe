@@ -104,7 +104,7 @@ export default {
         this.setError('You need to introduce your self to the mentee!');
       }
 
-      const roomId = await this.createRoom([this.selectedQuestion.userId]);
+      const roomId = await this.createRoom([this.selectedQuestion.from.id]);
 
       const message = {
         sender_id: this.currentProfile.id,
