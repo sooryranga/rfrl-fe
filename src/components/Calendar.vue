@@ -412,6 +412,7 @@ export default {
     cancelEventCreation() {
       this.showEventCreationDialog = false;
       this.selectedEvent = null;
+      this.deleteEvent = null;
       this.deleteEventFunction();
     },
     saveEventCreation() {
@@ -422,6 +423,7 @@ export default {
       }
       this.showEventCreationDialog = false;
       this.selectedEvent = null;
+      this.deleteEvent = null;
     },
   },
 };

@@ -12,16 +12,52 @@
     </div>
     <div class="row justify-content-between">
       <div class="col my-auto">
-        <div class="row" v-if="pendingSession === null">
+        <div v-for="(session) in pendingSessions" v-bind:key="session.id">
+          <div class="row h-100" v-if="isWaitingForResponse(session)">
+            <div class="col my-auto">
+              <div>
+                <p class="m-0"> Waiting for response</p>
+              </div>
+            </div>
+            <div class="h-100">
+              <span v-on:click="modify(session)" class="material-icons btn btn-outline-dark mr-2">
+                create
+              </span>
+              <span v-on:click="deleteSession(session)" class="material-icons btn btn-outline-dark">
+                delete
+              </span>
+            </div>
+          </div>
+          <div v-else>
+            <p
+            class="align-middle"
+            v-if="session.tutorId != currentProfile.id">
+              {{session.tutor.firstName}} wants to tutor you
+            </p>
+            <p
+            class="align-middle"
+            v-else>
+              {{wantsToLearnFromYou}}
+            </p>
+            <span v-on:click="modify(session)" class="material-icons btn btn-outline-dark mr-2">
+              check
+            </span>
+            <span v-on:click="deleteSession(session)" class="material-icons btn btn-outline-dark">
+              delete
+            </span>
+          </div>
+        </div>
+        <div class="row">
           <div class="col h-100">
             <button
-            v-on:click="create(this.currentProfile.id)"
+            v-if="currentProfile.isTutor"
+            v-on:click="create(currentProfile.id)"
             class="btn btn-outline-dark mx-2 float-left">
               Tutor
             </button>
             <button
             v-bind:class="{ tutorDropDownActive: 'dropdown-toggle' }"
-            v-on:click="selectTutor(false)"
+            v-on:click="selectTutor"
             class="btn btn-outline-dark float-left">
               Learn from
             </button>
@@ -33,45 +69,12 @@
                     <img class="profilePicture" v-bind:src="user.photo"/>
                   </div>
                   <div class="col">
-                    {user.firstName}
+                    {user.username}
                   </div>
                 </div>
               </a>
             </div>
           </div>
-        </div>
-        <div class="row h-100" v-else-if="pendingSession.by === currentProfile.id">
-          <div class="col my-auto">
-            <div>
-              <p class="m-0"> Waiting for response</p>
-            </div>
-          </div>
-          <div class="h-100">
-            <span v-on:click="modify" class="material-icons btn btn-outline-dark mr-2">
-              create
-            </span>
-            <span v-on:click="deleteSession" class="material-icons btn btn-outline-dark">
-              delete
-            </span>
-          </div>
-        </div>
-        <div v-else-if="this.pendingSession.by !== this.currentProfile.id">
-          <p
-          class="align-middle"
-          v-if="this.pendingSession.tutorId != this.currentProfile.id">
-            {{pendingSession.tutor.firstName}} wants to tutor you
-          </p>
-          <p
-          class="align-middle"
-          v-else>
-            {{wantsToLearnFromYou}}
-          </p>
-          <span v-on:click="modify" class="material-icons">
-            check
-          </span>
-          <span v-on:click="deleteSession" class="material-icons">
-            delete
-          </span>
         </div>
       </div>
     </div>
@@ -83,7 +86,7 @@ import {mapGetters} from 'vuex';
 import {SessionService} from '@/api/SessionService';
 
 export default {
-  name: 'scheduled-tutoring',
+  name: 'tutoring-scheduler',
 
   props: {
     'roomId': {
@@ -109,10 +112,9 @@ export default {
 
   data: function() {
     return {
-      pendingSession: null,
+      pendingSessions: [],
       users: {},
       showError: false,
-      tutorID: null,
       showDropDown: false,
     };
   },
@@ -130,10 +132,14 @@ export default {
         const otherUserId = Object.keys(this.users).filter(
             (userID) => userID != this.currentProfile.id,
         )[0];
-        return await create(otherUserId);
+        console.log(otherUserId);
+        return await this.create(otherUserId);
       }
 
       this.showDropDown = true;
+    },
+    isWaitingForResponse(session) {
+      return session.updatedBy === this.currentProfile.id;
     },
     async setNewRoom() {
       const currentRoom = this.rooms()[this.roomId];
@@ -147,70 +153,65 @@ export default {
       this.users = users;
 
       try {
-        this.pendingSession = await SessionService.getPrendingSession(
+        this.pendingSessions = await SessionService.getPrendingSession(
             this.roomId,
         );
       } catch (error) {
-        this.pendingSession = {
-          id: '542db2df-60d8-4313-895a-96098d043512',
-          users: this.users,
-          tutorId: this.currentProfile.id,
-          by: this.currentProfile.id,
-        };
+        throw error;
       }
     },
-    async create(tutorID) {
+    async create(tutorId) {
       if (this.showDropDown) {
         this.showDropDown = false;
       }
 
-      const by = this.currentProfile.id;
+      console.log(this.users);
+      const clientIds = Object.keys(this.users);
 
-      const pendingSession = {
-        users: {...this.users},
+      const session = {
+        roomId: this.roomId,
+        clientIds,
         tutorId,
-        by,
       };
+
+      let createdSession;
       try {
-        this.pendingSession = await SessionService.create(
-            this.roomId,
-            pendingSession,
-        );
+        createdSession = await SessionService.create({session});
+        this.pendingSessions.push(createdSession);
       } catch (error) {
-        console.error(error);
-        this.pendingSession = {
-          ...pendingSession,
-          id: 'e2777493-62c5-469f-bd9b-0b36abbb3e52',
-        };
+        throw error;
       }
-      console.log(this.pendingSession);
+
       this.$router.push({
         name: 'session-calendar',
         params: {
-          localSession: this.pendingSession,
-          sessionId: this.pendingSession.id,
+          localSession: createdSession,
+          sessionId: createdSession.id,
           saveEvent: this.saveEventCallBack,
           deleteEvent: this.deleteEventCallBack,
         },
       });
     },
-    modify: function() {
+    modify: function(session) {
       this.$router.push({
         name: 'session-calendar',
         params: {
-          localSession: this.pendingSession,
-          sessionId: this.pendingSession.id,
+          localSession: session,
+          sessionId: session.id,
           saveEvent: this.saveEventCallBack,
           deleteEvent: this.deleteEventCallBack,
         },
       });
     },
-    deleteSession: async function() {
+    deleteSession: async function(session) {
       try {
-        await SessionService.delete(this.pendingSession.id);
+        await SessionService.delete(session.id);
       } catch (error) {
-        this.pendingSession = null;
+        throw error;
       }
+      this.pendingSessions = this.pendingSessions.filter(
+          (s) => s.id != session.id,
+      );
     },
     saveEventCallBack: async function(session) {
       if (!session.id) {

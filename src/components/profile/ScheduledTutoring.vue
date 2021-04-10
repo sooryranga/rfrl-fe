@@ -6,7 +6,7 @@
         <h6 class="my-2">Scheduled Tutoring</h6>
       </div>
     </div>
-    <div v-if="scheduledSessions.length">
+    <div v-if="scheduledSessions.length > 0">
       <div class="row mt-1 h-100" v-for="(dateSession,index) in dateScheduledSessions" v-bind:key="index">
         <div class="col-1 my-1" id="date">
           <div
@@ -74,14 +74,15 @@ export default {
       type: Boolean,
     },
   },
-  data: function() {
+  data() {
     return {
-      'scheduledSessions': [],
+      scheduledSessions: [],
     };
   },
   computed: {
     ...mapGetters('profile', ['currentProfile']),
     'dateScheduledSessions': function() {
+      console.log(this.scheduledSessions);
       if (this.scheduledSessions.length === 0) {
         return [];
       }
@@ -133,8 +134,8 @@ export default {
   },
   mounted: async function() {
     try {
-      if (this.profileId) await this.importSessionForUser();
-      if (this.roomId) await importSessionForRoom();
+      if (this.profileId) return await this.importSessionForUser();
+      if (this.roomId) return await this.importSessionForRoom();
     } catch (error) {
       console.error(error);
       this.scheduledSessions.push({

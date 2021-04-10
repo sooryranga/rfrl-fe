@@ -2,19 +2,27 @@ import Vue from 'vue';
 
 export const SessionService = {
   async getSessionForProfile() {
-    return await Vue.axios.get(
+    const response = await Vue.axios.get(
         `sessions/`,
+        null,
         {state: 'scheduled'},
     );
+    return response.data;
   },
   async getPrendingSession(roomId) {
-    return await Vue.axios.get(
-        `session/`,
-        {room_id: roomId, state: 'scheduled'},
+    const response = await Vue.axios.get(
+        `sessions/`,
+        null,
+        {params: {room_id: roomId, state: 'pending'}},
     );
+    return response.data;
   },
   async getScheduledSessions(roomId) {
-    return await Vue.axios.get(`session/`, {roomId, scheduled: true});
+    return await Vue.axios.get(
+        `sessions/`,
+        null,
+        {params: {room_id: roomId, state: 'scheduled'}},
+    );
   },
   async selectSessionDates(id, eventIds, replace=false) {
     return await Vue.axios.post(
@@ -31,11 +39,13 @@ export const SessionService = {
   async save(id, session) {
     return await Vue.axios.put(`session/${id}`, session);
   },
-  async create(roomId, session) {
-    return await Vue.axios.post(`message-room/${roomId}/session`, session);
+  async create({session}) {
+    const response = await Vue.axios.post(`session/`, session);
+
+    return response.data;
   },
   async delete(id) {
-    return await Vue.axios.delete(`session/${id}`);
+    return await Vue.axios.delete(`session/${id}/`);
   },
 };
 
