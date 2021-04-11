@@ -15,6 +15,14 @@ export const ClientService = {
     }
     return clients;
   },
+  async getEvents({id, startTime, endTime, state}) {
+    const response = await Vue.axios.get(
+        `client/${id}/events/`,
+        {params: {startTime, endTime, state}},
+    );
+
+    return response.data;
+  },
 };
 
 
