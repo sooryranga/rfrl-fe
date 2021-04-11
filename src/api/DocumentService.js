@@ -2,13 +2,13 @@ import Vue from 'vue';
 
 export const DocumentService = {
   async getForUser(profileId) {
-    return await Vue.axios.get(`document-order/`, null, {params: {
+    return await Vue.axios.get(`document-order/`, {params: {
       ref_id: profileId,
       ref_type: 'client',
     }});
   },
   async getForSession(sessionId) {
-    return await Vue.axios.get(`document-order/`, null, {params: {
+    return await Vue.axios.get(`document-order/`, {params: {
       ref_id: sessionId,
       ref_type: 'session',
     }});
