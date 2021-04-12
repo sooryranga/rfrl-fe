@@ -185,10 +185,7 @@ export default {
       this.$router.push({
         name: 'session-calendar',
         params: {
-          localSession: createdSession,
           sessionId: createdSession.id,
-          saveEvent: this.saveEventCallBack,
-          deleteEvent: this.deleteEventCallBack,
         },
       });
     },
@@ -196,10 +193,7 @@ export default {
       this.$router.push({
         name: 'session-calendar',
         params: {
-          localSession: session,
           sessionId: session.id,
-          saveEvent: this.saveEventCallBack,
-          deleteEvent: this.deleteEventCallBack,
         },
       });
     },

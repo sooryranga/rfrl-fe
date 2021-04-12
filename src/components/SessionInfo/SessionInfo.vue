@@ -84,10 +84,10 @@ export default {
   computed: {
     ...mapGetters('profile', ['currentProfile']),
     selectedDate: function() {
-      return this.session?.startTime;
+      return this.session?.start;
     },
     hideWeekdays: function() {
-      let day = this.session?.startTime.getDay();
+      let day = this.session?.start.getDay();
       // vucal starts from monday 1 to sunday 7
       // getDay starts from sunday 0 to saturday 6
       day = day === 0? 7: day;
@@ -102,10 +102,10 @@ export default {
       });
     },
     timeFrom: function() {
-      return Math.max(this.session?.startTime.getHours()-1, 0)*60;
+      return Math.max(this.session?.start.getHours()-1, 0)*60;
     },
     timeTo: function() {
-      return Math.min(this.session?.endTime.getHours()+1, 24)*60;
+      return Math.min(this.session?.end.getHours()+1, 24)*60;
     },
   },
   mounted: async function() {
@@ -117,8 +117,8 @@ export default {
     }
 
     this.events.push( {
-      'start': this.session.startTime,
-      'end': this.session.endTime,
+      'start': this.session.start,
+      'end': this.session.end,
       'title': 'Session',
       'id': this.session.id,
     });
