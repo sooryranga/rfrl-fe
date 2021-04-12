@@ -69,8 +69,7 @@
       :disable-views="['years', 'year', 'month', 'day']"
       @view-change="updateEventsShown($event)"
       @ready="updateEventsShown($event)"
-      @event-drag-create="createEvent"
-      @event-delete="deleteLocalyCreatedEvent">
+      @event-drag-create="createEvent">
         <template v-slot:title="{view}">
           <span v-if="view.id === 'week'">
             {{ view.startDate.toLocaleString('default', { month: 'long', year: 'numeric'}) }}
@@ -101,7 +100,6 @@ const STATE = Object.freeze({
   createEvents: 'createEvents',
   chooseDate: 'chooseDate',
   selectOne: 'selectOne',
-  selectMultiple: 'selectMultiple',
 });
 
 export default {
@@ -115,19 +113,6 @@ export default {
       type: String,
       required: false,
     },
-    saveEvent: {
-      type: Function,
-      required: true,
-    },
-    deleteEvent: {
-      type: Function,
-      required: true,
-    },
-    // delete
-    localSession: {
-      type: Object,
-      required: false,
-    },
   },
   data: function() {
     return {
@@ -138,7 +123,6 @@ export default {
       sessionCount: 0,
       showEventCreationDialog: false,
       events: [],
-      locallyCreated: [],
       unauthenticated: false,
       selectedDate: new Date(),
       showError: false,
@@ -155,12 +139,6 @@ export default {
         return 'Choose a Date from this List';
       }
       return 'Schedule';
-    },
-    relatedEvents: function() {
-      if (this.state === STATE.user) {
-        return this.events;
-      }
-      return this.locallyCreated;
     },
     newSessionName: function() {
       if (this.state === STATE.user) return 'Personnal Events';
@@ -180,15 +158,15 @@ export default {
       if (this.sessionId) {
         this.events = await Session.SessionService.getRelatedEvents({
           id: this.sessionId,
-          startTime: event.startDate.toISOString(),
-          endTime: event.endDate.toISOString(),
+          start: event.startDate.toISOString(),
+          end: event.endDate.toISOString(),
           state: Session.SessionState.SCHEDULED,
         });
       } else if (this.userId) {
         this.events = await Client.ClientService.getEvents({
           id: this.userId,
-          startTime: event.startDate.toISOString(),
-          endTime: event.endDate.toISOString(),
+          start: event.startDate.toISOString(),
+          end: event.endDate.toISOString(),
           state: Session.SessionState.SCHEDULED,
         });
       } else {
@@ -196,45 +174,17 @@ export default {
       }
     },
     async saveSession() {
-      if (this.state === STATE.selectMultiple) {
-        return await this.selectMultipleEventsFromOptions();
+      if (this.sessionId) {
+        await Session.SessionService.createSessionEvent({
+          sessionId: this.sessionId,
+          start: this.selectedEvent.start,
+          end: this.selectedEvent.end,
+          title: this.selectedEvent.title,
+        });
+      } else {
+        throw error('Client events not implemented yet');
       }
-      if (!this.locallyCreated.length) {
-        this.setError('Schedule events to save');
-        return;
-      }
-      this.session.scheduledDates = this.locallyCreated;
-      await this.saveEvent(this.session);
       return this.$router.go(-1);
-    },
-    canDelete(event) {
-      return this.state === STATE.createEvents;
-    },
-    canSelect(event) {
-      return (
-        this.state === STATE.selectOne ||
-        this.state === STATE.selectMultiple
-      );
-    },
-    canSave() {
-      return (
-        this.state === STATE.selectMultiple ||
-        this.state === STATE.chooseDate
-      );
-    },
-    deleteEventAction(deletedEvent) {
-      this.events = this.events.filter(
-          (event) => event.id != deletedEvent.id,
-      );
-      this.deleteLocalyCreatedEvent(deletedEvent);
-    },
-    deleteLocalyCreatedEvent(deletedEvent) {
-      this.locallyCreated = this.locallyCreated.filter(
-          (event) => event.id != deletedEvent.id,
-      );
-    },
-    dateToString(date) {
-      return `${date.getDate()+1}/${date.getMonth()+1} `;
     },
     createEvent() {
       console.log(this.validateNewEvent());
@@ -270,7 +220,7 @@ export default {
     },
     async setUpSession() {
       try {
-        this.session = Session.SessionService.get(this.sessionId);
+        this.session = await Session.SessionService.get(this.sessionId);
       } catch (error) {
         throw error;
       }
@@ -278,41 +228,14 @@ export default {
       if (this.session.eventId == null) {
         this.state = STATE.createEvents;
       } else {
-        const event = Session.SessionService.getSessionEvent({
+        const event = await Session.SessionService.getSessionEvent({
           SessionId: this.session.id,
           id: this.session.eventId,
         });
+        console.log(this.events);
         this.events.push(event);
         this.state = STATE.selectOne;
-      }
-    },
-    async selectMultipleEventsFromOptions() {
-      try {
-        await Session.SessionService.selectSessionDates(
-            this.session.selectedEvents,
-            true,
-        );
-      } catch (error) {
-        console.error(error);
-      }
-      return this.$router.go(-1);
-    },
-    async selectEventFromOptions(event) {
-      if (this.state === STATE.selectOne) {
-        try {
-          await Session.SessionService.selectSessionDates(
-              this.sessionId,
-              [event.id],
-          );
-        } catch (error) {
-          console.error(error);
-        }
-        return this.$router.go(-1);
-      }
-      if (event.id in this.session.selectedEvents) {
-        this.session.selectedEvents.remove(event.id);
-      } else {
-        this.session.selectedEvents.add(event.id);
+        this.setCurrentCalendarDate(event.start);
       }
     },
     onEventCreate(event, deleteEventFunction) {
@@ -358,12 +281,9 @@ export default {
       this.selectedEvent = null;
       this.deleteEventFunction();
     },
-    saveEventCreation() {
-      console.log({...this.selectedEvent});
+    async saveEventCreation() {
       this.events.push(this.selectedEvent);
-      if (this.state === STATE.createEvents) {
-        this.locallyCreated.push({...this.selectedEvent});
-      }
+      await this.saveSession();
       this.showEventCreationDialog = false;
       this.selectedEvent = null;
     },

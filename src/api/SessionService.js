@@ -5,6 +5,29 @@ export const SessionState = Object.freeze({
   PENDING: 'pending',
 });
 
+export const responseToEvent = (eventResponse) => {
+  if (!eventResponse) return;
+
+  const event = {...eventResponse};
+  if (event.createdAt) {
+    event.createdAt = new Date(event.createdAt);
+  }
+
+  if (event.updatedAt) {
+    event.updatedAt = new Date(event.updatedAt);
+  }
+
+  if (event.start) {
+    event.start = new Date(event.start);
+  }
+
+  if (event.end) {
+    event.end = new Date(event.end);
+  }
+
+  return event;
+};
+
 export const SessionService = {
   async getSessionForProfile() {
     const response = await Vue.axios.get(
@@ -21,25 +44,34 @@ export const SessionService = {
     return response.data;
   },
   async getScheduledSessions(roomId) {
-    return await Vue.axios.get(
+    const response = await Vue.axios.get(
         `sessions/`,
         {params: {room_id: roomId, state: SessionState.SCHEDULED}},
     );
+
+    return response.data;
   },
-  async selectSessionDates(id, eventIds, replace=false) {
-    return await Vue.axios.post(
-        `session/${id}/event/`,
-        {events: eventIds, replace},
+  async createSessionEvent({sessionId, start, end, title}) {
+    const response = await Vue.axios.post(
+        `session/${sessionId}/event/`,
+        {start, end, title},
     );
+    return responseToEvent(response.data);
   },
-  async unselectSessionDates(id, eventIds) {
-    return await Vue.axios.delete(`session/${id}/event/`, {events: eventIds});
+  async bookSession({sessionId, canAttend}) {
+    const response = await Vue.axios.post(
+        `session/${sessionId}/book`,
+        {canAttend},
+    );
+    return response.data;
   },
   async get(id) {
-    return await Vue.axios.get(`session/${id}/`);
+    const response = await Vue.axios.get(`session/${id}/`);
+    return response.data;
   },
   async save(id, session) {
-    return await Vue.axios.put(`session/${id}/`, session);
+    const response = await Vue.axios.put(`session/${id}/`, session);
+    return response.data;
   },
   async create({session}) {
     const response = await Vue.axios.post(`session/`, session);
@@ -47,18 +79,24 @@ export const SessionService = {
     return response.data;
   },
   async delete(id) {
-    return await Vue.axios.delete(`session/${id}/`);
+    const response = await Vue.axios.delete(`session/${id}/`);
+    return response.data;
   },
-  async getRelatedEvents({id, startTime, endTime, state}) {
+  async getRelatedEvents({id, start, end, state}) {
     const response = await Vue.axios.get(
         `session/${id}/event/`,
-        {params: {startTime, endTime, state}},
+        {params: {start, end, state}},
     );
-    return response.data;
+
+    const events = response.data.map((event) =>{
+      responseToEvent(event);
+    });
+
+    return events;
   },
   async getSessionEvent({SessionId, id}) {
-    const response = await Vue.axios.post(`session/${SessionId}/event/${id}/`);
-    return response.data;
+    const response = await Vue.axios.get(`session/${SessionId}/event/${id}/`);
+    return responseToEvent(response.data);
   },
 };
 
