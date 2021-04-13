@@ -254,7 +254,6 @@ export default {
       return this.$router.go(-1);
     },
     createEvent() {
-      console.log(this.validateNewEvent());
       if (!this.validateNewEvent()) {
         this.deleteEventFunction();
       } else {

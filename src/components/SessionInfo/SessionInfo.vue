@@ -41,6 +41,7 @@
             hide-view-selector
             :time-from="timeFrom"
             :time-to="timeTo"
+            :time-step="90"
             :hide-weekdays="hideWeekdays"
             :editable-events="{ title: false, drag: false, resize: false, delete: false, create: false }"
             :selected-date="selectedDate"
@@ -61,7 +62,7 @@
 
 <script>
 import {mapGetters} from 'vuex';
-import {SessionService} from '@/api/SessionService';
+import {Session} from '@/api';
 
 export default {
   name: 'session-info',
@@ -73,21 +74,17 @@ export default {
   },
   props: {
     sessionId: {
-      type: String,
-      required: false,
-    },
-    localSession: {
-      type: Object,
+      type: Number,
       required: false,
     },
   },
   computed: {
     ...mapGetters('profile', ['currentProfile']),
     selectedDate: function() {
-      return this.session?.start;
+      return this.session.event.start;
     },
     hideWeekdays: function() {
-      let day = this.session?.start.getDay();
+      let day = this.session.event.start.getDay();
       // vucal starts from monday 1 to sunday 7
       // getDay starts from sunday 0 to saturday 6
       day = day === 0? 7: day;
@@ -102,23 +99,23 @@ export default {
       });
     },
     timeFrom: function() {
-      return Math.max(this.session?.start.getHours()-1, 0)*60;
+      return Math.max(this.session.event.start.getHours()-2, 0)*60;
     },
     timeTo: function() {
-      return Math.min(this.session?.end.getHours()+1, 24)*60;
+      return Math.min(this.session.event.end.getHours()+2, 24)*60;
     },
   },
   mounted: async function() {
     try {
-      this.session = await SessionService.get(this.sessionId);
+      this.session = await Session.SessionService.get(this.sessionId);
     } catch (error) {
       console.error(error);
       this.session = this.localSession;
     }
 
     this.events.push( {
-      'start': this.session.start,
-      'end': this.session.end,
+      'start': this.session.event.start,
+      'end': this.session.event.end,
       'title': 'Session',
       'id': this.session.id,
     });

@@ -5,10 +5,10 @@ export const SessionState = Object.freeze({
   PENDING: 'pending',
 });
 
-export const responseToEvent = (eventResponse) => {
-  if (!eventResponse) return;
+export const responseToEvent = (response) => {
+  if (!response) return;
 
-  const event = {...eventResponse};
+  const event = {...response};
   if (event.createdAt) {
     event.createdAt = new Date(event.createdAt);
   }
@@ -28,6 +28,25 @@ export const responseToEvent = (eventResponse) => {
   return event;
 };
 
+export const responseToSession = (response) => {
+  if (!response) return;
+
+  const session = {...response};
+  if (session.createdAt) {
+    session.createdAt = new Date(session.createdAt);
+  }
+
+  if (session.updatedAt) {
+    session.updatedAt = new Date(session.updatedAt);
+  }
+
+  if (session.event) {
+    session.event = responseToEvent(session.event);
+  }
+
+  return session;
+};
+
 export const SessionService = {
   async getSessionForProfile() {
     const response = await Vue.axios.get(
@@ -41,7 +60,11 @@ export const SessionService = {
         `sessions/`,
         {params: {room_id: roomId, state: SessionState.PENDING}},
     );
-    return response.data;
+    const sessions = response.data.map((session) => {
+      return responseToSession(session);
+    });
+
+    return sessions;
   },
   async getScheduledSessions(roomId) {
     const response = await Vue.axios.get(
@@ -49,7 +72,11 @@ export const SessionService = {
         {params: {room_id: roomId, state: SessionState.SCHEDULED}},
     );
 
-    return response.data;
+    const sessions = response.data.map((session) => {
+      return responseToSession(session);
+    });
+
+    return sessions;
   },
   async createSessionEvent({sessionId, start, end, title}) {
     const response = await Vue.axios.post(
@@ -67,16 +94,16 @@ export const SessionService = {
   },
   async get(id) {
     const response = await Vue.axios.get(`session/${id}/`);
-    return response.data;
+    return responseToSession(response.data);
   },
   async save(id, session) {
     const response = await Vue.axios.put(`session/${id}/`, session);
-    return response.data;
+    return responseToSession(response.data);
   },
   async create({session}) {
     const response = await Vue.axios.post(`session/`, session);
 
-    return response.data;
+    return responseToSession(response.data);
   },
   async delete(id) {
     const response = await Vue.axios.delete(`session/${id}/`);

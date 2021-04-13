@@ -37,7 +37,6 @@ export const QuestionService = {
     const questions = questionsResponse.map((questionR) => (
       responseToQuestion(questionR)
     ));
-    console.log(questions);
     return questions;
   },
   async get(questionID) {

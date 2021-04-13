@@ -200,7 +200,6 @@ export default {
       Object.keys(roomList).forEach((key) => {
         const room = roomList[key];
 
-        console.log(room._id, room.users, this.currentUserId);
         const roomContacts = room.users.filter(
             (user) => user._id !== this.currentUserId,
         );
