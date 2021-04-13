@@ -60,7 +60,7 @@ export const SessionService = {
   },
   async bookSession({sessionId, canAttend}) {
     const response = await Vue.axios.post(
-        `session/${sessionId}/book`,
+        `session/${sessionId}/book/`,
         {canAttend},
     );
     return response.data;
