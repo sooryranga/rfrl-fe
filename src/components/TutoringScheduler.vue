@@ -13,7 +13,7 @@
     <div class="row justify-content-between">
       <div class="col my-auto">
         <div v-for="(session) in pendingSessions" v-bind:key="session.id">
-          <div class="row h-100" v-if="isWaitingForResponse(session)">
+          <div class="row h-100" v-if="isWaitingForResponseFromOthers(session)">
             <div class="col my-auto">
               <div>
                 <p class="m-0"> Waiting for response</p>
@@ -29,22 +29,24 @@
             </div>
           </div>
           <div v-else>
-            <p
-            class="align-middle"
-            v-if="session.tutorId != currentProfile.id">
-              {{session.tutor.firstName}} wants to tutor you
-            </p>
-            <p
-            class="align-middle"
-            v-else>
-              {{wantsToLearnFromYou}}
-            </p>
-            <span v-on:click="modify(session)" class="material-icons btn btn-outline-dark mr-2">
-              check
-            </span>
-            <span v-on:click="deleteSession(session)" class="material-icons btn btn-outline-dark">
-              delete
-            </span>
+            <div class="row h-100" v-if="isWaitingForResponseFromYou(session)">
+              <div class="col my-auto">
+                <p class="align-middle" v-if="session.tutorId != currentProfile.id">
+                  {{session.tutor.firstName}} wants to tutor you
+                </p>
+                <p class="align-middle" v-else>
+                  {{wantsToLearnFromYou}}
+                </p>
+              </div>
+              <div class="h-100">
+                <span v-on:click="modify(session)" class="material-icons btn btn-outline-dark mr-2">
+                  check
+                </span>
+                <span v-on:click="deleteSession(session)" class="material-icons btn btn-outline-dark">
+                  delete
+                </span>
+              </div>
+            </div>
           </div>
         </div>
         <div class="row">
@@ -138,8 +140,14 @@ export default {
 
       this.showDropDown = true;
     },
-    isWaitingForResponse(session) {
-      return session.updatedBy === this.currentProfile.id;
+    isWaitingForResponseFromOthers(session) {
+      return session.eventId != null && session.canAttend != null;
+    },
+    isWaitingForResponseFromYou(session) {
+      return session.eventId != null && session.canAttend === null;
+    },
+    isWaitingToCreateEvent(session) {
+      return session.eventId === null;
     },
     async setNewRoom() {
       const currentRoom = this.rooms()[this.roomId];
