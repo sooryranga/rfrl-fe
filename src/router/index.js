@@ -7,7 +7,7 @@ import Documents from '@/components/Documents.vue';
 import TutorDashboard from '@/components/profile/TutorDashboard.vue';
 import TutorReview from '@/components/profile/TutorReview.vue';
 import ProfileAbout from '@/components/profile/About.vue';
-import ScheduledTutoring from '@/components/profile/ScheduledTutoring.vue';
+import ScheduledTutoring from '@/components/ScheduledTutoring.vue';
 import AnsweredQuestions from '@/components/profile/AnsweredQuestions.vue';
 
 import VueCal from 'vue-cal';

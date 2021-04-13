@@ -6,7 +6,7 @@
         <h6 class="my-2">Scheduled Tutoring</h6>
       </div>
     </div>
-    <div v-if="scheduledSessions.length > 0">
+    <div v-if="scheduledSessions.length">
       <div class="row mt-1 h-100" v-for="(dateSession,index) in dateScheduledSessions" v-bind:key="index">
         <div class="col-1 my-1" id="date">
           <div
@@ -28,7 +28,7 @@
             v-on:click="goToEvent(session)">
               <div v-if="showName" class="row">
                 <div class="col-6 my-auto">
-                  <div><p class="m-0">{{session.start.toLocaleTimeString()}}</p></div>
+                  <div><p class="m-0">{{session.event.start.toLocaleTimeString()}}</p></div>
                 </div>
                 <div class="col-auto my-auto">
                   <p class="m-0">
@@ -38,7 +38,7 @@
               </div>
               <div v-else class="row">
                 <div class="col my-auto">
-                  <div><p class="m-0">{{session.start.toLocaleTimeString()}}</p></div>
+                  <div><p class="m-0">{{session.event.start.toLocaleTimeString()}}</p></div>
                 </div>
               </div>
             </button>
@@ -57,7 +57,7 @@
 <script>
 import {mapGetters} from 'vuex';
 import {dayOfWeekMapping} from '@/utils.js';
-import {SessionService} from '@/api/SessionService.js';
+import {Session} from '@/api';
 
 export default {
   name: 'scheduled-tutoring',
@@ -81,19 +81,18 @@ export default {
   },
   computed: {
     ...mapGetters('profile', ['currentProfile']),
-    'dateScheduledSessions': function() {
-      console.log(this.scheduledSessions);
+    dateScheduledSessions() {
       if (this.scheduledSessions.length === 0) {
         return [];
       }
 
-      let _date = this.scheduledSessions[0].start;
+      let _date = this.scheduledSessions[0].event.start;
       _date.setHours(0, 0, 0, 0);
       const cache = [{date: _date, sessions: []}];
 
       for (let i = 0; i < this.scheduledSessions.length; i++) {
         const session = this.scheduledSessions[i];
-        const _compDate = session.start;
+        const _compDate = session.event.start;
         _compDate.setHours(0, 0, 0, 0);
 
         if (_compDate > _date) {
@@ -102,14 +101,24 @@ export default {
         }
         cache[cache.length-1].sessions.push(session);
       }
+
+      console.log(cache);
       return cache;
+    },
+  },
+  watch: {
+    async roomId() {
+      await this.importSessionForRoom();
+    },
+    async profileId() {
+      await this.importSessionForUser();
     },
   },
   methods: {
     goToEvent(session) {
       this.$router.push({
         name: 'session-info',
-        params: {sessionId: session.id, localSession: session},
+        params: {sessionId: session.id},
       });
     },
     isToday(checkingDate) {
@@ -124,42 +133,17 @@ export default {
       return dayOfWeekMapping[day];
     },
     async importSessionForUser() {
-      this.scheduledSessions = await SessionService.getSessionForProfile();
+      this.scheduledSessions = await Session.
+          SessionService.getSessionForProfile();
     },
     async importSessionForRoom() {
-      this.scheduledSessions = await SessionService.getScheduledSessions(
-          this.roomId,
-      );
+      this.scheduledSessions = await Session.
+          SessionService.getScheduledSessions(
+              this.roomId,
+          );
     },
   },
   mounted: async function() {
-    try {
-      if (this.profileId) return await this.importSessionForUser();
-      if (this.roomId) return await this.importSessionForRoom();
-    } catch (error) {
-      console.error(error);
-      this.scheduledSessions.push({
-        start: new Date('2021-02-01T03:45:00.086Z'),
-        end: new Date('2021-02-01T04:15:00.086Z'),
-        mentor: {id: this.currentProfile.id, name: 'Arun'},
-        mentee: {name: 'Sathi'},
-        id: '1',
-      });
-      this.scheduledSessions.push({
-        start: new Date('2021-02-26T03:45:00.086Z'),
-        end: new Date('2021-02-26T04:15:00.086Z'),
-        mentor: {id: this.currentProfile.id, name: 'Arun'},
-        mentee: {name: 'Soory'},
-        id: '2',
-      });
-      this.scheduledSessions.push({
-        start: new Date('2021-11-26T03:45:00.086Z'),
-        end: new Date('2021-11-26T04:15:00.086Z'),
-        mentor: {id: '622bccca-2449-4774-a926-dfb984dc530d', name: 'Arun'},
-        mentee: {name: 'TJ'},
-        id: '3',
-      });
-    }
   },
 };
 </script>
