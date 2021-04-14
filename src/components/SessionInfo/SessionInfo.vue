@@ -5,7 +5,7 @@
         <h4 class="ml-4 my-2"> Tutoring Session </h4>
       </div>
       <div class="col">
-        <button class="btn btn-secondary">Start Session</button>
+        <button class="btn btn-secondary" v-on:click="routeToConference">Start Session</button>
       </div>
     </div>
     <div class="shadow p-3 my-3 bg-white">
@@ -75,7 +75,19 @@ export default {
   props: {
     sessionId: {
       type: Number,
-      required: false,
+      required: true,
+    },
+  },
+  methods: {
+    routeToConference() {
+      this.$router.push(
+          {
+            name: 'session-conference',
+            params: {
+              sessionId: this.sessionId,
+            },
+          },
+      );
     },
   },
   computed: {
@@ -109,8 +121,7 @@ export default {
     try {
       this.session = await Session.SessionService.get(this.sessionId);
     } catch (error) {
-      console.error(error);
-      this.session = this.localSession;
+      throw error;
     }
 
     this.events.push( {
