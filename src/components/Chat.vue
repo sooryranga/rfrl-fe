@@ -20,6 +20,7 @@
           :menuActions="menuActions"
           :messageActions="messageActions"
           :roomId="roomId"
+          :single-room="isSingleRoom"
           @fetchMessages="fetchMessages"
           @sendMessage="sendMessage"
           @openFile="openFile"
@@ -48,12 +49,31 @@ import ChatWindow from 'vue-advanced-chat';
 import 'vue-advanced-chat/dist/vue-advanced-chat.css';
 
 export default {
+  name: 'chat',
   components: {
     ChatWindow,
   },
 
-  props: ['currentUserId', 'theme', 'roomId'],
-
+  props: {
+    currentUserId: {
+      type: String,
+      required: true,
+    },
+    theme: {
+      type: String,
+      required: false,
+      default: 'light',
+    },
+    roomId: {
+      type: String,
+      required: true,
+    },
+    isSingleRoom: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+  },
   data() {
     return {
       menuActions: [
