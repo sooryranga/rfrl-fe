@@ -86,7 +86,14 @@ const routes = [
     name: 'session-conference',
     props: true,
     redirect: (to) => {
-      return '/session/' + to.params.sessionId +'/conference/code';
+      const url = [
+        '/session/',
+        to.params.sessionId,
+        '/conference/',
+        to.params.conferenceId,
+        '/code',
+      ];
+      return url.join('');
     },
     component: () => import('@/components/SessionConference.vue'),
     children: [
