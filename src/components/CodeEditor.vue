@@ -1,65 +1,39 @@
 
 <template>
   <div class="h-100">
-    <div id="monaco-editor" class="h-100"/>
+    <div id="monaco-editor" ref="monacoEditor" class="h-100"/>
   </div>
 </template>
 
 <script>
-import {WS_URL} from '@/conf';
 import * as Y from 'yjs';
 import {WebrtcProvider} from 'y-webrtc';
 import {MonacoBinding} from 'y-monaco';
 import * as monaco from 'monaco-editor';
 
-// @ts-ignore
-window.MonacoEnvironment = {
-  getWorkerUrl: function(moduleId, label) {
-    if (label === 'json') {
-      return '/monaco/dist/json.worker.bundle.js';
-    }
-    if (label === 'css') {
-      return '/monaco/dist/css.worker.bundle.js';
-    }
-    if (label === 'html') {
-      return '/monaco/dist/html.worker.bundle.js';
-    }
-    if (label === 'typescript' || label === 'javascript') {
-      return '/monaco/dist/ts.worker.bundle.js';
-    }
-    return '/monaco/dist/editor.worker.bundle.js';
-  },
-};
-
 export default {
   props: {
-    conferenceId: {
-      type: String,
+    doc: {
+      type: Y.Doc,
+      required: true,
+    },
+    provider: {
+      type: WebrtcProvider,
       required: true,
     },
   },
   data: function() {
     return {
       editor: null,
-      doc: null,
-      provider: null,
       type: null,
       monacoBinding: null,
       language: 'javascript',
     };
   },
   mounted: function() {
-    this.doc = new Y.Doc();
-    this.provider = new WebrtcProvider(
-        this.conferenceId,
-        this.doc,
-        {
-          signaling: [`${WS_URL}/${this.conferenceId}/`],
-        },
-    );
-    this.type = this.doc.getText('monaco');
+    const ytext = this.doc.getText('monaco');
     this.editor = monaco.editor.create(
-        document.getElementById('monaco-editor'),
+        this.$refs['monacoEditor'],
         {
           value: '',
           language: this.language,
@@ -67,8 +41,10 @@ export default {
         },
     );
     this.monacoBinding = new MonacoBinding(
-        this.editor.getModel(),
-        new Set([this.editor]), provider.awareness,
+        ytext,
+        (this.editor.getModel()),
+        new Set([this.editor]),
+        this.provider.awareness,
     );
     this.provider.connect();
   },
