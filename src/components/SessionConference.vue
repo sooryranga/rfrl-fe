@@ -21,14 +21,14 @@
                   <li class="nav-item active">
                     <router-link
                       class="nav-link"
-                      :to="{ name: 'code', params: {userId: $route.params.userId }}">
+                      :to="{ name: 'code', params: {userId: $route.params.userId, conferenceId }}">
                       Code
                     </router-link>
                   </li>
                   <li class="nav-item">
                     <router-link
                       class="nav-link"
-                      :to="{ name: 'text-editor', params: {userId: $route.params.userId }}">
+                      :to="{ name: 'text-editor', params: {userId: $route.params.userId, conferenceId }}">
                       Text Editor
                     </router-link>
                   </li>
@@ -53,6 +53,7 @@ import {mapGetters} from 'vuex';
 import {Session} from '@/api';
 
 export default {
+  name: 'session-conference',
   components: {
     'chat': Chat,
   },
@@ -64,6 +65,10 @@ export default {
   props: {
     sessionId: {
       type: Number,
+      required: true,
+    },
+    conferenceId: {
+      type: String,
       required: true,
     },
   },

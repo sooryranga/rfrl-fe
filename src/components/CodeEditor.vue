@@ -1,3 +1,4 @@
+
 <template>
   <div class="h-100">
     <div id="monaco-editor" class="h-100"/>
@@ -5,6 +6,7 @@
 </template>
 
 <script>
+import {WS_URL} from '@/conf';
 import * as Y from 'yjs';
 import {WebrtcProvider} from 'y-webrtc';
 import {MonacoBinding} from 'y-monaco';
@@ -30,6 +32,12 @@ window.MonacoEnvironment = {
 };
 
 export default {
+  props: {
+    conferenceId: {
+      type: String,
+      required: true,
+    },
+  },
   data: function() {
     return {
       editor: null,
@@ -42,7 +50,13 @@ export default {
   },
   mounted: function() {
     this.doc = new Y.Doc();
-    this.provider = new WebrtcProvider('codemirror-demo-room', this.doc);
+    this.provider = new WebrtcProvider(
+        this.conferenceId,
+        this.doc,
+        {
+          signaling: [`${WS_URL}/${this.conferenceId}/`],
+        },
+    );
     this.type = this.doc.getText('monaco');
     this.editor = monaco.editor.create(
         document.getElementById('monaco-editor'),

@@ -1,5 +1,10 @@
 <template>
   <div class="h-100 pt-3 container-xl overflow-auto">
+    <transition name="fade">
+      <div v-if="showError" class="alert alert-danger fade-in" role="alert">
+        {{error}}
+      </div>
+    </transition>
     <div class="row p-3 my-3">
       <div class="col my-auto">
         <h4 class="ml-4 my-2"> Tutoring Session </h4>
@@ -70,6 +75,8 @@ export default {
     return {
       session: null,
       events: [],
+      showError: false,
+      error: null,
     };
   },
   props: {
@@ -79,15 +86,31 @@ export default {
     },
   },
   methods: {
-    routeToConference() {
-      this.$router.push(
-          {
-            name: 'session-conference',
-            params: {
-              sessionId: this.sessionId,
+    setError(error) {
+      this.error = error;
+      this.showError = true;
+      setTimeout(function() {
+        this.error = null;
+        this.showError = false;
+      }.bind(this), 2000);
+    },
+    async routeToConference() {
+      try {
+        const conferenceId = await Session.SessionService.getConferenceId(
+            {sessionId: this.sessionId},
+        );
+        this.$router.push(
+            {
+              name: 'session-conference',
+              params: {
+                sessionId: this.sessionId,
+                conferenceId,
+              },
             },
-          },
-      );
+        );
+      } catch (err) {
+        this.setError(err.response.data.message);
+      }
     },
   },
   computed: {
