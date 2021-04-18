@@ -82,7 +82,7 @@ const routes = [
     component: () => import('@/components/SessionInfo/SessionInfo.vue'),
   },
   {
-    path: '/session/:sessionId/conference',
+    path: '/session/:sessionId/conference/:conferenceId',
     name: 'session-conference',
     props: true,
     redirect: (to) => {
@@ -93,11 +93,13 @@ const routes = [
       {
         path: 'code',
         name: 'code',
+        props: true,
         component: () => import('@/components/CodeEditor.vue'),
       },
       {
         path: 'text-editor',
         name: 'text-editor',
+        props: true,
         component: () => import('@/components/TextEditor.vue'),
       },
     ],
