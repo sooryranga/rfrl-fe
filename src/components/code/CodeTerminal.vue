@@ -1,9 +1,21 @@
 <template>
-  <vue-command :commands="commands" />
+  <vue-command
+    :commands="commands"
+    :is-in-progress="isInProgress"
+    :history="history"
+    :builtIn="builtIn"
+    :executed="executed"
+    :prompt="prompt"
+    :hide-bar="hideBar"
+    :show-help="true"
+    @update:history="changeHistory"
+    class="h-100"
+  />
 </template>
 
 <script>
-import VueCommand, {createStdout} from 'vue-command';
+import VueCommand, {createDummyStdout} from 'vue-command';
+import CodeTerminalLoading from '@/components/code/CodeTerminalLoading.vue';
 import 'vue-command/dist/vue-command.css';
 
 export default {
@@ -13,9 +25,35 @@ export default {
   },
 
   data: () => ({
-    commands: {
-      'hello-world': () => createStdout('Hello world'),
-    },
+    commands: {},
+    prompt: '~tutorme@code:#/',
+    isInProgress: false,
+    hideBar: true,
+    history: [],
+    builtIn: undefined,
+    executed: new Set(),
+    terminate: false,
   }),
+
+  methods: {
+    changeHistory(history) {
+      this.history = history;
+    },
+  },
+
+  created() {
+    this.commands.clear = () => {
+      this.history = [];
+      // Push dummy Stdout to show Stdin
+      return createDummyStdout();
+    };
+
+    this.commands.run = () => {
+      return CodeTerminalLoading;
+    };
+  },
+
+  mounted() {
+  },
 };
 </script>
