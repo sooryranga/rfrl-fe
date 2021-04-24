@@ -6,6 +6,7 @@ import chatRooms from './modules/chatRooms';
 import roomMessages from './modules/roomMessages';
 import tutors from './modules/tutors';
 import companies from './modules/companies';
+import conference from './modules/conference';
 
 // Load Vuex
 Vue.use(Vuex);
@@ -18,6 +19,7 @@ const store = new Vuex.Store({
     roomMessages,
     tutors,
     companies,
+    conference,
   },
 });
 

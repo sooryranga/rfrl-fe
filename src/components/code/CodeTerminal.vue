@@ -14,6 +14,7 @@
 </template>
 
 <script>
+import {mapActions, mapGetters} from 'vuex';
 import VueCommand, {createDummyStdout} from 'vue-command';
 import CodeTerminalLoading from '@/components/code/CodeTerminalLoading.vue';
 import 'vue-command/dist/vue-command.css';
@@ -35,7 +36,18 @@ export default {
     terminate: false,
   }),
 
+  computed: {
+    ...mapGetters['conference', ['codeResult']],
+  },
+
+  watch: {
+    codeResult(value) {
+      console.log(value);
+    },
+  },
+
   methods: {
+    ...mapActions('conference', ['setToRunning', 'setCodeResults']),
     changeHistory(history) {
       this.history = history;
     },
@@ -49,11 +61,14 @@ export default {
     };
 
     this.commands.run = () => {
+      this.setToRunning();
       return CodeTerminalLoading;
     };
   },
 
-  mounted() {
+  async mounted() {
+    const sessionId = this.$route.params.sessionId;
+    await this.setCodeResults({sessionId});
   },
 };
 </script>

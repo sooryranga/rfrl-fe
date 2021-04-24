@@ -25,6 +25,7 @@ export const roomsRef = db.collection('chatRooms');
 export const messagesRef = (roomId) => {
   return roomsRef.doc(roomId).collection('messages');
 };
+export const conferenceCodeRef = db.collection('conferenceCode');
 
 export const filesRef = storageRef.child('files');
 
