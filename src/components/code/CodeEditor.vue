@@ -6,6 +6,7 @@
 </template>
 
 <script>
+import {mapGetters, mapActions} from 'vuex';
 import * as Y from 'yjs';
 import {WebrtcProvider} from 'y-webrtc';
 import {MonacoBinding} from 'y-monaco';
@@ -23,6 +24,23 @@ export default {
       required: true,
     },
   },
+  computed: {
+    ...mapGetters('conference', ['isRunning']),
+  },
+  watch: {
+    async isRunning(value) {
+      if (value === true) {
+        const code = this.editor.getValue();
+        const sessionId = this.$route.params.sessionId;
+
+        await this.runCode({
+          code,
+          sessionId,
+          language: 'javascript',
+        });
+      }
+    },
+  },
   data: function() {
     return {
       editor: null,
@@ -31,6 +49,9 @@ export default {
       language: 'javascript',
     };
   },
+  methods: {
+    ...mapActions('conference', ['runCode']),
+  },
   mounted: function() {
     const ytext = this.doc.getText('monaco');
     this.editor = monaco.editor.create(
@@ -38,7 +59,7 @@ export default {
         {
           value: '',
           language: this.language,
-          theme: 'vs-dark',
+          theme: 'vs',
         },
     );
     this.monacoBinding = new MonacoBinding(
