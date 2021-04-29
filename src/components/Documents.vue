@@ -41,7 +41,6 @@
 
 <script>
 import {mapGetters, mapActions} from 'vuex';
-import {DOCUMENTS, ADD_DOCUMENT} from '@/constants.actions.js';
 import DocumentEditor from '@/components/DocumentsEditor.vue';
 import {documentState} from '@/constants.state.js';
 import {DocumentService} from '@/api/DocumentService.js';
@@ -75,7 +74,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions('profile', [DOCUMENTS, ADD_DOCUMENT]),
+    ...mapActions('profile', ['getDocuments', 'addDocument']),
     'cancelEvent': function() {
       this.clearEditorState();
       this.editorOpen = false;
@@ -99,7 +98,7 @@ export default {
     },
     'saveItem': async function(state) {
       if (isLoggedInUser) {
-        await this[ADD_DOCUMENT]({
+        await this.addDocument({
           index: this.editingIndex,
           newDocument: state,
         });
@@ -119,7 +118,7 @@ export default {
   mounted: async function() {
     if (this.isLoggedInUser) {
       if (this.currentProfile.documents.length === 0) {
-        this[DOCUMENTS]();
+        this.getDocuments();
       }
       this.localDocuments.push(...this.currentProfile.documents);
     } else if (this.sessionId) {

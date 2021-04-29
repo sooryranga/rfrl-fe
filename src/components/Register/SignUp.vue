@@ -128,39 +128,69 @@ export default {
       );
       window.location.replace(url);
     },
-    loginToGoogle: function() {
+
+    loginToGoogle() {
       this.googleOauth.signIn();
     },
+
+    routeAfterLogin(auth) {
+      switch (auth.signUpStage) {
+        case 'TypeOfUser':
+          this.$router.push(
+              {
+                name: 'typeOfUser',
+              },
+          );
+          break;
+        case 'BasicInfo':
+          this.$router.push(
+              {
+                name: 'basicInfo',
+              },
+          );
+          break;
+        case 'CompanyEmail':
+          this.$router.push(
+              {
+                name: 'companyEmail',
+              },
+          );
+          break;
+        case 'RegisterDocuments':
+          this .$router.push(
+              {
+                name: 'registerDocuments',
+              },
+          );
+          break;
+        default:
+          this.$router.push(
+              {
+                name: 'profile',
+                params: {userId: this.currentProfile.id},
+              },
+          );
+      }
+    },
+
     async registerWithEmail() {
       this.$v.$touch();
       if (this.$v.$invalid) return;
 
-      await this.emailRegister({
+      const auth = await this.emailRegister({
         email: this.email,
         password: this.password,
       });
-
-      this.$router.push(
-          {
-            name: 'profile',
-            params: {userId: this.currentProfile.id},
-          },
-      );
+      this.routeAfterLogin(auth);
     },
     async loginToEmail() {
       this.$v.$touch();
       if (this.$v.$invalid) return;
-      await this.emailLogin({
+      const auth = await this.emailLogin({
         email: this.email,
         password: this.password,
       });
-
-      this.$router.push(
-          {
-            name: 'profile',
-            params: {userId: this.currentProfile.id},
-          },
-      );
+      this.routeAfterLogin(auth);
     },
     async onGoogleSignIn(hasUser) {
       if (!hasUser) {
@@ -176,18 +206,13 @@ export default {
       console.log('Email: ' + profile.getEmail());
       console.log('token: ' + idToken);
 
-      await this.googleLogin({
+      const auth = await this.googleLogin({
         token: idToken,
         name: profile.getName(),
         profilePicture: profile.getImageUrl(),
       });
 
-      this.$router.push(
-          {
-            name: 'profile',
-            params: {userId: this.currentProfile.id},
-          },
-      );
+      this.routeAfterLogin(auth);
     },
   },
   computed: {

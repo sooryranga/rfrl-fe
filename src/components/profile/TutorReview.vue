@@ -51,7 +51,6 @@
 
 <script>
 import {mapGetters, mapActions} from 'vuex';
-import {TUTOR_REVIEW} from '@/constants.actions.js';
 import {profileState} from '@/constants.state.js';
 
 export default {
@@ -71,7 +70,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions('profile', [TUTOR_REVIEW]),
+    ...mapActions('profile', ['getTutorReviews']),
   },
   beforeMount: function() {
     if (this.isLoggedInUser) {
@@ -80,7 +79,7 @@ export default {
   },
   mounted: function() {
     if (this.isLoggedInUser) {
-      this[TUTOR_REVIEW]();
+      this.getTutorReviews();
     }
   },
 };
