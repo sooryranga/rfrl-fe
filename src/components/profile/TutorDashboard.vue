@@ -20,7 +20,6 @@
 
 <script>
 import {mapGetters, mapActions} from 'vuex';
-import {TUTORED_STUDENTS} from '@/constants.actions.js';
 
 export default {
   name: 'tutor-dashboard',
@@ -31,10 +30,10 @@ export default {
     ...mapGetters('profile', ['currentProfile']),
   },
   methods: {
-    ...mapActions('profile', [TUTORED_STUDENTS]),
+    ...mapActions('profile', ['tutoredStudents']),
   },
   mounted: function() {
-    this[TUTORED_STUDENTS]();
+    this.tutoredStudents();
   },
 };
 </script>

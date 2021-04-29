@@ -1,10 +1,6 @@
 import {v1 as uuidv1} from 'uuid';
 
 import {
-  TUTORED_STUDENTS, DOCUMENTS, EDUCATION, TUTOR_REVIEW,
-  ADD_DOCUMENT, ADD_EDUCATION,
-} from '@/constants.actions.js';
-import {
   SET_PROFILE, SET_UPDATE_PROFILE,
   SET_TUTORED_STUDENTS, SET_DOCUMENTS, SET_EDUCATION,
   SET_TUTOR_REVIEW, SET_DOCUMENT,
@@ -52,17 +48,21 @@ const getters = {
 };
 
 const actions = {
-  async updateProfile({commit, getters}, profile) {
+  async updateProfile(
+      {commit, getters},
+      {firstName, lastName, photo, about, isTutor},
+  ) {
+    console.log({firstName, lastName, photo, about, isTutor});
     if (!getters.loggedIn || !getters.currentProfile) {
       throw Error('User is not logged in');
     }
 
     const updatedProfile = await Profile.ProfileService.update(
         getters.currentProfile.id,
-        profile,
+        {firstName, lastName, photo, about, isTutor},
     );
 
-    if (profile.photo) {
+    if (photo) {
       await usersRef.doc(updatedProfile.id).set(
           {
             _id: updatedProfile.id,
@@ -74,92 +74,104 @@ const actions = {
 
     commit(SET_UPDATE_PROFILE, updatedProfile);
   },
-  async [TUTORED_STUDENTS]({commit}) {
+  async tutoredStudents({commit}) {
     commit(SET_TUTORED_STUDENTS, [
       {from: {id:uuidv1()}, name: 'soory', lastTutoredDate: new Date(), image: 'https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png'},// eslint-disable-line
       {from: {id:uuidv1()}, name: 'arun', lastTutoredDate: new Date(), image: 'https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png'},// eslint-disable-line
     ]);
   },
-  async [DOCUMENTS]({commit}) {
+  async getDocuments({commit}) {
     commit(SET_DOCUMENTS, [
       {id: 14, name: 'resume', type: 'application/pdf', src: 'https://www.w3.org/wai/er/tests/xhtml/testfiles/resources/pdf/dummy.pdf', description: 'my resume is super big and nastymy resume is super big and nastymy resume is super big and nastymy resume is super big and nastymy resume is super big and nastymy resume is super big and nasty'}, // eslint-disable-line
       {id: 15, name: 'grade report', type: 'image/jpeg', src: 'https://upload.wikimedia.org/wikipedia/commons/b/b6/image_created_with_a_mobile_phone.png', description: 'my grade report'}, // eslint-disable-line
     ]);
   },
-  async [EDUCATION]({commit}) {
+  async getEducation({commit}) {
     commit(SET_EDUCATIONS, [
       {id: uuidv1(), institution: 'Waterloo', degree: 'bachelorrs', fieldOfStudy: 'engineering', start: new Date(2014, 0, 1, 0, 0, 0, 0), end: new Date(2019, 0, 1, 0, 0), institutionLogo: 'https://upload.wikimedia.org/wikipedia/en/thumb/6/6e/University_of_Waterloo_seal.svg/1920px-University_of_Waterloo_seal.svg.png'},// eslint-disable-line
     ]);
   },
-  async [TUTOR_REVIEW]({commit}) {
+  async getTutorReviews({commit}) {
     commit(SET_TUTOR_REVIEW, [
       {studentImage: 'https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png', studentName: 'Arun', id: 12, title: 'Good tutor', createdAt: new Date(), stars: 4.5, description: 'He taught me well'}, //eslint-disable-line
       {studentImage: 'https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png', studentName: 'Soory',id: 1, title:'meh, there are other tutors', createdAt: new Date(), stars: 2.5, description: 'couldn\' speak english properly'}, // eslint-disable-line
     ]);
   },
-  async [ADD_DOCUMENT]({commit}, {index, newDocument}) {
+  async addDocument({commit}, {index, newDocument}) {
     commit(SET_DOCUMENT, {index, newDocument});
   },
-  async [ADD_EDUCATION]({commit}, {index, newEducation}) {
+  async addEducation({commit}, {index, newEducation}) {
     commit(SET_EDUCATION, {index, newEducation});
   },
+
   async loginAuthorized({commit}) {
     try {
-      const client = await Auth.AuthService.loginAuthorized();
-      if (!client) {
+      const {profile, auth} = await Auth.AuthService.loginAuthorized();
+      if (!profile) {
         return;
       }
 
       commit(SET_LOGGED_IN);
-      commit(SET_PROFILE, client);
+      commit(SET_PROFILE, profile);
+      return auth;
     } catch (err) {
       commit(SET_AUTH_ERROR, getErrorMessageFromRequest(err));
     }
   },
   async googleLogin({commit}, {token, name, imageUrl}) {
-    const client = await Auth.AuthService.signupGoogle({token, name, imageUrl});
+    const {profile, auth} = await Auth.AuthService.signupGoogle(
+        {token, name, imageUrl},
+    );
 
-    if (!client) {
+    if (!profile) {
       return;
     }
 
-    commit(SET_PROFILE, client);
+    commit(SET_PROFILE, profile);
     commit(SET_GOOGLE_AUTH, {token, name, imageUrl});
     commit(SET_LOGGED_IN);
+    return auth;
   },
   async linkedinLogin({commit}, {token}) {
-    const client = await Auth.AuthService.signupLinkedIn({token});
+    const {profile, auth} = await Auth.AuthService.signupLinkedIn({token});
 
-    if (!client) {
+    if (!profile) {
       return;
     }
 
-    commit(SET_PROFILE, client);
+    commit(SET_PROFILE, profile);
     commit(SET_LINKED_IN_AUTH, token);
     commit(SET_LOGGED_IN);
+    return auth;
   },
   async emailLogin({commit}, {email, password}) {
-    const client = await Auth.AuthService.loginEmail({email, password});
+    const {profile, auth} = await Auth.AuthService.loginEmail(
+        {email, password},
+    );
 
-    if (!client) {
+    if (!profile) {
       return;
     }
 
-    commit(SET_PROFILE, client);
+    commit(SET_PROFILE, profile);
     commit(SET_EMAIL_AUTH, email);
     commit(SET_LOGGED_IN);
+    return auth;
   },
   async emailRegister({commit}, {email, password}) {
     try {
-      const client = await Auth.AuthService.signupPassword({email, password});
+      const {profile, auth} = await Auth.AuthService.signupPassword(
+          {email, password},
+      );
 
-      if (!client) {
+      if (!profile) {
         return;
       }
 
-      commit(SET_PROFILE, client);
+      commit(SET_PROFILE, profile);
       commit(SET_EMAIL_AUTH, email);
       commit(SET_LOGGED_IN);
+      return auth;
     } catch (err) {
       commit(SET_AUTH_ERROR, getErrorMessageFromRequest(err));
       throw err;
