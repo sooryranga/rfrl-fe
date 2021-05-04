@@ -1,12 +1,16 @@
 <template>
   <div class="shadow p-3 my-4 pt-5 pb-4 bg-white">
     <about-editor
-      v-if="editorOpen"
-      v-on:closeEditor="closeEditor"
-    ></about-editor>
+      v-if="aboutEditorOpen"
+      v-on:closeEditor="closeAboutEditor"
+    />
+    <photo-editor
+      v-if="photoEditorOpen"
+      v-on:closeEditor="closePhotoEditor"
+    />
     <div class="row">
       <div class="col-3">
-        <img class="profilePicture" v-bind:src="profile.photo"/>
+        <img class="profilePicture" v-bind:src="profile.photo" v-on:click="updateImage"/>
         <div v-if="bookTutorButton">
           <router-link class="btn btn-dark p-2 mr-2"  :to="bookTutorRoute">Book Tutor</router-link>
         </div>
@@ -25,15 +29,20 @@
 <script>
 import {mapGetters} from 'vuex';
 import AboutEditor from '@/components/profile/AboutEditor.vue';
+import PhotoEditor from '@/components/profile/PhotoEditor.vue';
 import {profileState} from '@/constants.state.js';
 
 export default {
   name: 'document',
-  components: {'about-editor': AboutEditor},
+  components: {
+    'about-editor': AboutEditor,
+    'photo-editor': PhotoEditor,
+  },
   data: function() {
     return {
-      'editorOpen': false,
-      'otherProfile': profileState(),
+      aboutEditorOpen: false,
+      photoEditorOpen: false,
+      otherProfile: profileState(),
     };
   },
   props: {
@@ -69,11 +78,18 @@ export default {
       return this.profile.canBeTutor &&
       (this.profile.id === this.currentProfile.id);
     },
-    closeEditor() {
-      this.editorOpen = false;
+    closeAboutEditor() {
+      this.aboutEditorOpen = false;
     },
     edit() {
-      this.editorOpen = true;
+      this.aboutEditorOpen = true;
+    },
+    updateImage() {
+      this.photoEditorOpen = true;
+    },
+    closePhotoEditor() {
+      console.log('close photo editor');
+      this.photoEditorOpen = false;
     },
   },
 };
