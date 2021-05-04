@@ -15,8 +15,6 @@ import {getErrorMessageFromRequest} from '@/utils';
 import {profileState} from '@/constants.state.js';
 import {Auth, Profile} from '@/api';
 
-import {usersRef} from '@/firestore';
-
 const blankState = () => ({
   google: {token: null},
   linkedin: {token: null},
@@ -61,16 +59,6 @@ const actions = {
         getters.currentProfile.id,
         {firstName, lastName, photo, about, isTutor},
     );
-
-    if (photo) {
-      await usersRef.doc(updatedProfile.id).set(
-          {
-            _id: updatedProfile.id,
-            username: updatedProfile.name,
-            avatar: updatedProfile.photo,
-          },
-      );
-    }
 
     commit(SET_UPDATE_PROFILE, updatedProfile);
   },
