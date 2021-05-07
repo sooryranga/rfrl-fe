@@ -74,20 +74,28 @@
 </template>
 
 <script>
+import {mapGetters} from 'vuex';
 import Datepicker from 'vuejs-datepicker';
-import {educationState} from '@/constants.state.js';
 
 export default {
-  name: 'document-editor',
+  name: 'education-editor',
   props: {
     educationprop: Object,
   },
   components: {
     Datepicker,
   },
+  computed: {
+    ...mapGetters('profile', ['currentProfile']),
+    startYear() {
+      return this.start?.getFullYear();
+    },
+    endYear() {
+      return this.end?.getFullYear();
+    },
+  },
   data: function() {
     return {
-      id: null,
       institution: null,
       degree: null,
       fieldOfStudy: null,
@@ -98,14 +106,13 @@ export default {
   methods: {
     save: function() {
       // Save file to bucket and update src
-      const state = educationState();
-      state.id = this.id? this.id : state.id;
-      state.institution = this.institution;
-      state.degree = this.degree;
-      state.fieldOfStudy = this.fieldOfStudy;
-      state.start = this.start;
-      state.end = this.end;
-
+      const state = {
+        institution: this.institution,
+        degree: this.degree,
+        fieldOfStudy: this.fieldOfStudy,
+        startYear: this.startYear,
+        endYear: this.endYear,
+      };
       this.$emit(
           'saveEvent',
           state,
@@ -118,12 +125,13 @@ export default {
     },
   },
   mounted: function() {
-    this.id = this.educationprop.id;
-    this.institution = this.educationprop.institution;
-    this.degree = this.educationprop.degree;
-    this.fieldOfStudy = this.educationprop.fieldOfStudy;
-    this.start = this.educationprop.start;
-    this.end = this.educationprop.end;
+    this.institution = this.currentProfile.institution || '';
+    this.degree = this.currentProfile.degree || '';
+    this.fieldOfStudy = this.currentProfile.fieldOfStudy || '';
+    this.start = this.currentProfile.startYear?
+      new Date(this.currentProfile.startYear, 0, 1): null;
+    this.end = this.currentProfile.endYear ?
+      new Date(this.currentProfile.endYear, 0, 1): null;
   },
 };
 </script>

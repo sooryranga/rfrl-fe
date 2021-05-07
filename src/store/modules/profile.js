@@ -2,9 +2,8 @@ import {v1 as uuidv1} from 'uuid';
 
 import {
   SET_PROFILE, SET_UPDATE_PROFILE,
-  SET_TUTORED_STUDENTS, SET_DOCUMENTS, SET_EDUCATION,
-  SET_TUTOR_REVIEW, SET_DOCUMENT,
-  SET_EDUCATIONS, SET_LOGGED_IN, SET_GOOGLE_AUTH,
+  SET_TUTORED_STUDENTS, SET_EDUCATION,
+  SET_TUTOR_REVIEW, SET_LOGGED_IN, SET_GOOGLE_AUTH,
   SET_LINKED_IN_AUTH, SET_EMAIL_AUTH, SET_LOGGED_OUT,
   SET_AUTH_ERROR,
 } from '@/constants.mutations.js';
@@ -50,7 +49,6 @@ const actions = {
       {commit, getters},
       {firstName, lastName, photo, about, isTutor},
   ) {
-    console.log({firstName, lastName, photo, about, isTutor});
     if (!getters.loggedIn || !getters.currentProfile) {
       throw Error('User is not logged in');
     }
@@ -68,28 +66,28 @@ const actions = {
       {from: {id:uuidv1()}, name: 'arun', lastTutoredDate: new Date(), image: 'https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png'},// eslint-disable-line
     ]);
   },
-  async getDocuments({commit}) {
-    commit(SET_DOCUMENTS, [
-      {id: 14, name: 'resume', type: 'application/pdf', src: 'https://www.w3.org/wai/er/tests/xhtml/testfiles/resources/pdf/dummy.pdf', description: 'my resume is super big and nastymy resume is super big and nastymy resume is super big and nastymy resume is super big and nastymy resume is super big and nastymy resume is super big and nasty'}, // eslint-disable-line
-      {id: 15, name: 'grade report', type: 'image/jpeg', src: 'https://upload.wikimedia.org/wikipedia/commons/b/b6/image_created_with_a_mobile_phone.png', description: 'my grade report'}, // eslint-disable-line
-    ]);
-  },
-  async getEducation({commit}) {
-    commit(SET_EDUCATIONS, [
-      {id: uuidv1(), institution: 'Waterloo', degree: 'bachelorrs', fieldOfStudy: 'engineering', start: new Date(2014, 0, 1, 0, 0, 0, 0), end: new Date(2019, 0, 1, 0, 0), institutionLogo: 'https://upload.wikimedia.org/wikipedia/en/thumb/6/6e/University_of_Waterloo_seal.svg/1920px-University_of_Waterloo_seal.svg.png'},// eslint-disable-line
-    ]);
-  },
   async getTutorReviews({commit}) {
     commit(SET_TUTOR_REVIEW, [
       {studentImage: 'https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png', studentName: 'Arun', id: 12, title: 'Good tutor', createdAt: new Date(), stars: 4.5, description: 'He taught me well'}, //eslint-disable-line
       {studentImage: 'https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png', studentName: 'Soory',id: 1, title:'meh, there are other tutors', createdAt: new Date(), stars: 2.5, description: 'couldn\' speak english properly'}, // eslint-disable-line
     ]);
   },
-  async addDocument({commit}, {index, newDocument}) {
-    commit(SET_DOCUMENT, {index, newDocument});
-  },
-  async addEducation({commit}, {index, newEducation}) {
-    commit(SET_EDUCATION, {index, newEducation});
+  async setEducation(
+      {commit, getters},
+      {institution, degree, fieldOfStudy, startYear, endYear},
+  ) {
+    await Profile.ProfileService.updateEducation({
+      id: getters.currentProfile.id,
+      institution,
+      degree,
+      fieldOfStudy,
+      startYear,
+      endYear,
+    });
+    commit(
+        SET_EDUCATION,
+        {institution, degree, fieldOfStudy, startYear, endYear},
+    );
   },
 
   async loginAuthorized({commit}) {
@@ -188,28 +186,17 @@ const mutations = {
   [SET_TUTORED_STUDENTS](state, tutoredStudents) {
     state.profile.tutoredStudents = tutoredStudents;
   },
-  [SET_DOCUMENTS](state, documents) {
-    state.profile.documents = documents;
-  },
-  [SET_EDUCATIONS](state, education) {
-    state.profile.education = education;
-  },
-  [SET_EDUCATION](state, {index, newEducation}) {
-    if (index != null) {
-      state.profile.education[index] = newEducation;
-    } else {
-      state.profile.education.push(newEducation);
-    }
+  [SET_EDUCATION](
+      state,
+      {institution, degree, fieldOfStudy, startYear, endYear},
+  ) {
+    state.profile = {
+      ...state.profile,
+      ...{institution, degree, fieldOfStudy, startYear, endYear},
+    };
   },
   [SET_TUTOR_REVIEW](state, reviews) {
     state.profile.tutorReviews = reviews;
-  },
-  [SET_DOCUMENT](state, {index, newDocument}) {
-    if (index != null) {
-      state.profile.documents[index] = newDocument;
-    } else {
-      state.profile.documents.push(newDocument);
-    };
   },
   [SET_LOGGED_IN](state) {
     if (!state.loggedIn) {
