@@ -1,5 +1,3 @@
-import {v4 as uuidv4} from 'uuid';
-
 const profileState = () => {
   return {
     id: null,
@@ -7,34 +5,25 @@ const profileState = () => {
     lastName: null,
     photo: null,
     about: null,
-    education: [],
+    education: null,
     workExperience: [],
-    documentation: {},
     canBeTutor: true,
     tutoredStudents: [],
-    documents: [],
     tutorReviews: [],
+    institution: null,
+    degree: null,
+    fieldOfStudy: null,
+    startYear: null,
+    endYear: null,
   };
 };
 
 const documentState = () => {
   return {
-    id: uuidv4(),
-    type: null,
-    src: null,
+    id: null,
+    name: null,
     description: null,
-  };
-};
-
-const educationState = () => {
-  return {
-    id: uuidv4(),
-    institution: null,
-    degree: null,
-    fieldOfStudy: null,
-    start: null,
-    end: null,
-    institutionLogo: null,
+    src: null,
   };
 };
 
@@ -95,7 +84,6 @@ const chatRoomState = ()=>{
 export {
   profileState,
   documentState,
-  educationState,
   tutoredStudentsState,
   tutorReview,
   chatRoomState,

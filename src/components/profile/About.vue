@@ -33,7 +33,7 @@ import PhotoEditor from '@/components/profile/PhotoEditor.vue';
 import {profileState} from '@/constants.state.js';
 
 export default {
-  name: 'document',
+  name: 'about',
   components: {
     'about-editor': AboutEditor,
     'photo-editor': PhotoEditor,

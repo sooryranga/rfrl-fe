@@ -10,13 +10,9 @@ const SET_UPDATE_PROFILE = 'set_update_profile';
 const SET_PROFILE_IMAGE = 'set_profile_image';
 const SET_NAME = 'set_name';
 const SET_TUTORED_STUDENTS = 'set_tutored_students';
-const SET_DOCUMENTS = 'set_documents';
 const SET_EDUCATION = 'set_education';
 const SET_TUTOR_REVIEW = 'set_tutor_review';
-const SET_DOCUMENT = 'set_document';
-const SET_NEW_DOCUMENT = 'set_new_document';
 const SET_ABOUT = 'set_about';
-const SET_EDUCATIONS = 'set_educations';
 
 const SET_ROOMS = 'set_rooms';
 const SET_USERS = 'set_users';
@@ -62,13 +58,9 @@ export {
   SET_PROFILE_IMAGE,
   SET_NAME,
   SET_TUTORED_STUDENTS,
-  SET_DOCUMENTS,
   SET_EDUCATION,
   SET_TUTOR_REVIEW,
-  SET_DOCUMENT,
-  SET_NEW_DOCUMENT,
   SET_ABOUT,
-  SET_EDUCATIONS,
   SET_UPDATE_PROFILE,
 
   // Mutations for chatRooms

@@ -32,6 +32,15 @@ export const ProfileService = {
     const response = await Vue.axios.post(`client/`, profile);
     return responseToProfile(response.data);
   },
+  async updateEducation(
+      {id, institution, degree, fieldOfStudy, startYear, endYear},
+  ) {
+    const response = await Vue.axios.put(
+        `client/${id}/education/`,
+        {institution, degree, fieldOfStudy, startYear, endYear},
+    );
+    return responseToProfile(response.data);
+  },
 };
 
 

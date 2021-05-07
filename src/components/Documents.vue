@@ -30,6 +30,7 @@
         <div v-if="allowToSave" class="documentEditor hover-to-show mt-1">
           <span v-on:click="edit(index)" class="material-icons md-dark btn-outline-light btn">create</span>
           <span class="material-icons md-dark btn-outline-light btn">drag_handle</span>
+          <span v-on:click="deleteItem(document.id)" class="material-icons md-dark btn-outline-light btn">delete</span>
         </div>
       </div>
     </div>
@@ -43,7 +44,7 @@
 import {mapGetters, mapActions} from 'vuex';
 import DocumentEditor from '@/components/DocumentsEditor.vue';
 import {documentState} from '@/constants.state.js';
-import {DocumentService} from '@/api/DocumentService.js';
+import {Document} from '@/api';
 
 
 export default {
@@ -51,92 +52,91 @@ export default {
   components: {'document-editor': DocumentEditor},
   data: function() {
     return {
-      'editorOpen': false,
-      'localDocuments': [],
-      'editingIndex': null,
-      'editingItem': documentState(),
+      editorOpen: false,
+      localDocuments: [],
+      editingIndex: null,
+      editingItem: documentState(),
     };
   },
   props: {
-    'profileId': String,
-    'sessionId': String,
+    profileId: String,
+    sessionId: String,
   },
   computed: {
     ...mapGetters('profile', ['currentProfile']),
-    'isLoggedInUser': function() {
+    isLoggedInUser() {
       return this.currentProfile.id === this.profileId;
     },
-    'isSessionDocuments': function() {
+    isSessionDocuments() {
       return this.sessionId != null;
     },
-    'allowToSave': function() {
+    allowToSave() {
       return this.isLoggedInUser || this.isSessionDocuments;
+    },
+    refType() {
+      if (this.profileId !== null) return 'client';
+      return 'session';
+    },
+    refId() {
+      if (this.profileId !== null) return this.profileId;
+      return this.sessionId;
     },
   },
   methods: {
-    ...mapActions('profile', ['getDocuments', 'addDocument']),
-    'cancelEvent': function() {
+    ...mapActions('profile', ['addDocument']),
+    cancelEvent() {
       this.clearEditorState();
       this.editorOpen = false;
     },
-    'clearEditorState': function() {
+    clearEditorState() {
       this.editorDocument = documentState();
     },
-    'add': function() {
+    add() {
       this.editingItem = documentState();
       this.editorOpen = true;
       this.editingIndex = null;
     },
-    'edit': function(index) {
+    edit(index) {
       this.editingIndex = index;
       this.editingItem = this.localDocuments[index];
       this.editorOpen = true;
     },
-    'saveEvent': function(state) {
+    saveEvent(state) {
       this.editorOpen = false;
       this.saveItem(state);
     },
-    'saveItem': async function(state) {
-      if (isLoggedInUser) {
-        await this.addDocument({
-          index: this.editingIndex,
-          newDocument: state,
+    async deleteItem(id) {
+      await Document.DocumentService.delete({id});
+      this.localDocuments = this.localDocuments.filter((doc) => doc.id != id);
+    },
+    async saveItem({name, description, src, id}) {
+      if (id != null) {
+        const newDocument = await Document.DocumentService.put(
+            {id, src, description, name},
+        );
+        this.$set(this.localDocuments, this.editingIndex, newDocument);
+      } else {
+        const ids = this.localDocuments.map((doc) => doc.id) || [];
+        const newDocument = await Document.DocumentService.post(
+            {src, name, description},
+        );
+        ids.push(newDocument.id);
+        const documents = await Document.DocumentService.putOrder({
+          refId: this.refId,
+          refType: this.refType,
+          documentIds: ids,
         });
-      } else {
-        await DocumentService.postForSession(this.sessionId, state);
+        this.localDocuments = documents;
       }
-
-      if (this.editingIndex != null) {
-        this.localDocuments[this.editingIndex] = state;
-      } else {
-        this.localDocuments.push(state);
-      }
-
       this.clearEditorState();
     },
   },
-  mounted: async function() {
-    if (this.isLoggedInUser) {
-      if (this.currentProfile.documents.length === 0) {
-        this.getDocuments();
-      }
-      this.localDocuments.push(...this.currentProfile.documents);
-    } else if (this.sessionId) {
-      const documents = [];
-      try {
-        documents.push(...DocumentService.getForSession(this.sessionId));
-      } catch (error) {
-        console.error(error);
-        documents.push(...[
-          {id: 14, name: 'Home work', type: 'application/pdf', src: 'https://www.w3.org/wai/er/tests/xhtml/testfiles/resources/pdf/dummy.pdf', description: 'my resume is super big and nastymy resume is super big and nastymy resume is super big and nastymy resume is super big and nastymy resume is super big and nastymy resume is super big and nasty'}, // eslint-disable-line
-          {id: 15, name: 'Practice', type: 'image/jpeg', src: 'https://upload.wikimedia.org/wikipedia/commons/b/b6/image_created_with_a_mobile_phone.png', description: 'my grade report'}, // eslint-disable-line
-          {id: 15, name: 'Home work2', type: 'image/jpeg', src: 'https://upload.wikimedia.org/wikipedia/commons/b/b6/image_created_with_a_mobile_phone.png', description: 'my grade report'}, // eslint-disable-line
-        ]);
-      }
-      await this.localDocuments.push(
-          ...documents,
-      );
-    }
+  async mounted() {
+    const documents = await Document.DocumentService.getOrder({
+      refId: this.refId,
+      refType: this.refType,
+    });
+    this.localDocuments = documents;
   },
 };
 </script>

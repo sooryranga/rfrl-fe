@@ -46,14 +46,15 @@
 </template>
 
 <script>
-import {documentState} from '@/constants.state.js';
+import {mapGetters} from 'vuex';
+import {documentRef} from '@/firestore';
 
 export default {
   name: 'document-editor',
   props: {
     documentprop: Object,
   },
-  data: function() {
+  data() {
     return {
       id: null,
       type: null,
@@ -63,28 +64,45 @@ export default {
       file: '',
     };
   },
+  computed: {
+    ...mapGetters('profile', ['currentProfile']),
+  },
   methods: {
-    handleFileUpload: function() {
+    handleFileUpload() {
       this.file = this.$refs.file.files[0];
     },
-    save: function() {
+    async save() {
       // Save file to bucket and update src
-      const state = documentState();
-      state.name = this.name;
-      state.description = this.description;
-      state.src = this.src? this.src : 'https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png'; // eslint-disable-line
+      console.log(this.file);
+      if (!this.file && !this.src) return;
+
+      if (this.file) {
+        const today = new Date();
+        const dateStr = today.toISOString().replace(/\D/g, '');
+        const snapshot = await documentRef
+            .child(`${this.currentProfile.id}-${dateStr}`)
+            .put(this.file);
+
+        this.src = await snapshot.ref.getDownloadURL();
+      }
+
       this.$emit(
           'saveEvent',
-          state,
+          {
+            id: this.id,
+            name: this.name,
+            description: this.description,
+            src: this.src,
+          },
       );
     },
-    cancel: function() {
+    cancel() {
       this.$emit(
           'cancelEvent',
       );
     },
   },
-  mounted: function() {
+  mounted() {
     this.id = this.documentprop.id;
     this.description = this.documentprop.description;
     this.name = this.documentprop.name;

@@ -29,5 +29,8 @@ export const conferenceCodeRef = db.collection('conferenceCode');
 
 export const filesRef = storageRef.child('files');
 
+export const profilePhotoRef = storageRef.child('profilePhotos');
+export const documentRef = storageRef.child('document');
+
 export const dbTimestamp = firebase.firestore.FieldValue.serverTimestamp();
 export const deleteDbField = firebase.firestore.FieldValue.delete();
