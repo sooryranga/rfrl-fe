@@ -11,7 +11,6 @@ const SET_PROFILE_IMAGE = 'set_profile_image';
 const SET_NAME = 'set_name';
 const SET_TUTORED_STUDENTS = 'set_tutored_students';
 const SET_EDUCATION = 'set_education';
-const SET_TUTOR_REVIEW = 'set_tutor_review';
 const SET_ABOUT = 'set_about';
 
 const SET_ROOMS = 'set_rooms';
@@ -44,6 +43,10 @@ const SET_CODE_RESULT_LISTENER = 'set_code_result_listener';
 const SET_CODE_RESULT = 'set_code_result';
 const SET_RESET_CONFERENCE = 'set_reset_conference';
 
+const SET_REQUIRED_REVIEW = 'set_required_review';
+
+const SET_GLOBAL_MODAL = 'set_global_modal';
+
 export {
   // Mutations for authentication
   SET_LOGGED_IN,
@@ -59,7 +62,6 @@ export {
   SET_NAME,
   SET_TUTORED_STUDENTS,
   SET_EDUCATION,
-  SET_TUTOR_REVIEW,
   SET_ABOUT,
   SET_UPDATE_PROFILE,
 
@@ -98,4 +100,10 @@ export {
   SET_CODE_RESULT,
   SET_CODE_RESULT_LISTENER,
   SET_RESET_CONFERENCE,
+
+  // Mutations for global modal
+  SET_GLOBAL_MODAL,
+
+  // Mutations for tutor review
+  SET_REQUIRED_REVIEW,
 };

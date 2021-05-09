@@ -1,18 +1,18 @@
 <template>
   <div id="app">
-    <router-view :key="routerViewKey"/>
+    <router-view />
+    <global-modal/>
   </div>
 </template>
 
 <script>
 import {mapActions} from 'vuex';
+import GlobalModal from './components/GlobalModal.vue';
 
 export default {
   name: 'tutor',
-  computed: {
-    routerViewKey() {
-      return this.$route.fullPath.split('/').slice(0, 2).join('/');
-    },
+  components: {
+    GlobalModal,
   },
   methods: {
     ...mapActions('profile', ['loginAuthorized']),

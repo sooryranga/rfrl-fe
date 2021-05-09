@@ -3,7 +3,7 @@ import {v1 as uuidv1} from 'uuid';
 import {
   SET_PROFILE, SET_UPDATE_PROFILE,
   SET_TUTORED_STUDENTS, SET_EDUCATION,
-  SET_TUTOR_REVIEW, SET_LOGGED_IN, SET_GOOGLE_AUTH,
+  SET_LOGGED_IN, SET_GOOGLE_AUTH,
   SET_LINKED_IN_AUTH, SET_EMAIL_AUTH, SET_LOGGED_OUT,
   SET_AUTH_ERROR,
 } from '@/constants.mutations.js';
@@ -64,12 +64,6 @@ const actions = {
     commit(SET_TUTORED_STUDENTS, [
       {from: {id:uuidv1()}, name: 'soory', lastTutoredDate: new Date(), image: 'https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png'},// eslint-disable-line
       {from: {id:uuidv1()}, name: 'arun', lastTutoredDate: new Date(), image: 'https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png'},// eslint-disable-line
-    ]);
-  },
-  async getTutorReviews({commit}) {
-    commit(SET_TUTOR_REVIEW, [
-      {studentImage: 'https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png', studentName: 'Arun', id: 12, title: 'Good tutor', createdAt: new Date(), stars: 4.5, description: 'He taught me well'}, //eslint-disable-line
-      {studentImage: 'https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png', studentName: 'Soory',id: 1, title:'meh, there are other tutors', createdAt: new Date(), stars: 2.5, description: 'couldn\' speak english properly'}, // eslint-disable-line
     ]);
   },
   async setEducation(
@@ -194,9 +188,6 @@ const mutations = {
       ...state.profile,
       ...{institution, degree, fieldOfStudy, startYear, endYear},
     };
-  },
-  [SET_TUTOR_REVIEW](state, reviews) {
-    state.profile.tutorReviews = reviews;
   },
   [SET_LOGGED_IN](state) {
     if (!state.loggedIn) {
