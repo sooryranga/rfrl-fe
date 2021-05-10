@@ -57,7 +57,11 @@ export const SessionService = {
         `sessions/`,
         {state: SessionState.SCHEDULED},
     );
-    return response.data;
+    const sessions = response.data.map((session) => {
+      return responseToSession(session);
+    });
+
+    return sessions;
   },
   async getPrendingSession(roomId) {
     const response = await Vue.axios.get(

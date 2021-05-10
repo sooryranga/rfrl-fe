@@ -3,7 +3,7 @@
     <div class="row">
       <h3 class=" ml-4 my-2"> Student Review </h3>
     </div>
-    <div class="mt-4" v-if="tutorReviews">
+    <div class="mt-4" v-if="tutorReviews.length">
       <div id="averageReview">
         <div class="row">
           <div class="col">
