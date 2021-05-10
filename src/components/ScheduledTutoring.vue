@@ -32,7 +32,11 @@
                 </div>
                 <div class="col-auto my-auto">
                   <p class="m-0">
-                    With {{currentProfile.id === session.mentor.id ? session.mentee.name : session.mentor.name}}
+                    With {{
+                      currentProfile.id === session.tutorId ?
+                      getName(getMentee(session)) :
+                      getName(session.tutor)
+                    }}
                   </p>
                 </div>
               </div>
@@ -101,8 +105,6 @@ export default {
         }
         cache[cache.length-1].sessions.push(session);
       }
-
-      console.log(cache);
       return cache;
     },
   },
@@ -142,8 +144,24 @@ export default {
               this.roomId,
           );
     },
+    getMentee(session) {
+      const mentees = session.clients.filter((client) => {
+        client.id != session.tutorId;
+      });
+
+      return mentees[0];
+    },
+    getName(profile) {
+      return `${profile.firstName} ${profile.lastName[0]}`;
+    },
   },
-  mounted: async function() {
+  async mounted() {
+    if (this.profileId) {
+      return await this.importSessionForUser();
+    }
+    if (this.sessionId) {
+      return await this.importSessionForRoom();
+    }
   },
 };
 </script>
