@@ -3,7 +3,12 @@
     <div class="row h-100">
       <div class='col-auto p-0 h-100'>
         <div class="h-100" style="width: 350px">
-          <video-messaging style="height: 30%;" v-bind:conferenceId="conferenceId"/>
+          <video-messaging
+            style="height: 30%;"
+            v-bind:conferenceId="conferenceId"
+            v-bind:videoStream="videoStream"
+            v-on:setTrack="setTrack"
+            ref="videoMessaging"/>
           <chat
             :isSingleRoom="true"
             :roomId="session.roomId"
@@ -48,10 +53,12 @@
 </template>
 
 <script>
+import {v4 as uuidv4} from 'uuid';
 import VideoMessaging from '@/components/VideoMessaging.vue';
 import {WS_URL} from '@/conf';
 import * as Y from 'yjs';
 import {WebrtcProvider} from 'y-webrtc';
+import {WebrtcManager} from '@/webrtc';
 import Chat from '@/components/Chat';
 import {mapGetters} from 'vuex';
 import {Session} from '@/api';
@@ -67,6 +74,10 @@ export default {
       session: null,
       doc: null,
       provider: null,
+
+      peerId: uuidv4(),
+      webrtcManger: null,
+      videoStream: null,
     };
   },
   props: {
@@ -82,6 +93,12 @@ export default {
   computed: {
     ...mapGetters('profile', ['currentProfile']),
   },
+  methods: {
+    setTrack({stream, track}) {
+      console.log(stream, track);
+      this.webrtcManger.addTrack({track, stream});
+    },
+  },
   async mounted() {
     try {
       this.session = await Session.SessionService.get(this.sessionId);
@@ -96,7 +113,16 @@ export default {
           signaling: [`${WS_URL}/${this.conferenceId}/yjs/`],
         },
     );
-    console.log(this.provider);
+
+    const url = `${WS_URL}/${this.conferenceId}/simple-peer/`;
+    this.webrtcManger = new WebrtcManager({
+      peerId: this.peerId,
+      conferenceId: this.conferenceId,
+      url,
+      setMediaTrack: (stream) => {
+        this.videoStream = stream;
+      },
+    });
   },
   beforeDestroy() {
     this.provider.disconnect();
