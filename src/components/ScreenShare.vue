@@ -5,36 +5,29 @@
           RTC Video stream not available.
         </video>
       </div>
-      <div>
-        <video id="myvideo" ref="video" class="video">
-          Video stream not available.
-        </video>
-      </div>
       <div id="buttonrow" class="row">
         <div class="col">
-          <i class="material-icons md-36 md-light" v-on:click="allowVideo=!allowVideo" v-if="!allowVideo">videocam</i>
-          <i class="material-icons md-36 md-light" v-on:click="allowVideo=!allowVideo" v-else>videocam_off</i>
-        </div>
-        <div class="col">
-          <i class="material-icons md-36 md-light" v-on:click="allowAudio=!allowAudio" v-if="!allowAudio">volume_up</i>
-          <i class="material-icons md-36 md-light" v-on:click="allowAudio=!allowAudio" v-else>volume_mute</i>
+          <i
+            class="material-icons md-36 md-light"
+            v-on:click="allowScreenShare=!allowScreenShare"
+            v-if="!allowScreenShare">screen_share</i>
+          <i
+            class="material-icons md-36 md-light"
+            v-on:click="allowScreenShare=!allowScreenShare" v-else>stop_screen_share</i>
         </div>
       </div>
     </div>
 </template>
 
 <script>
-import {WEBCAM_STREAM_TYPE} from '@/webrtc';
+import {SCREEN_STREAM_TYPE} from '@/webrtc';
 
 export default {
-  name: 'video-messaging',
+  name: 'screen-share',
   data: function() {
     return {
-      allowVideo: false,
-      allowAudio: false,
-      video: null,
+      allowScreenShare: false,
       videortc: null,
-      audioTrack: null,
       videoTrack: null,
       stream: null,
     };
@@ -49,25 +42,29 @@ export default {
       this.videortc.muted = true;
       this.videortc.play();
     },
-    async allowVideo(val, _) {
-      if (this.videoTrack != null && val === false) {
-        this.$emit(
-            'removeTrack',
-            {track: this.videoTrack, stream: this.stream},
-        );
-        this.videoTrack.stop();
+    async allowScreenShare(val, _) {
+      if (val === false) {
+        if (this.videoTrack) {
+          this.$emit(
+              'removeTrack',
+              {track: this.videoTrack, stream: this.stream},
+          );
+          this.videoTrack.stop();
+        }
+        if (this.audioTrack) {
+          this.$emit(
+              'removeTrack',
+              {track: this.videoTrack, stream: this.stream},
+          );
+          this.audioTrack.stop();
+        }
+
         this.videoTrack = null;
+        this.audioTrack = null;
         return;
       }
-      await this.startStream(val, this.allowAudio);
-      this.setTracks();
-    },
-    async allowAudio(val, _) {
-      if (this.audioTrack != null) {
-        this.audioTrack.enabled = val;
-        return;
-      }
-      await this.startStream(this.allowVideo, val);
+
+      await this.startStream();
       this.setTracks();
     },
   },
@@ -89,10 +86,10 @@ export default {
     async connectPeers() {
     // Create the local connection and its event listeners
     },
-    async startStream(video, audio) {
+    async startStream() {
       try {
-        const stream = await navigator.mediaDevices.getUserMedia(
-            {video, audio},
+        const stream = await navigator.mediaDevices.getDisplayMedia(
+            {video: true, audio: true},
         );
         if (this.videoTrack) {
           this.videoTrack.stop();
@@ -102,15 +99,11 @@ export default {
           this.audioTrack.stop();
           this.audioTrack = null;
         }
-        if (video) {
-          this.videoTrack = stream.getVideoTracks()[0];
-        }
-        if (audio) {
-          this.audioTrack = stream.getAudioTracks()[0];
-        }
-        this.video.srcObject = stream;
-        this.video.play();
+        this.videoTrack = stream.getVideoTracks()[0];
+        this.audioTrack = stream.getAudioTracks()[0];
         this.stream = stream;
+        this.videortc.srcObject = stream;
+        this.videortc.play();
       } catch (err) {
         console.log('An error occurred: ' + err);
         self.allowScreenShare = false;
@@ -124,7 +117,7 @@ export default {
             {
               track: this.videoTrack,
               stream: this.stream,
-              type: WEBCAM_STREAM_TYPE,
+              type: SCREEN_STREAM_TYPE,
             },
         );
       }
@@ -134,7 +127,7 @@ export default {
             {
               track: this.audioTrack,
               stream: this.stream,
-              type: WEBCAM_STREAM_TYPE,
+              type: SCREEN_STREAM_TYPE,
             },
         );
       }
@@ -147,7 +140,7 @@ export default {
 #parent{
   position: relative;
   flex: 0 0 auto!important;
-  height: 30%;
+  height: 100%;
   width: 100%;
   background-color: black;
 }
@@ -158,14 +151,6 @@ export default {
   z-index: 0;
   width: 100%;
   height: 100%;
-}
-#myvideo{
-  position: absolute;
-  bottom: 2%;
-  left: 2%;
-  width: 30%;
-  height: 30%;
-  z-index: 1;
 }
 #buttonrow{
   position: absolute;
