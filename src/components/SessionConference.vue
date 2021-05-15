@@ -3,7 +3,13 @@
     <div class="row h-100">
       <div class='col-auto p-0 h-100'>
         <div class="h-100" style="width: 350px">
-          <video-messaging style="height: 30%;"></video-messaging>
+          <video-messaging
+            style="height: 30%;"
+            v-bind:conferenceId="conferenceId"
+            v-bind:videoStream="videoStream"
+            v-on:setTrack="setTrackOnPeers"
+            v-on:removeTrack="removeTrackFromPeers"
+            ref="videoMessaging"/>
           <chat
             :isSingleRoom="true"
             :roomId="session.roomId"
@@ -32,6 +38,13 @@
                       Text Editor
                     </router-link>
                   </li>
+                  <li class="nav-item">
+                    <router-link
+                      class="nav-link"
+                      :to="{ name: 'screen-share', params: {conferenceId}}">
+                      Screen Share
+                    </router-link>
+                  </li>
                 </ul>
               </div>
             </nav>
@@ -39,7 +52,13 @@
         </div>
         <div class="row" style="height:94%">
           <div class="col p-0">
-            <router-view :doc="doc" :provider="provider" :key="$route.path"/>
+            <router-view
+              :doc="doc"
+              :videoStream="shareScreenStream"
+              :provider="provider"
+              v-on:setTrack="setTrackOnPeers"
+              v-on:removeTrack="removeTrackFromPeers"
+              :key="$route.path"/>
           </div>
         </div>
       </div>
@@ -48,9 +67,12 @@
 </template>
 
 <script>
+import {v4 as uuidv4} from 'uuid';
+import VideoMessaging from '@/components/VideoMessaging.vue';
 import {WS_URL} from '@/conf';
 import * as Y from 'yjs';
 import {WebrtcProvider} from 'y-webrtc';
+import {WebrtcManager, WEBCAM_STREAM_TYPE, SCREEN_STREAM_TYPE} from '@/webrtc';
 import Chat from '@/components/Chat';
 import {mapGetters} from 'vuex';
 import {Session} from '@/api';
@@ -59,12 +81,21 @@ export default {
   name: 'session-conference',
   components: {
     'chat': Chat,
+    'video-messaging': VideoMessaging,
   },
   data: function() {
     return {
       session: null,
       doc: null,
       provider: null,
+
+      peerId: uuidv4(),
+      webrtcManger: null,
+      videoStream: null,
+      shareScreenStream: null,
+
+      idToStream: {},
+      idToType: {},
     };
   },
   props: {
@@ -80,18 +111,77 @@ export default {
   computed: {
     ...mapGetters('profile', ['currentProfile']),
   },
+  methods: {
+    setTrackOnPeers({stream, track, type}) {
+      this.sendDataToPeers({
+        type,
+        streamId: stream.id,
+      });
+
+      this.webrtcManger.addTrack({track, stream});
+    },
+    removeTrackFromPeers({track, stream}) {
+      this.webrtcManger.removeTrack({track, stream});
+    },
+    matchAndSetStream({type, stream}) {
+      if (type === WEBCAM_STREAM_TYPE) {
+        this.videoStream = stream;
+        return;
+      }
+
+      if (type === SCREEN_STREAM_TYPE) {
+        this.shareScreenStream = stream;
+        return;
+      }
+
+      console.error('Did not match to any stream type');
+    },
+    announceMediaStream(stream) {
+      this.idToStream[stream.id] = stream;
+      if (!(stream.id in this.idToType)) return;
+
+      this.matchAndSetStream({
+        type: this.idToType[stream.id],
+        stream,
+      });
+    },
+    announceData(data) {
+      console.log(data);
+      const {type, streamId} = data;
+      this.idToType[streamId] = type;
+
+      if (!(streamId in this.idToStream)) return;
+
+      this.matchAndSetStream({
+        type,
+        stream: this.idToStream[streamId],
+      });
+    },
+    sendDataToPeers(data) {
+      this.webrtcManger.sendData(data);
+    },
+  },
   async mounted() {
     try {
       this.session = await Session.SessionService.get(this.sessionId);
     } catch (error) {
       throw error;
     }
+    const url = `${WS_URL}/${this.conferenceId}/simple-peer/`;
+    this.webrtcManger = new WebrtcManager({
+      peerId: this.peerId,
+      conferenceId: this.conferenceId,
+      url,
+      setMediaTrack: (stream) => this.announceMediaStream(stream),
+      announceData: (data) => this.announceData(data),
+    });
+
     this.doc = new Y.Doc();
     this.provider = new WebrtcProvider(
         this.conferenceId,
         this.doc,
         {
-          signaling: [`${WS_URL}/${this.conferenceId}/`],
+          signaling: [`${WS_URL}/${this.conferenceId}/yjs/`],
         },
     );
   },

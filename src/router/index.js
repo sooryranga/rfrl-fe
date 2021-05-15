@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import VideoMessaging from '@/components/VideoMessaging.vue';
 import Education from '@/components/profile/Education.vue';
 import Documents from '@/components/Documents.vue';
 import TutorDashboard from '@/components/profile/TutorDashboard.vue';
@@ -12,7 +11,6 @@ import CodeTerminalLoading from '@/components/code/CodeTerminalLoading.vue';
 
 import VueCal from 'vue-cal';
 
-Vue.component('video-messaging', VideoMessaging);
 Vue.component('education', Education);
 Vue.component('documents', Documents);
 Vue.component('tutor-dashboard', TutorDashboard);
@@ -107,6 +105,12 @@ const routes = [
             name: 'text-editor',
             props: true,
             component: () => import('@/components/TextEditor.vue'),
+          },
+          {
+            path: 'screen-share',
+            name: 'screen-share',
+            props: true,
+            component: () => import('@/components/ScreenShare.vue'),
           },
         ],
       },
