@@ -1,6 +1,9 @@
 <template>
   <div class="container-fluid h-100">
-    <div class="row h-100">
+    <div v-if="!this.session" class="spinner-border" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+    <div v-else class="row h-100">
       <div class='col-auto p-0 h-100'>
         <div class="h-100" style="width: 350px">
           <video-messaging
@@ -100,7 +103,7 @@ export default {
   },
   props: {
     sessionId: {
-      type: Number,
+      value: [Number, String],
       required: true,
     },
     conferenceId: {
@@ -163,7 +166,7 @@ export default {
   },
   async mounted() {
     try {
-      this.session = await Session.SessionService.get(this.sessionId);
+      this.session = await Session.SessionService.get(parseInt(this.sessionId));
     } catch (error) {
       throw error;
     }

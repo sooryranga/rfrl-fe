@@ -37,6 +37,7 @@ const SET_TUTORS_ERROR = 'set_add_tutor_error';
 const SET_COMPANIES = 'set_companies';
 const SET_COMPANIES_ERROR = 'set_companies_error';
 
+const SET_RUN_CODE = 'set_run_code';
 const SET_CODE_IS_RUNNING = 'set_code_is_running';
 const SET_CODE = 'set_code';
 const SET_CODE_RESULT_LISTENER = 'set_code_result_listener';
@@ -95,6 +96,7 @@ export {
   SET_COMPANIES_ERROR,
 
   // Mutations for conference
+  SET_RUN_CODE,
   SET_CODE_IS_RUNNING,
   SET_CODE,
   SET_CODE_RESULT,
