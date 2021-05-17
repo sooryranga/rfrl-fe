@@ -25,15 +25,15 @@ export default {
     },
   },
   computed: {
-    ...mapGetters('conference', ['isRunning']),
+    ...mapGetters('conference', ['runCode']),
   },
   watch: {
-    async isRunning(value) {
+    async runCode(value) {
       if (value === true) {
         const code = this.editor.getValue();
         const sessionId = this.$route.params.sessionId;
 
-        await this.runCode({
+        await this.submitCode({
           code,
           sessionId,
           language: 'javascript',
@@ -50,7 +50,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions('conference', ['runCode']),
+    ...mapActions('conference', ['submitCode']),
   },
   mounted: function() {
     const ytext = this.doc.getText('monaco');

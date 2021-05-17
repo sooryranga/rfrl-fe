@@ -72,13 +72,13 @@ export default {
     tutorStars: Number,
     tutorFirstName: String,
     tutorLastName: String,
-    id: String,
+    reviewId: String,
   },
   methods: {
     ...mapActions('tutorReview', ['submitTutorReview', 'ignoreTutorReview']),
     async save() {
       await this.submitTutorReview({
-        id: this.id,
+        id: this.reviewId,
         headline: this.headline,
         review: this.review,
         stars: this.stars,

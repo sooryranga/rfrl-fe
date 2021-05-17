@@ -56,7 +56,7 @@ export default {
   },
   data() {
     return {
-      id: null,
+      documentId: null,
       type: null,
       description: null,
       name: null,
@@ -89,7 +89,7 @@ export default {
       this.$emit(
           'saveEvent',
           {
-            id: this.id,
+            id: this.documentId,
             name: this.name,
             description: this.description,
             src: this.src,
@@ -103,7 +103,7 @@ export default {
     },
   },
   mounted() {
-    this.id = this.documentprop.id;
+    this.documentId = this.documentprop.id;
     this.description = this.documentprop.description;
     this.name = this.documentprop.name;
     this.src = this.documentprop.src;
