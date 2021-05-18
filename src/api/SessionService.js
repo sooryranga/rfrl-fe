@@ -124,7 +124,7 @@ export const SessionService = {
     );
 
     const events = response.data.map((event) =>{
-      responseToEvent(event);
+      return responseToEvent(event);
     });
 
     return events;

@@ -117,7 +117,7 @@
       @view-change="updateEventsShown($event)"
       @ready="updateEventsShown($event)"
       :on-event-click="onEventClick"
-      @event-drag-create="createEvent">
+      @event-drag-create="createEvent($event)">
         <template v-slot:title="{view}">
           <span v-if="view.id === 'week'">
             {{ view.startDate.toLocaleString('default', { month: 'long', year: 'numeric'}) }}
@@ -253,14 +253,15 @@ export default {
       }
       return this.$router.go(-1);
     },
-    createEvent() {
+    createEvent(event) {
+      this.selectedEvent = event;
       if (!this.validateNewEvent()) {
         this.deleteEventFunction();
       } else {
         this.showEventCreationDialog = true;
       }
     },
-    validateNewEvent(event) {
+    validateNewEvent() {
       return (
         !this.checkOverlaps(this.selectedEvent) &&
         this.checkEventInFuture(this.selectedEvent)

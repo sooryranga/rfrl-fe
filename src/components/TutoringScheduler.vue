@@ -98,6 +98,7 @@ export default {
   },
 
   computed: {
+    ...mapGetters('profile', ['currentProfile']),
     wantsToLearnFromYou() {
       return 'Students wants to learn from you';
     },
@@ -109,7 +110,11 @@ export default {
       delete filteredTutors[this.currentProfile.id];
       return filteredTutors;
     },
-    ...mapGetters('profile', ['currentProfile']),
+    currentRoom() {
+      if (!this.roomId) return {};
+
+      return this.$store.getters['chatRooms/getRoom'](this.roomId);
+    },
   },
 
   data: function() {
@@ -122,13 +127,14 @@ export default {
   },
 
   watch: {
-    roomId: async function(roomId) {
+    currentRoom: async function() {
+      if (!this.currentRoom) return;
       await this.setNewRoom();
     },
   },
 
   methods: {
-    ...mapGetters('chatRooms', ['rooms', 'getUser']),
+    ...mapGetters('chatRooms', ['getUser']),
     async selectTutor() {
       if (Object.keys(this.users).length === 2) {
         const otherUserId = Object.keys(this.users).filter(
@@ -149,12 +155,9 @@ export default {
       return session.eventId === null;
     },
     async setNewRoom() {
-      const currentRoom = this.rooms()[this.roomId];
-      // user = this.getUsers(currentRoom.users)
-
       const users = {};
-      for (let i = 0; i < currentRoom.users.length; i++) {
-        const userId = currentRoom.users[i];
+      for (let i = 0; i < this.currentRoom.users.length; i++) {
+        const userId = this.currentRoom.users[i];
         users[userId] = this.getUser()(userId);
       }
       this.users = users;
@@ -224,11 +227,6 @@ export default {
       if (!session.id) return;
       await SessionService.delete(session.id);
     },
-  },
-
-  mounted: async function() {
-    if (!this.roomId) return;
-    await this.setNewRoom();
   },
 };
 </script>
