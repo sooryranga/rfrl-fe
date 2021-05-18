@@ -76,7 +76,7 @@ async function snapshotRoomChanges(commit, getters, snapshot) {
 }
 
 const getters = {
-  getRoomExistsWithUsers(state) {
+  getRoomExistsWithUsers: (state) => {
     return (userIds) => {
       const userSet = new Set(userIds);
       const rooms = Object.values(state.rooms);
@@ -93,17 +93,20 @@ const getters = {
       return null;
     };
   },
-  isAutoUpdateRooms(state) {
+  isAutoUpdateRooms: (state) => {
     return state.autoUpdateRooms;
   },
-  users(state) {
+  users: (state) => {
     return state.users;
   },
-  getUser(state) {
+  getUser: (state) => {
     return (id) => state.users[id];
   },
-  rooms(state) {
+  rooms: (state) => {
     return state.rooms;
+  },
+  getRoom: (state) => (roomId) => {
+    return state.rooms[roomId];
   },
 };
 
