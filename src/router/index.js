@@ -29,6 +29,12 @@ const routes = [
     },
     children: [
       {
+        path: 'verify-email/:emailType/',
+        name: 'verify-email',
+        props: true,
+        component: () => import('@/components/VerifyEmail.vue'),
+      },
+      {
         path: 'chat/:roomId?',
         name: 'chat',
         component: () => import('@/components/ChatContainer.vue'),
