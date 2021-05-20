@@ -65,9 +65,9 @@ export default {
   name: 'questions-viewer',
   computed: {
     ...mapGetters('questions', ['selectedQuestion']),
-    ...mapGetters('profile', ['currentProfile']),
+    ...mapGetters('profile', ['currentProfileId']),
     canScheduleSession() {
-      return this.selectedQuestion.from.id != this.currentProfile.id;
+      return this.selectedQuestion.from.id != this.currentProfileId;
     },
   },
   data() {
@@ -107,7 +107,7 @@ export default {
       const roomId = await this.createRoom([this.selectedQuestion.from.id]);
 
       const message = {
-        sender_id: this.currentProfile.id,
+        sender_id: this.currentProfileId,
         content: this.introduction,
         timestamp: new Date(),
       };

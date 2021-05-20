@@ -23,6 +23,7 @@ const GLOBAL_MODAL_ROUTES = new Set([
 export default {
   components: {TutorReviewSubmissionModal},
   computed: {
+    ...mapGetters('profile', ['loggedIn']),
     ...mapGetters(
         'tutorReview',
         ['showTutorReview', 'firstPendingTutorReview'],
@@ -32,7 +33,18 @@ export default {
       return GLOBAL_MODAL_ROUTES.has(this.$route.name) && this.showGlobalModal;
     },
     showTutorReviewSubmissionModal() {
-      return this.showTutorReview && this.ableToShowGlobalModal;
+      return (
+        this.loggedIn &&
+        this.showTutorReview &&
+        this.ableToShowGlobalModal
+      );
+    },
+  },
+
+  watch: {
+    async loggedIn(loggedIn) {
+      if (!loggedIn) return;
+      await this.getPendingTutorReview();
     },
   },
   data() {
@@ -44,9 +56,6 @@ export default {
     async close() {
       await this.preventShowingGlobalModal();
     },
-  },
-  async mounted() {
-    await this.getPendingTutorReview();
   },
 };
 

@@ -57,8 +57,8 @@
 
 <script>
 import {mapActions, mapGetters} from 'vuex';
-import {Auth} from '@/api';
 import {required, minLength} from 'vuelidate/lib/validators';
+import {flowToNextStep, basicInfo} from './RegisterFlow';
 
 export default {
   name: 'BasicUserInfo',
@@ -92,16 +92,15 @@ export default {
         lastName: this.lastName,
         about: this.about.length > 0 ? this.about : null,
       });
-      await this.goToRegisterDocuments();
+      await this.goNext();
     },
-    async goToRegisterDocuments() {
-      await Auth.AuthService.updateSignUpFlow({stage: 'RegisterDocuments'});
-
-      this.$router.push(
-          {
-            name: 'registerDocuments',
-          },
-      );
+    async goNext() {
+      await flowToNextStep({
+        currentStep: basicInfo,
+        isTutor: this.currentProfile.isTutor,
+        router: this.$router,
+        params: {profileId: this.currentProfile.id},
+      });
     },
   },
   mounted() {

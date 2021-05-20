@@ -184,7 +184,7 @@ export default {
       if (this.state === STATE.user) return 'Personnal Events';
       return 'Session ' + this.sessionCount;
     },
-    ...mapGetters('profile', ['currentProfile']),
+    ...mapGetters('profile', ['currentProfileId']),
   },
   async mounted() {
     if (this.sessionId) {
@@ -279,11 +279,11 @@ export default {
       this.selectedDate = date;
     },
     setUpUser() {
-      if (this.userId != this.currentProfile.id) {
+      if (this.userId != this.currentProfileId) {
         this.unauthenticated = true;
         this.error = 'Unauthorized to view other users calendar';
       }
-      this.events = this.getEventsForUser(this.currentProfile.id);
+      this.events = this.getEventsForUser(this.currentProfileId);
     },
     async setUpSession() {
       try {

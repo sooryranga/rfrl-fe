@@ -3,7 +3,7 @@
     <div class="row h-100">
       <div class="col-8 h-100">
         <chat
-        :currentUserId="currentProfile.id"
+        :currentUserId="currentProfileId"
         :theme="theme"
         :room-id="selectedRoom"
         v-if="showChat"
@@ -44,7 +44,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters('profile', ['currentProfile']),
+    ...mapGetters('profile', ['currentProfileId']),
   },
 
   mounted() {
@@ -64,7 +64,7 @@ export default {
   },
 
   watch: {
-    currentProfile() {
+    currentProfileId() {
       this.showChat = false;
       setTimeout(() => (this.showChat = true), 150);
     },

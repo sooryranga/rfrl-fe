@@ -5,7 +5,7 @@ import {
   SET_TUTORED_STUDENTS, SET_EDUCATION,
   SET_LOGGED_IN, SET_GOOGLE_AUTH,
   SET_LINKED_IN_AUTH, SET_EMAIL_AUTH, SET_LOGGED_OUT,
-  SET_AUTH_ERROR,
+  SET_AUTH_ERROR, SET_COMPANY,
 } from '@/constants.mutations.js';
 
 import {getErrorMessageFromRequest} from '@/utils';
@@ -38,6 +38,7 @@ const state ={
 };
 
 const getters = {
+  currentProfileId: (state) => state.profile?.id,
   currentProfile: (state) => state.profile,
   loggedIn: (state) => state.loggedIn,
   type: (state) => state.type,
@@ -96,6 +97,7 @@ const actions = {
       return auth;
     } catch (err) {
       commit(SET_AUTH_ERROR, getErrorMessageFromRequest(err));
+      throw err;
     }
   },
   async googleLogin({commit}, {token, name, imageUrl}) {
@@ -168,6 +170,9 @@ const actions = {
     commit(SET_LOGGED_OUT);
     Auth.destroyToken();
   },
+  setCompany({commit}, {companyName}) {
+    commit(SET_COMPANY, {companyName});
+  },
 };
 
 const mutations = {
@@ -188,6 +193,9 @@ const mutations = {
       ...state.profile,
       ...{institution, degree, fieldOfStudy, startYear, endYear},
     };
+  },
+  [SET_COMPANY](state, {companyName}) {
+    state.profile.companyName = companyName;
   },
   [SET_LOGGED_IN](state) {
     if (!state.loggedIn) {

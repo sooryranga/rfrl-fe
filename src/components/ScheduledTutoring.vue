@@ -33,7 +33,7 @@
                 <div class="col-auto my-auto">
                   <p class="m-0">
                     With {{
-                      currentProfile.id === session.tutorId ?
+                      currentProfileId === session.tutorId ?
                       getName(getMentee(session)) :
                       getName(session.tutor)
                     }}
@@ -84,7 +84,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('profile', ['currentProfile']),
+    ...mapGetters('profile', ['currentProfileId']),
     dateScheduledSessions() {
       if (this.scheduledSessions.length === 0) {
         return [];

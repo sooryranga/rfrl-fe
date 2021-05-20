@@ -61,7 +61,10 @@ export const AuthService = {
   },
   async loginAuthorized() {
     if (!getToken()) {
-      return null;
+      return {
+        profile: null,
+        auth: null,
+      };
     }
 
     try {
@@ -69,7 +72,6 @@ export const AuthService = {
           'login-authorized/',
       );
       saveToken(response.data?.token);
-
       return formatLoginResponse(response);
     } catch (err) {
       destroyToken();

@@ -10,7 +10,7 @@ import {mapActions} from 'vuex';
 import GlobalModal from './components/GlobalModal.vue';
 
 export default {
-  name: 'tutor',
+  name: 'app',
   components: {
     GlobalModal,
   },
@@ -18,7 +18,14 @@ export default {
     ...mapActions('profile', ['loginAuthorized']),
   },
   async mounted() {
-    await this.loginAuthorized();
+    try {
+      await this.loginAuthorized();
+    } catch (err) {
+      this.$router.push({
+        name: 'signup',
+      });
+      throw err;
+    }
   },
 };
 </script>

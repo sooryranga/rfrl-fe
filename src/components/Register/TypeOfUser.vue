@@ -6,7 +6,7 @@
     </button>
   </div>
   <div class="col h-100">
-    <button type="button" class="btn btn-outline-dark btn-lg" v-on:click="goToBasicInfo">
+    <button type="button" class="btn btn-outline-dark btn-lg" v-on:click="goNext">
       Looking to learn
     </button>
   </div>
@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import {Auth} from '@/api';
+import {flowToNextStep, typeOfUser} from './RegisterFlow';
 import {mapActions, mapGetters} from 'vuex';
 
 export default {
@@ -29,11 +29,15 @@ export default {
           {isTutor: true},
       );
 
-      await this.goToBasicInfo();
+      await this.goNext();
     },
-    async goToBasicInfo() {
-      await Auth.AuthService.updateSignUpFlow({stage: 'BasicInfo'});
-      this.$router.push({name: 'basicInfo'});
+    async goNext() {
+      await flowToNextStep({
+        currentStep: typeOfUser,
+        isTutor: this.currentProfile.isTutor,
+        router: this.$router,
+        params: {profileId: this.currentProfile.id},
+      });
     },
   },
 };

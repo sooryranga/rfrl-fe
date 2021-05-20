@@ -6,14 +6,14 @@
     <education :profileId="currentProfile.id"/>
     <documents :profileId="currentProfile.id"/>
     <div class="row">
-      <button type="button" class="col btn btn-primary mt-3" v-on:click="goToProfile">Done woot woot</button>
+      <button type="button" class="col btn btn-primary mt-3" v-on:click="goNext">Done woot woot</button>
     </div>
   </div>
 </div>
 </template>
 
 <script>
-import {Auth} from '@/api';
+import {flowToNextStep, registerDocuments} from './RegisterFlow';
 import {mapGetters} from 'vuex';
 export default {
   name: 'RegisterDocuments',
@@ -21,14 +21,13 @@ export default {
     ...mapGetters('profile', ['currentProfile']),
   },
   methods: {
-    async goToProfile() {
-      await Auth.AuthService.updateSignUpFlow({stage: 'DoneSignUp'});
-      this.$router.push(
-          {
-            name: 'profile',
-            params: {userId: this.currentProfile.id},
-          },
-      );
+    async goNext() {
+      await flowToNextStep({
+        currentStep: registerDocuments,
+        isTutor: this.currentProfile.isTutor,
+        router: this.$router,
+        params: {profileId: this.currentProfile.id},
+      });
     },
   },
 };
