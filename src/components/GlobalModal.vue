@@ -1,6 +1,7 @@
+
 <template>
   <tutor-review-submission-modal
-    v-if="showTutorReviewSubmissionModal"
+    v-if="showTutorReviewSubmissionModal && firstPendingTutorReview"
     v-bind:tutorFirstName="firstPendingTutorReview.firstName"
     v-bind:tutorLastName="firstPendingTutorReview.lastName"
     v-bind:tutorId="firstPendingTutorReview.tutorId"
@@ -39,6 +40,7 @@ export default {
         this.ableToShowGlobalModal
       );
     },
+
   },
 
   watch: {

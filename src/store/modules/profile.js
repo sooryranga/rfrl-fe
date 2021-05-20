@@ -5,7 +5,7 @@ import {
   SET_TUTORED_STUDENTS, SET_EDUCATION,
   SET_LOGGED_IN, SET_GOOGLE_AUTH,
   SET_LINKED_IN_AUTH, SET_EMAIL_AUTH, SET_LOGGED_OUT,
-  SET_AUTH_ERROR, SET_COMPANY,
+  SET_AUTH_ERROR, SET_EMAIL_VERIFICATION,
 } from '@/constants.mutations.js';
 
 import {getErrorMessageFromRequest} from '@/utils';
@@ -41,7 +41,7 @@ const getters = {
   currentProfileId: (state) => state.profile?.id,
   currentProfile: (state) => state.profile,
   loggedIn: (state) => state.loggedIn,
-  type: (state) => state.type,
+  logInType: (state) => state.type,
   error: (state) => state.error,
 };
 
@@ -170,8 +170,15 @@ const actions = {
     commit(SET_LOGGED_OUT);
     Auth.destroyToken();
   },
-  setCompany({commit}, {companyName}) {
-    commit(SET_COMPANY, {companyName});
+  setEmailVerification(
+      {commit},
+      {email, workEmail, companyName, verifiedWorkEmail, verifiedEmail},
+  ) {
+    console.log('setEmailVerification');
+    commit(
+        SET_EMAIL_VERIFICATION,
+        {email, workEmail, companyName, verifiedWorkEmail, verifiedEmail},
+    );
   },
 };
 
@@ -194,8 +201,15 @@ const mutations = {
       ...{institution, degree, fieldOfStudy, startYear, endYear},
     };
   },
-  [SET_COMPANY](state, {companyName}) {
+  [SET_EMAIL_VERIFICATION](
+      state,
+      {email, workEmail, companyName, verifiedWorkEmail, verifiedEmail},
+  ) {
     state.profile.companyName = companyName;
+    state.profile.email = email;
+    state.profile.workEmail = workEmail;
+    state.profile.verifiedEmail = verifiedEmail;
+    state.profile.verifiedWorkEmail = verifiedWorkEmail;
   },
   [SET_LOGGED_IN](state) {
     if (!state.loggedIn) {
