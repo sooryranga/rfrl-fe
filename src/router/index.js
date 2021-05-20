@@ -74,7 +74,7 @@ const routes = [
         path: '/session/:sessionId/info',
         name: 'session-info',
         props: true,
-        component: () => import('@/components/SessionInfo/SessionInfo.vue'),
+        component: () => import('@/components/sessioninfo/SessionInfo.vue'),
       },
       {
         path: '/session/:sessionId/conference/:conferenceId',

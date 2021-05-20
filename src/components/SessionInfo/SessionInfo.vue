@@ -66,7 +66,6 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex';
 import {Session} from '@/api';
 
 export default {
@@ -114,7 +113,6 @@ export default {
     },
   },
   computed: {
-    ...mapGetters('profile', ['currentProfile']),
     selectedDate: function() {
       return this.session.event.start;
     },

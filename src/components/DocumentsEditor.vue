@@ -65,7 +65,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('profile', ['currentProfile']),
+    ...mapGetters('profile', ['currentProfileId']),
   },
   methods: {
     handleFileUpload() {
@@ -80,7 +80,7 @@ export default {
         const today = new Date();
         const dateStr = today.toISOString().replace(/\D/g, '');
         const snapshot = await documentRef
-            .child(`${this.currentProfile.id}-${dateStr}`)
+            .child(`${this.currentProfileId}-${dateStr}`)
             .put(this.file);
 
         this.src = await snapshot.ref.getDownloadURL();

@@ -63,9 +63,9 @@ export default {
     sessionId: String,
   },
   computed: {
-    ...mapGetters('profile', ['currentProfile']),
+    ...mapGetters('profile', ['currentProfileId']),
     isLoggedInUser() {
-      return this.currentProfile.id === this.profileId;
+      return this.currentProfileId === this.profileId;
     },
     isSessionDocuments() {
       return this.sessionId != null;

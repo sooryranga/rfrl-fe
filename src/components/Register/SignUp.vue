@@ -85,6 +85,7 @@
 import {mapActions, mapGetters} from 'vuex';
 import queryString from 'query-string';
 
+import {flowToStep} from './RegisterFlow';
 import {required, minLength, email} from 'vuelidate/lib/validators';
 
 
@@ -134,43 +135,12 @@ export default {
     },
 
     routeAfterLogin(auth) {
-      switch (auth.signUpStage) {
-        case 'TypeOfUser':
-          this.$router.push(
-              {
-                name: 'typeOfUser',
-              },
-          );
-          break;
-        case 'BasicInfo':
-          this.$router.push(
-              {
-                name: 'basicInfo',
-              },
-          );
-          break;
-        case 'CompanyEmail':
-          this.$router.push(
-              {
-                name: 'companyEmail',
-              },
-          );
-          break;
-        case 'RegisterDocuments':
-          this .$router.push(
-              {
-                name: 'registerDocuments',
-              },
-          );
-          break;
-        default:
-          this.$router.push(
-              {
-                name: 'profile',
-                params: {userId: this.currentProfile.id},
-              },
-          );
-      }
+      flowToStep({
+        currentStep: auth.signUpStage,
+        isTutor: this.currentProfile.isTutor,
+        router: this.$router,
+        params: {profileId: this.currentProfile.id},
+      });
     },
 
     async registerWithEmail() {
