@@ -8,6 +8,7 @@ import tutors from './modules/tutors';
 import companies from './modules/companies';
 import conference from './modules/conference';
 import tutorReview from './modules/tutorReview';
+import reportClient from './modules/reportClient';
 import globalModal from './modules/globalModal';
 
 // Load Vuex
@@ -24,6 +25,7 @@ const store = new Vuex.Store({
     conference,
     tutorReview,
     globalModal,
+    reportClient,
   },
 });
 

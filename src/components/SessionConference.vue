@@ -14,6 +14,7 @@
             v-on:removeTrack="removeTrackFromPeers"
             ref="videoMessaging"/>
           <chat
+            ref="chat"
             :isSingleRoom="true"
             :roomId="session.roomId"
             :currentUserId="currentProfileId"
@@ -47,6 +48,15 @@
                       :to="{ name: 'screen-share', params: {conferenceId}}">
                       Screen Share
                     </router-link>
+                  </li>
+                </ul>
+                <ul class="navbar-nav ml-auto">
+                  <li class="nav-item">
+                    <button v-on:click="report" class="btn btn-sm btn-light" type="button" aria-label="report">
+                      <span class="material-icons-outlined" style="vertical-align: middle;">
+                        report
+                      </span>
+                    </button>
                   </li>
                 </ul>
               </div>
@@ -115,6 +125,9 @@ export default {
     ...mapGetters('profile', ['currentProfileId']),
   },
   methods: {
+    async report() {
+      this.$refs.chat.reportClient(this.session.roomId);
+    },
     setTrackOnPeers({stream, track, type}) {
       this.sendDataToPeers({
         type,

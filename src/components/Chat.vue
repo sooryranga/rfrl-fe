@@ -81,6 +81,10 @@ export default {
           name: 'deleteRoom',
           title: 'Delete Chat',
         },
+        {
+          name: 'report',
+          title: 'Report',
+        },
       ],
       showReactionEmojis: false,
       showEmojis: false,
@@ -159,6 +163,7 @@ export default {
     ...mapGetters('chatRooms', ['users']),
     ...mapActions('chatRooms', ['fetchAndSetRooms']),
     ...mapActions('roomMessages', ['fetchAndSetMessages']),
+    ...mapActions('reportClient', ['setAccusedClient']),
 
     updateRoomsWithLatestMessage(latestMessages) {
       this.loadingRooms = true;
@@ -361,7 +366,17 @@ export default {
           return this.removeUser(roomId);
         case 'deleteRoom':
           return this.deleteRoom(roomId);
+        case 'report':
+          return this.reportClient(roomId);
       }
+    },
+
+    reportClient(roomId) {
+      const room = this.rooms.find((r)=> r.roomId === roomId);
+      const accused = room.users.find((user) => {
+        return user._id !== this.currentUserId;
+      });
+      this.setAccusedClient(accused);
     },
 
     messageActionHandler() {
