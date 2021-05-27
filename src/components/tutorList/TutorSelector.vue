@@ -5,11 +5,11 @@
       <h4 class="ml-4 my-2"> Tutors </h4>
     </div>
   </div>
-  <div v-if="tutors.length" class="row fillHeight tutorCardsMain mb-2">
+  <div v-if="tutors.length" class="row tutorCardsMain mb-2">
     <div class="col mt-4 card-columns mx-3">
       <div v-for="(tutor) in tutors" v-bind:key="tutor.id" class="card">
         <router-link class="stretched-link text-decoration-none tutorProfile" :to="routeToTutor(tutor.id)">
-          <img v-bind:src="tutor.photo" class="tutorPhoto">
+          <img v-bind:src="tutor.photo"  class="card-img-top tutorPhoto">
           <div class="card-body  py-1 documentBody">
             <h6 class="card-title">{{name(tutor.firstName, tutor.lastName)}}</h6>
             <div class="card-text">
@@ -95,5 +95,8 @@ export default {
 .tutorCardsMain{
   overflow-y: scroll;
   max-height: 100%;
+}
+.card-columns {
+  column-count: 4;
 }
 </style>
