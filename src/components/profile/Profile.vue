@@ -3,6 +3,7 @@
     <div class="row">
       <div class="col-7 overflowContainer">
         <profile-about v-bind:profile-id="$route.params.userId"></profile-about>
+        <want-referral v-if="isLoggedInUser"></want-referral>
         <education v-bind:profile-id="$route.params.userId"></education>
         <documents v-bind:profile-id="$route.params.userId"></documents>
         <tutor-dashboard v-bind:profile-id="$route.params.userId"></tutor-dashboard>
@@ -26,6 +27,7 @@ import {mapGetters} from 'vuex';
 import {profileState} from '@/constants.state.js';
 
 import AskedQuestions from '@/components/profile/AskedQuestions.vue';
+import WantReferral from './WantReferral.vue';
 
 export default {
   name: 'tutor',
@@ -36,6 +38,7 @@ export default {
   },
   components: {
     'asked-questions': AskedQuestions,
+    WantReferral,
   },
   computed: {
     ...mapGetters('profile', ['currentProfile']),

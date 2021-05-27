@@ -20,6 +20,7 @@ const profileState = () => {
     companyName: null,
     email: null,
     verifiedEmail: null,
+    isLookingForReferral: false,
   };
 };
 
