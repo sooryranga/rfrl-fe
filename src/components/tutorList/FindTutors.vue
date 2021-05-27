@@ -1,5 +1,5 @@
 <template>
-  <div class="h-100 mt-3 container-xl mx-auto">
+  <div class="h-100 mt-3 mx-auto">
     <transition name="fade">
       <div v-if="tutorError" class="alert alert-danger fade-in" role="alert">
         {{tutorError}}
@@ -8,8 +8,14 @@
         {{companyError}}
       </div>
     </transition>
-    <tutor-filter></tutor-filter>
-    <tutor-selector></tutor-selector>
+    <div class="row">
+      <div class="col-3">
+        <tutor-filter></tutor-filter>
+      </div>
+      <div class="col">
+        <tutor-selector></tutor-selector>
+      </div>
+    </div>
   </div>
 </template>
 
