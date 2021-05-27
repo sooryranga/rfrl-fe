@@ -42,10 +42,24 @@ const getters = {
   currentProfile: (state) => state.profile,
   loggedIn: (state) => state.loggedIn,
   logInType: (state) => state.type,
+  isLookingForReferral: (state) => state.profile?.isLookingForReferral,
   error: (state) => state.error,
 };
 
 const actions = {
+  async updateIsLookingForReferral(
+      {getters, commit},
+      {isLookingForReferral, companyIds},
+  ) {
+    await Profile.ProfileService.updateWantingCompanyReferral({
+      profileId: getters.currentProfileId,
+      isLookingForReferral,
+      companyIds,
+    });
+    const updatedProfile = {...getters.currentProfile};
+    updatedProfile.isLookingForReferral = isLookingForReferral;
+    commit(SET_UPDATE_PROFILE, updatedProfile);
+  },
   async updateProfile(
       {commit, getters},
       {firstName, lastName, photo, about, isTutor},
