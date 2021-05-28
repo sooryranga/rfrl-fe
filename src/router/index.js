@@ -50,6 +50,11 @@ const routes = [
         component: () => import('@/components/tutorList/FindTutors.vue'),
       },
       {
+        path: 'clients',
+        name: 'Clients',
+        component: () => import('@/components/clientList/FindClients.vue'),
+      },
+      {
         path: 'home',
         name: 'home',
         component: () => import('@/components/Home.vue'),

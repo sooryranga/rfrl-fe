@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import {mapActions, mapGetters} from 'vuex';
+import {mapGetters} from 'vuex';
 import TutorSelector from '@/components/tutorList/TutorSelector.vue';
 import TutorFilter from '@/components/tutorList/TutorFilter.vue';
 
@@ -33,12 +33,6 @@ export default {
   computed: {
     ...mapGetters('tutors', ['tutorError']),
     ...mapGetters('companies', ['companyError']),
-  },
-  methods: {
-    ...mapActions('tutors', ['getTutors']),
-  },
-  async mounted() {
-    await this.getTutors();
   },
 };
 </script>

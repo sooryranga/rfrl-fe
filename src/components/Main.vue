@@ -14,9 +14,17 @@
           </div>
           <div class="col">
             <div class="row">
-              <router-link class="col p-2 text-dark" to="/">Home</router-link>
               <router-link class="col p-2 text-dark" to="/questions">Ask Question</router-link>
-              <router-link class="col p-2 text-dark" to="/tutors">Find Tutor</router-link>
+              <router-link
+                v-if="currentProfile.isTutor"
+                class="col p-2 text-dark" to="/clients">
+                Find Clients
+              </router-link>
+              <router-link
+                v-if="currentProfile.isLookingForReferral"
+                class="col p-2 text-dark" to="/tutors">
+                Find Tutor
+              </router-link>
               <router-link class="col p-2 text-dark" to="/chat">Messages</router-link>
               <div v-if="loggedIn" class="col">
                 <div class="dropdown">
