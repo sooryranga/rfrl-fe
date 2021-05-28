@@ -4,6 +4,7 @@ import {getErrorMessageFromRequest} from '@/utils';
 import {
   SET_ADD_TUTORS,
   SET_TUTORS_ERROR,
+  SET_TUTORS,
 } from '@/constants.mutations.js';
 
 const state = {
@@ -20,10 +21,13 @@ const getters = {
 };
 
 const actions = {
-  async getTutors({commit}) {
+  async getTutors({commit}, {fromCompanyIds}) {
     try {
-      const tutors = await Client.ClientService.getList(true);
-      commit(SET_ADD_TUTORS, tutors);
+      const tutors = await Client.ClientService.getList({
+        isTutor: true,
+        fromCompanyIds,
+      });
+      commit(SET_TUTORS, tutors);
     } catch (err) {
       commit(SET_TUTORS_ERROR, getErrorMessageFromRequest(err));
     }
@@ -31,18 +35,11 @@ const actions = {
 };
 
 const mutations = {
+  [SET_TUTORS](state, tutors) {
+    state.tutors = tutors;
+  },
   [SET_ADD_TUTORS](state, newTutors) {
-    const existingTutorIds = new Set();
-    state.tutors.forEach((tutor) => {
-      existingTutorIds.add(tutor.id);
-    });
-    const tutors = [...state.tutors];
-
-    newTutors.forEach((tutor) => {
-      if (!existingTutorIds.has(tutor.id)) {
-        tutors.push(tutor);
-      }
-    });
+    const tutors = [...state.tutors, ...newTutors];
     state.tutors = tutors;
   },
   [SET_TUTORS_ERROR](state, error) {
