@@ -6,12 +6,6 @@
       </div>
     </transition>
     <questions-editor v-if="isEditorOpen"></questions-editor>
-    <questions-filter
-    class="mt-3"
-    v-on:updateTag="updateTag"
-    v-on:updatedAtPosted="updatedAtPosted"
-    v-on:updateRemote="updateRemote"
-    ></questions-filter>
     <div class="row h-100 w-100 mt-4">
       <div class="col-4">
         <questions-selector></questions-selector>
@@ -25,7 +19,6 @@
 
 <script>
 import {mapActions, mapGetters} from 'vuex';
-import QuestionsFilter from '@/components/questions/QuestionsFilter.vue';
 import QuestionsEditor from '@/components/questions/QuestionsEditor.vue';
 import QuestionsSelector from '@/components/questions/QuestionsSelector.vue';
 import QuestionsViewer from '@/components/questions/QuestionsViewer.vue';
@@ -33,7 +26,6 @@ import QuestionsViewer from '@/components/questions/QuestionsViewer.vue';
 export default {
   name: 'Questions',
   components: {
-    'questions-filter': QuestionsFilter,
     'questions-selector': QuestionsSelector,
     'questions-viewer': QuestionsViewer,
     'questions-editor': QuestionsEditor,

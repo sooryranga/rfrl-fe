@@ -3,7 +3,7 @@
     <div class="row mb-2">
       <div class="col-auto mr-auto my-auto">
         <div>
-          <h5 class="m-0">Questions Asked Near You</h5>
+          <h5 class="m-0">Questions</h5>
           <p class="m-0">{{questions.length}} found</p>
         </div>
       </div>
