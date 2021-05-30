@@ -50,15 +50,6 @@ export default {
       console.log(datePosted);
     },
   },
-  async mounted() {
-    await this.getQuestions();
-
-    const questionID = this.$route.params?.questionId;
-    console.log(parseInt(questionID));
-    if (questionID) {
-      this.selectQuestion(parseInt(questionID));
-    }
-  },
 };
 </script>
 
