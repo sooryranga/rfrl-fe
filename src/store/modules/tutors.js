@@ -46,7 +46,7 @@ const actions = {
       const tutors = await Client.ClientService.getList({
         isTutor: true,
         ...params,
-        lastTutor,
+        lastClient: lastTutor,
       });
 
       commit(mutation, tutors);

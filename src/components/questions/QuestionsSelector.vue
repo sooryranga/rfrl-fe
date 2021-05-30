@@ -61,7 +61,7 @@ export default {
   methods: {
     async infiniteHandler($state) {
       const newQuestions = await this.getQuestions(
-          {setSelected: false, getMore: true},
+          {getMore: true},
       );
       if (newQuestions.length) {
         $state.loaded();

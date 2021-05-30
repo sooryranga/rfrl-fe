@@ -79,7 +79,7 @@ const actions = {
 
   async getQuestions(
       {commit, getters},
-      {setSelected=true, getMore=false},
+      {getMore=false},
   ) {
     const questions = getters.questions;
     if (getMore == false && questions != null) {
@@ -96,7 +96,8 @@ const actions = {
       );
       commit(SET_MORE_QUESTIONS, questions);
 
-      if (setSelected && questions) {
+      if (getters.selectedQuestion == null && questions) {
+        console.log(questions);
         commit(SET_SELECT_QUESTION, questions[0].id);
       }
       return questions;

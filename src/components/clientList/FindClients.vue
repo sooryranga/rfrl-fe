@@ -54,7 +54,6 @@ export default {
     ...mapGetters('companies', ['companyError', 'companies']),
   },
   methods: {
-    ...mapActions('clients', ['getClients']),
     ...mapActions('companies', ['getCompanies']),
     verifyWorkEmail() {
       this.$router.push({
@@ -68,16 +67,11 @@ export default {
   async mounted() {
     await this.getCompanies();
 
-    const companyId = this.currentProfile.companyId;
-
     const id = this.currentProfile.companyId;
     const company = this.companies.filter((c) => c.id===id);
-
     if (company.length > 0) {
       this.companyName = company[0].name;
     }
-
-    this.getClients({wantingReferralCompanyId: companyId ? [companyId]: []});
   },
 };
 </script>
