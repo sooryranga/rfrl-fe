@@ -27,6 +27,10 @@
           </div>
         </div>
       </li>
+      <infinite-loading @infinite="infiniteHandler">
+        <div slot="no-more">No more questions</div>
+        <div slot="no-results">No results questions</div>
+      </infinite-loading>
     </ul>
   </div>
   <div v-else>
@@ -37,21 +41,34 @@
 </template>
 
 <script>
-import {mapActions} from 'vuex';
+import {mapActions, mapGetters} from 'vuex';
 import en from 'javascript-time-ago/locale/en';
 import TimeAgo from 'javascript-time-ago';
+import InfiniteLoading from 'vue-infinite-loading';
+
 
 TimeAgo.addDefaultLocale(en);
 const timeAgo = new TimeAgo('en-US');
 
 export default {
   name: 'QuestionsSelector',
-  data() {
-    return {
-      questions: [],
-    };
+  components: {
+    InfiniteLoading,
+  },
+  computed: {
+    ...mapGetters('questions', ['questions']),
   },
   methods: {
+    async infiniteHandler($state) {
+      const newQuestions = await this.getQuestions(
+          {setSelected: false, getMore: true},
+      );
+      if (newQuestions.length) {
+        $state.loaded();
+      } else {
+        $state.complete();
+      }
+    },
     ...mapActions(
         'questions',
         ['getQuestions', 'openEditor', 'selectQuestion'],
@@ -80,7 +97,7 @@ export default {
     },
   },
   async mounted() {
-    this.questions = await this.getQuestions();
+    await this.getQuestions({});
   },
 };
 </script>

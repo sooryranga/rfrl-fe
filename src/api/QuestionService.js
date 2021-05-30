@@ -22,8 +22,11 @@ export const responseToQuestion = (questionResponse) => {
 };
 
 export const QuestionService = {
-  async getQuestions() {
-    const response = await Vue.axios.get(`questions/`);
+  async getQuestions({lastQuestion}) {
+    const response = await Vue.axios.get(
+        `questions/`,
+        {params: {lastQuestion}},
+    );
     const responseData = response.data;
     const questions = responseData.map((questionR) => (
       responseToQuestion(questionR)

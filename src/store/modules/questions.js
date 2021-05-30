@@ -3,7 +3,6 @@ import {getErrorMessageFromRequest} from '@/utils';
 
 import {
   SET_ADD_QUESTION,
-  SET_QUESTIONS,
   SET_MORE_QUESTIONS,
   SET_SELECT_QUESTION,
   SET_QUESTION_ERROR,
@@ -14,7 +13,7 @@ import {
 const state = {
   error: null,
   selectedQuestionID: null,
-  questions: null,
+  questions: [],
   editorOpen: false,
   editorQuestionID: null,
 };
@@ -61,10 +60,9 @@ const actions = {
 
   async getQuestion(
       {commit, getters},
-      questionID,
-      options = {setSelected: true},
+      {questionID},
   ) {
-    let question = getters.getQuestion(id);
+    let question = getters.getQuestion(questionID);
     if (question != null) {
       return question;
     }
@@ -79,30 +77,38 @@ const actions = {
     }
   },
 
-  async getQuestions({commit, getters}, options={setSelected: true}) {
-    let questions = getters.questions;
-
-    if (questions) {
+  async getQuestions(
+      {commit, getters},
+      {setSelected=true, getMore=false},
+  ) {
+    const questions = getters.questions;
+    if (getMore == false && questions != null) {
       return questions;
     }
 
+    const lastQuestion = questions.length > 0 ?
+      questions[questions.length-1].id :
+      null;
+
     try {
-      questions = await Question.QuestionService.getQuestions();
-      commit(SET_QUESTIONS, questions);
+      const questions = await Question.QuestionService.getQuestions(
+          {lastQuestion},
+      );
+      commit(SET_MORE_QUESTIONS, questions);
+
+      if (setSelected && questions) {
+        commit(SET_SELECT_QUESTION, questions[0].id);
+      }
+      return questions;
     } catch (error) {
       console.error(error);
       const errorString = getErrorMessageFromRequest(error);
       commit(SET_QUESTION_ERROR, errorString);
       return [];
     }
-
-    if (options.setSelected && questions) {
-      commit(SET_SELECT_QUESTION, questions[0].id);
-    }
-    return questions;
   },
 
-  selectQuestion({commit, getters}, id, option={}) {
+  selectQuestion({commit, getters}, id) {
     if (id === null) {
       commit(SET_SELECT_QUESTION, null);
       return null;
@@ -141,7 +147,7 @@ const actions = {
     );
   },
 
-  async updateQuestion({dispatch, commit}, payload, option={}) {
+  async updateQuestion({dispatch, commit}, payload) {
     const id = payload.id;
     const question = await dispatch('getQuestion', {id});
     if (question === null) {
@@ -162,7 +168,7 @@ const actions = {
     return question;
   },
 
-  async createQuestion({commit}, payload, options={}) {
+  async createQuestion({commit}, payload) {
     try {
       const question = await Question.QuestionService.create(payload);
       commit(SET_ADD_QUESTION, question);
@@ -180,9 +186,6 @@ const actions = {
 const mutations = {
   [SET_ADD_QUESTION](state, question) {
     state.questions.push(question);
-  },
-  [SET_QUESTIONS](state, questions) {
-    state.questions = questions;
   },
   [SET_MORE_QUESTIONS](state, questions) {
     state.questions =[...state.questions, ...questions];
