@@ -5,7 +5,7 @@
       <h4 class="ml-4 my-2"> Tutors </h4>
     </div>
   </div>
-  <div v-if="tutors.length" class="row tutorCardsMain mb-2">
+  <div class="row tutorCardsMain mb-2">
     <div class="col mt-4 card-columns mx-3">
       <div v-for="(tutor) in tutors" v-bind:key="tutor.id" class="card">
         <router-link class="stretched-link text-decoration-none tutorProfile" :to="routeToTutor(tutor.id)">
@@ -28,23 +28,45 @@
           </div>
         </router-link>
       </div>
+      <infinite-loading :identifier="params" @infinite="infiniteHandler">
+        <div slot="no-more">
+          <div class="card">
+            <div class="card-body">
+              <h6 class="card-subtitle mb-2 text-muted">No more tutors</h6>
+            </div>
+          </div>
+        </div>
+        <div slot="no-results">
+          <p> No tutors to show </p>
+        </div>
+      </infinite-loading>
     </div>
-  </div>
-  <div v-else>
-    <p> No tutors to show </p>
   </div>
 </div>
 </template>
 
 <script>
-import {mapGetters} from 'vuex';
+import {mapActions, mapGetters} from 'vuex';
+import InfiniteLoading from 'vue-infinite-loading';
 
 export default {
   name: 'Tutors',
+  components: {
+    InfiniteLoading,
+  },
   computed: {
-    ...mapGetters('tutors', ['tutors']),
+    ...mapGetters('tutors', ['tutors', 'params']),
   },
   methods: {
+    ...mapActions('tutors', ['getTutors']),
+    async infiniteHandler($state) {
+      const newTutors = await this.getTutors({reset: false});
+      if (newTutors.length) {
+        $state.loaded();
+      } else {
+        $state.complete();
+      }
+    },
     name(firstName, lastName) {
       const name = [];
       if (firstName) {

@@ -35,6 +35,7 @@ const SET_QUESTION_EDITOR = 'set_question_editor';
 const SET_ADD_TUTORS = 'set_add_tutors';
 const SET_TUTORS = 'set_tutors';
 const SET_TUTORS_ERROR = 'set_add_tutor_error';
+const SET_TUTOR_PARAMS = 'set_tutor_params';
 
 const SET_ADD_CLIENTS = 'set_add_clients';
 const SET_CLIENTS = 'set_clients';
@@ -101,6 +102,7 @@ export {
   SET_ADD_TUTORS,
   SET_TUTORS,
   SET_TUTORS_ERROR,
+  SET_TUTOR_PARAMS,
 
   // Mutations for clients
   SET_ADD_CLIENTS,
@@ -128,3 +130,4 @@ export {
   // Mutations for tutor review
   SET_REQUIRED_REVIEW,
 };
+

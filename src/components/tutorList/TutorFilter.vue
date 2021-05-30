@@ -101,7 +101,7 @@ export default {
   },
   methods: {
     ...mapActions('companies', ['getCompanies']),
-    ...mapActions('tutors', ['getTutors']),
+    ...mapActions('tutors', ['updateParams']),
     changeCompany() {
       this.changedCompanies = true;
     },
@@ -116,7 +116,7 @@ export default {
         return;
       }
 
-      await this.getTutors({fromCompanyIds: this.companyIds});
+      await this.updateParams({fromCompanyIds: this.companyIds});
       // filter with checkedCompanies
       this.changedCompanies = false;
     },
@@ -135,7 +135,7 @@ export default {
       );
     }
 
-    this.getTutors({fromCompanyIds: this.companyIds});
+    this.updateParams({fromCompanyIds: this.companyIds});
   },
 };
 </script>

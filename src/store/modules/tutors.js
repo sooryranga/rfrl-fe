@@ -5,11 +5,13 @@ import {
   SET_ADD_TUTORS,
   SET_TUTORS_ERROR,
   SET_TUTORS,
+  SET_TUTOR_PARAMS,
 } from '@/constants.mutations.js';
 
 const state = {
   error: null,
   tutors: [],
+  params: {},
 };
 
 const getters = {
@@ -18,18 +20,40 @@ const getters = {
   getTutor: (state) => (id) => {
     state.tutors.find((tutor) => tutor.id === id);
   },
+  params: (state) => state.params,
 };
 
 const actions = {
-  async getTutors({commit}, {fromCompanyIds}) {
+  async updateParams({commit, getters}, {fromCompanyIds}) {
+    const params = getters.params;
+    const updateParams = params.fromCompanyIds != fromCompanyIds;
+    if (!updateParams) return;
+
+    commit(SET_TUTOR_PARAMS, {fromCompanyIds});
+  },
+  async getTutors({commit, getters}, {reset=false}) {
+    const params = getters.params;
+    const tutors = getters.tutors;
+    let lastTutor = tutors.length > 0 ? tutors[tutors.length-1].id : undefined;
+    let mutation = SET_ADD_TUTORS;
+
+    if (reset) {
+      lastTutor = undefined;
+      mutation = SET_TUTORS;
+    }
+
     try {
       const tutors = await Client.ClientService.getList({
         isTutor: true,
-        fromCompanyIds,
+        ...params,
+        lastTutor,
       });
-      commit(SET_TUTORS, tutors);
+
+      commit(mutation, tutors);
+      return tutors;
     } catch (err) {
       commit(SET_TUTORS_ERROR, getErrorMessageFromRequest(err));
+      return [];
     }
   },
 };
@@ -44,6 +68,10 @@ const mutations = {
   },
   [SET_TUTORS_ERROR](state, error) {
     state.error = error;
+  },
+  [SET_TUTOR_PARAMS](state, params) {
+    state.params = params;
+    state.tutors = [];
   },
 };
 

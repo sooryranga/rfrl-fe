@@ -7,11 +7,15 @@ export const ClientService = {
     const response = await Vue.axios.get(`client/${id}/`);
     return Profile.responseToProfile(response.data);
   },
-  async getList({isTutor, fromCompanyIds, wantingReferralCompanyId}) {
+  async getList({
+    isTutor, fromCompanyIds, wantingReferralCompanyId, lastTutor,
+  }) {
     const response = await Vue.axios.get(
         `clients/`,
         {
-          params: {isTutor, fromCompanyIds, wantingReferralCompanyId},
+          params: {
+            isTutor, fromCompanyIds, wantingReferralCompanyId, lastTutor,
+          },
           paramsSerializer: (params) => {
             return qs.stringify(params, {indices: false});
           },
