@@ -205,7 +205,6 @@ export class WebrtcManager {
   * @param {obj} stream
   */
   onPeerStream(stream) {
-    console.log(this);
     this.setMediaTrack(stream);
   }
 
