@@ -55,10 +55,10 @@ export default {
     InfiniteLoading,
   },
   computed: {
-    ...mapGetters('tutors', ['tutors', 'params']),
+    ...mapGetters('listTutors', ['tutors', 'params']),
   },
   methods: {
-    ...mapActions('tutors', ['getTutors']),
+    ...mapActions('listTutors', ['getTutors']),
     async infiniteHandler($state) {
       const newTutors = await this.getTutors({reset: false});
       if (newTutors.length) {

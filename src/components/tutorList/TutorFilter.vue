@@ -101,7 +101,7 @@ export default {
   },
   methods: {
     ...mapActions('companies', ['getCompanies']),
-    ...mapActions('tutors', ['updateParams']),
+    ...mapActions('listTutors', ['updateParams']),
     changeCompany() {
       this.changedCompanies = true;
     },

@@ -4,8 +4,8 @@ import questions from './modules/questions';
 import profile from './modules/profile';
 import chatRooms from './modules/chatRooms';
 import roomMessages from './modules/roomMessages';
-import tutors from './modules/tutors';
-import clients from './modules/clients';
+import listTutors from './modules/listTutors';
+import listClients from './modules/listClients';
 import companies from './modules/companies';
 import conference from './modules/conference';
 import tutorReview from './modules/tutorReview';
@@ -21,8 +21,8 @@ const store = new Vuex.Store({
     profile,
     chatRooms,
     roomMessages,
-    tutors,
-    clients,
+    listTutors,
+    listClients,
     companies,
     conference,
     tutorReview,

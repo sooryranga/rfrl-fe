@@ -29,7 +29,11 @@
           </div>
         </div>
         <div slot="no-results">
-          <p> No clients to show </p>
+          <div class="card">
+            <div class="card-body">
+              <h6 class="card-subtitle mb-2 text-muted">No more clients</h6>
+            </div>
+          </div>
         </div>
       </infinite-loading>
     </div>
@@ -47,11 +51,11 @@ export default {
     InfiniteLoading,
   },
   computed: {
-    ...mapGetters('clients', ['clients']),
+    ...mapGetters('listClients', ['clients']),
     ...mapGetters('profile', ['currentProfile']),
   },
   methods: {
-    ...mapActions('clients', ['getClients']),
+    ...mapActions('listClients', ['getClients']),
     async infiniteHandler($state) {
       const companyId = this.currentProfile.companyId;
       const newClients = await this.getClients(

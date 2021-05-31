@@ -31,7 +31,7 @@ export default {
     'tutor-filter': TutorFilter,
   },
   computed: {
-    ...mapGetters('tutors', ['tutorError']),
+    ...mapGetters('listTutors', ['tutorError']),
     ...mapGetters('companies', ['companyError']),
   },
 };

@@ -7,6 +7,8 @@ import TutorReview from '@/components/profile/TutorReview.vue';
 import ProfileAbout from '@/components/profile/About.vue';
 import ScheduledTutoring from '@/components/ScheduledTutoring.vue';
 import AnsweredQuestions from '@/components/profile/AnsweredQuestions.vue';
+import Loading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/vue-loading.css';
 
 import VueCal from 'vue-cal';
 
@@ -18,6 +20,7 @@ Vue.component('profile-about', ProfileAbout);
 Vue.component('scheduled-tutoring', ScheduledTutoring);
 Vue.component('answered-questions', AnsweredQuestions);
 Vue.component('vue-cal', VueCal);
+Vue.component('loading', Loading);
 Vue.use(VueRouter);
 
 const routes = [
@@ -62,6 +65,7 @@ const routes = [
       {
         path: '/profile/:userId',
         name: 'profile',
+        props: true,
         component: () => import('@/components/profile/Profile.vue'),
       },
       {

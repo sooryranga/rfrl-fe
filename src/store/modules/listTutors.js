@@ -18,7 +18,7 @@ const getters = {
   tutors: (state) => state.tutors,
   tutorError: (state) => state.error,
   getTutor: (state) => (id) => {
-    state.tutors.find((tutor) => tutor.id === id);
+    return state.tutors.find((tutor) => tutor.id === id);
   },
   params: (state) => state.params,
 };
