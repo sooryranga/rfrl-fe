@@ -27,7 +27,6 @@ const actions = {
       clients[clients.length-1].id :
       undefined;
 
-    console.log(lastClient);
     try {
       const clients = await Client.ClientService.getList({
         wantingReferralCompanyId,

@@ -36,11 +36,11 @@ import {Question} from '@/api';
 export default {
   name: 'asked-questions',
   props: {
-    'profileId': String,
+    profileId: String,
   },
   data: function() {
     return {
-      'questions': [],
+      questions: [],
     };
   },
   methods: {

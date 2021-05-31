@@ -1,22 +1,22 @@
 <template>
   <div class="container-xl h-100">
-    <div class="row">
+    <loading :active.sync="isLoading"/>
+    <div v-if="!isLoading" class="row">
       <div class="col-7 overflowContainer">
-        <profile-about v-bind:profile-id="$route.params.userId"></profile-about>
+        <profile-about :profile-id="userId" :fetched-profile="profile"></profile-about>
         <want-referral v-if="isLoggedInUser"></want-referral>
-        <education v-bind:profile-id="$route.params.userId"></education>
-        <documents v-bind:profile-id="$route.params.userId"></documents>
-        <tutor-dashboard v-bind:profile-id="$route.params.userId"></tutor-dashboard>
-        <tutor-review v-bind:profile-id="$route.params.userId"></tutor-review>
+        <education :profile-id="userId" :fetched-profile="profile"></education>
+        <documents :profile-id="userId"></documents>
+        <tutor-review :profile-id="userId"></tutor-review>
       </div>
       <div class="col overflowContainer">
         <scheduled-tutoring
           showName
           v-if="isLoggedInUser"
           class="p-2 my-1 bg-white"
-          v-bind:profile-id="$route.params.userId"/>
-        <answered-questions v-bind:profile-id="$route.params.userId"></answered-questions>
-        <asked-questions v-bind:profile-id="$route.params.userId"></asked-questions>
+          :profile-id="userId"/>
+        <answered-questions :profile-id="userId"></answered-questions>
+        <asked-questions :profile-id="userId"></asked-questions>
       </div>
     </div>
   </div>
@@ -24,34 +24,41 @@
 
 <script>
 import {mapGetters} from 'vuex';
-import {profileState} from '@/constants.state.js';
-
+import {Client} from '@/api';
 import AskedQuestions from '@/components/profile/AskedQuestions.vue';
 import WantReferral from './WantReferral.vue';
+import Loading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/vue-loading.css';
 
 export default {
   name: 'tutor',
   data: function() {
     return {
-      profile: profileState(),
+      profile: null,
     };
+  },
+  props: {
+    userId: String,
   },
   components: {
     'asked-questions': AskedQuestions,
     WantReferral,
+    Loading,
   },
   computed: {
     ...mapGetters('profile', ['currentProfile']),
-    ...mapGetters('tutors', ['getTutor']),
-    'isLoggedInUser': function() {
-      return this.currentProfile.id === this.$route.params.userId;
+    isLoggedInUser() {
+      return this.currentProfile.id === this.userId;
+    },
+    isLoading() {
+      return this.profile === null;
     },
   },
-  beforeMount: function() {
-    if (this.$route.params.userId === this.currentProfile.id) {
+  async mounted() {
+    if (this.isLoggedInUser) {
       this.profile = this.currentProfile;
     } else {
-      this.profile = this.getTutor(this.$route.params.userId);
+      this.profile = await Client.ClientService.get(this.userId);
     }
   },
 };

@@ -49,7 +49,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('clients', ['clientError']),
+    ...mapGetters('listClients', ['clientError']),
     ...mapGetters('profile', ['currentProfile']),
     ...mapGetters('companies', ['companyError', 'companies']),
   },
