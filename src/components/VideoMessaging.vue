@@ -44,10 +44,18 @@ export default {
     videoStream: MediaStream,
   },
   watch: {
-    videoStream(val, _) {
-      this.videortc.srcObject = val;
+    videoStream(stream, _) {
+      this.videortc.srcObject = stream;
       this.videortc.muted = true;
       this.videortc.play();
+
+      const videoTacks = stream.getVideoTracks();
+      if (videoTacks.length > 0) {
+        const videoTrack = videoTacks[0];
+        videoTrack.onmute = () => {
+          videoTrack.stop();
+        };
+      }
     },
     async allowVideo(val, _) {
       if (this.videoTrack != null && val === false) {
