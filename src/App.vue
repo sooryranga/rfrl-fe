@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import {mapActions} from 'vuex';
+import {mapActions, mapGetters} from 'vuex';
 import GlobalModal from './components/GlobalModal.vue';
 
 export default {
@@ -14,10 +14,14 @@ export default {
   components: {
     GlobalModal,
   },
+  computed: {
+    ...mapGetters('profile', ['loggedIn']),
+  },
   methods: {
     ...mapActions('profile', ['loginAuthorized']),
   },
   async mounted() {
+    if (this.loggedIn) return;
     try {
       await this.loginAuthorized();
     } catch (err) {
