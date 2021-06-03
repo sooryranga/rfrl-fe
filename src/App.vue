@@ -36,20 +36,18 @@ export default {
 
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: left;
-  color: #2c3e50;
-  flex-flow: column;
   height: 100%;
-  z-index: 10;
   width: 100vw;
 }
-p {
-  font-size: 14px;
+:root {
+  --clr-primary: #651fff;
+  --clr-gray: #37474f;
+  --clr-gray-light: #b0bec5;
 }
-#topnavbar{
-  height: 65px;
+* {
+  box-sizing: border-box;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  margin: 0;
+  padding: 0;
 }
 </style>

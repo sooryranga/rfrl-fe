@@ -1,5 +1,5 @@
 <template>
-  <div class="h-100 mt-3 mx-auto">
+  <div class="h-100">
     <transition name="fade">
       <div v-if="clientError" class="alert alert-danger fade-in" role="alert">
         {{clientError}}
@@ -8,16 +8,15 @@
         {{companyError}}
       </div>
     </transition>
-    <div v-if="currentProfile.verifiedWorkEmail">
-      <div class="row">
-        <div class="col">
-          <p>You are shown clients who wants referral for {{companyName}}</p>
-        </div>
+    <div v-if="currentProfile.verifiedWorkEmail" class="flex-container">
+      <div class="flex-item-shrink">
+        <h4 class="ml-4 my-2"> Clients </h4>
       </div>
-      <div class="row">
-        <div class="col">
-          <client-selector/>
-        </div>
+      <div class="flex-item-shrink">
+        <p class="ml-4 my-2">You are shown clients who wants referral for {{companyName}}</p>
+      </div>
+      <div class="flex-item-grow">
+        <client-selector/>
       </div>
     </div>
     <div v-else class="h-100 w-100">
@@ -82,5 +81,23 @@ export default {
   height:12vh;
   padding:5px;
   width:100%;
+}
+.flex-container{
+  flex-direction: column;
+  display:flex;
+  max-height:100%;
+  flex-wrap: nowrap;
+}
+.flex-item-grow{
+  flex-grow: 1;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  /* for Firefox */
+  min-height: 0;
+}
+.flex-item-shrink{
+  flex:0;
 }
 </style>
