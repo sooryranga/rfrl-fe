@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="main">
     <div class="
       align-items-center p-1 px-md-4
       bg-white border-bottom shadow-sm
@@ -53,8 +53,11 @@
         </div>
       </div>
     </div>
-    <verify-email-banner v-if="emailBannerReqiured" :email-type="emailBannerType"></verify-email-banner>
-    <div id="content" class="w-100">
+    <verify-email-banner
+      v-if="emailBannerReqiured"
+      :email-type="emailBannerType"
+      class="flex-item-shrink"/>
+    <div id="content" class="w-100 flex-item-grow">
       <router-view :key="routerViewKey"/>
     </div>
   </div>
@@ -113,37 +116,23 @@ export default {
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: left;
-  color: #2c3e50;
-  flex-flow: column;
-  height: 100%;
-  z-index: 10;
-  width: 100vw;
-}
-p {
-  font-size: 14px;
-}
-#topnavbar{
-  height: 65px;
-}
-#content{
-  height: calc(100vh - 66px);
-}
-html, body {
-  height: 100%;
-}
 .sticky-top{
   z-index:4
 }
 #navProfilePicture{
-  height: 30px;
-  width: 30px;
+  width: 2rem;
   background-size: cover;
   background-position: top center;
   border-radius: 50%;
+}
+#main{
+  flex-direction: column;
+  display:flex;
+  height:100%;
+  flex-wrap: nowrap;
+}
+.flex-item-grow{
+  flex: 1;
+  min-height: 0; /* new */
 }
 </style>
