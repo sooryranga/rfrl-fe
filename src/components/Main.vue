@@ -1,58 +1,52 @@
 <template>
   <div id="main">
-    <div class="
-      align-items-center p-1 px-md-4
+    <nav ref="nav" class="
+      align-items-center p-1
       bg-white border-bottom shadow-sm
       text-center
-    " id="topnavbar">
-      <div class="container-xl" id="navbar2">
-        <div class="row my-2">
-          <div class="col-4">
-            <div class="row">
-              <router-link class="p-2 col" to="/">TutorMe</router-link>
+    ">
+      <div class="container-xl nav-container">
+        <div class="logo">
+          <router-link to="/">TutorMe</router-link>
+        </div>
+        <div class="nav-links">
+          <router-link class="text-dark" to="/questions">Ask Question</router-link>
+          <router-link
+            v-if="currentProfile.isTutor"
+            class="text-dark" to="/clients">
+            Find Clients
+          </router-link>
+          <router-link
+            v-if="currentProfile.isLookingForReferral"
+            class="text-dark" to="/tutors">
+            Find Tutor
+          </router-link>
+          <router-link class="text-dark" to="/chat">Messages</router-link>
+          <div v-if="loggedIn">
+            <div class="dropdown">
+              <button
+              class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <img id="navProfilePicture" v-bind:src="currentProfile.photo"/>
+                {{currentProfile.firstName}} {{currentProfile.lastName}}
+              </button>
+              <div class="dropdown-menu dropdown-menu-left" aria-labelledby="dropdownMenuButton">
+                <router-link
+                    class="dropdown-item text-dark"
+                    :to="profileLink">
+                  View Profile
+                </router-link>
+                <a class="dropdown-item" href="#">Settings & Privacy</a>
+                <a class="dropdown-item" v-on:click="logoutUser" href="#">Log Out</a>
+              </div>
             </div>
           </div>
-          <div class="col">
-            <div class="row">
-              <router-link class="col p-2 text-dark" to="/questions">Ask Question</router-link>
-              <router-link
-                v-if="currentProfile.isTutor"
-                class="col p-2 text-dark" to="/clients">
-                Find Clients
-              </router-link>
-              <router-link
-                v-if="currentProfile.isLookingForReferral"
-                class="col p-2 text-dark" to="/tutors">
-                Find Tutor
-              </router-link>
-              <router-link class="col p-2 text-dark" to="/chat">Messages</router-link>
-              <div v-if="loggedIn" class="col">
-                <div class="dropdown">
-                  <button
-                  class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
-                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <img id="navProfilePicture" v-bind:src="currentProfile.photo"/>
-                    {{currentProfile.firstName}} {{currentProfile.lastName}}
-                  </button>
-                  <div class="dropdown-menu dropdown-menu-left" aria-labelledby="dropdownMenuButton">
-                    <router-link
-                        class="dropdown-item text-dark"
-                        :to="profileLink">
-                      View Profile
-                    </router-link>
-                    <a class="dropdown-item" href="#">Settings & Privacy</a>
-                    <a class="dropdown-item" v-on:click="logoutUser" href="#">Log Out</a>
-                  </div>
-                </div>
-              </div>
-              <div class="col align-items-center" v-else>
-                <router-link class="btn btn-dark mr-2" to="/signup">Sign Up</router-link>
-              </div>
-            </div>
+          <div class="align-items-center" v-else>
+            <router-link class="btn btn-dark mr-2" to="/signup">Sign Up</router-link>
           </div>
         </div>
       </div>
-    </div>
+    </nav>
     <verify-email-banner
       v-if="emailBannerReqiured"
       :email-type="emailBannerType"
@@ -116,6 +110,34 @@ export default {
 </script>
 
 <style>
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 7vh;
+    margin: 0 auto;
+}
+
+.nav-links {
+    display: flex;
+    justify-content: space-around;
+    width: 60%;
+    vertical-align: middle;
+}
+
+.nav-links a {
+  margin-bottom: auto;
+  margin-top: auto;
+}
+
+.logo {
+    color: rgb(0, 0, 0);
+    text-transform: uppercase;
+    letter-spacing: 5px;
+    font-size: 20px;
+    padding-left: 2em;
+}
+
 .sticky-top{
   z-index:4
 }
