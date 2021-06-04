@@ -8,11 +8,11 @@
         {{companyError}}
       </div>
     </transition>
-    <div class="row">
-      <div class="col-3">
+    <div class="flex-container-row">
+      <div id="tutor-filter" class="flex-item-shrink h-100">
         <tutor-filter></tutor-filter>
       </div>
-      <div class="col">
+      <div id="tutor-selector" class="flex-item-grow h-100">
         <tutor-selector></tutor-selector>
       </div>
     </div>
@@ -43,5 +43,22 @@ export default {
   height:12vh;
   padding:5px;
   width:100%;
+}
+.flex-container-row{
+  flex-direction: row;
+  display:flex;
+  height:100%;
+  flex-wrap: nowrap;
+}
+
+#tutor-filter{
+  min-width: 20rem;
+}
+
+.flex-item-grow{
+  flex-grow: 1;
+}
+.flex-item-shrink{
+  height:100%;
 }
 </style>
