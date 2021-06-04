@@ -112,6 +112,7 @@ export default {
       console.log('updateForReferral');
     },
     async updatedCompany() {
+      console.log('updatedCompany');
       if (!this.changedCompanies) {
         return;
       }

@@ -94,6 +94,7 @@ export default {
   width: 8rem;
   clip-path: circle(60px at center);
   margin-top: 2rem;
+  margin-left: 1rem;
 }
 
 .clientProfile{
@@ -120,15 +121,6 @@ export default {
   color: white;
   padding: 1rem;
   background-color: var(--clr-primary);
-}
-.banner-img {
-  position: absolute;
-  background-image: url(https://images.unsplash.com/photo-1582727657635-c771002bdada?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=400&fit=max&ixid=eyJhcHBfaWQiOjE0NTg5fQ);
-  height: 10rem;
-  width: 100%;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
 }
 
 .card {

@@ -1,43 +1,36 @@
 <template>
-<div class="h-100">
-  <div class="row">
-    <div class="col">
-      <h4 class="ml-4 my-2"> Tutors </h4>
-    </div>
-  </div>
-  <div class="row tutorCardsMain mb-2">
-    <div class="col mt-4 card-columns mx-3">
+<div class="flex-container-column h-100">
+  <h4 class="ml-4 my-2"> Tutors </h4>
+  <div class="scrollable flex-item-grow pb-2">
+    <div class="wrapper-grid">
       <div v-for="(tutor) in tutors" v-bind:key="tutor.id" class="card">
-        <router-link class="stretched-link text-decoration-none tutorProfile" :to="routeToTutor(tutor.id)">
-          <img v-bind:src="tutor.photo"  class="card-img-top tutorPhoto">
-          <div class="card-body  py-1 documentBody">
-            <h6 class="card-title">{{name(tutor.firstName, tutor.lastName)}}</h6>
-            <div class="card-text">
-              <div v-if="tutor.about" class="row">
-                <p class="col">{{shortAbout(tutor.about)}}</p>
-              </div>
-              <div class="row">
-                <span class="material-icons col">
-                    block
-                </span>
-                <div class="col">
-                  <p> Work Verification </p>
-                </div>
-              </div>
-            </div>
+        <img v-bind:src="getTutorPhoto(tutor)" class="profile-img">
+        <p class="name">{{name(tutor.firstName, tutor.lastName)}}</p>
+        <div v-if="tutor.about">
+          <p class="about">{{shortAbout(tutor.about)}}</p>
+        </div>
+        <div class="row">
+          <span class="material-icons col">
+              block
+          </span>
+          <div class="col">
+            <p> Work Verification </p>
           </div>
+        </div>
+        <router-link class="stretched-link text-decoration-none" :to="routeToTutor(tutor.id)">
+          <button class='btn'>Profile</button>
         </router-link>
       </div>
       <infinite-loading :identifier="params" @infinite="infiniteHandler">
         <div slot="no-more">
           <div class="card">
-            <div class="card-body">
-              <h6 class="card-subtitle mb-2 text-muted">No more tutors</h6>
-            </div>
+            <h6 class="my-2 text-muted">No more tutors</h6>
           </div>
         </div>
         <div slot="no-results">
-          <p> No tutors to show </p>
+          <div class="card">
+            <h6 class="my-2 text-muted">No more tutors</h6>
+          </div>
         </div>
       </infinite-loading>
     </div>
@@ -66,6 +59,9 @@ export default {
       } else {
         $state.complete();
       }
+    },
+    getTutorPhoto(client) {
+      return client.photo || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQB8oKGDdE1XOkEAYG_Xmo3HObzakQbY4oHnQ&usqp=CAU'; //eslint-disable-line
     },
     name(firstName, lastName) {
       const name = [];
@@ -102,19 +98,65 @@ export default {
 
 
 <style scoped>
-.tutorPhoto{
-  height:10vh;
-  padding:5px;
-  width:100%;
+.profile-img {
+  width: 8rem;
+  clip-path: circle(60px at center);
+  margin-top: 2rem;
+  margin-left: 1rem;
 }
-.tutorProfile{
+
+.clientProfile{
   min-height: 20vh;
 }
-.tutorCardsMain{
-  overflow-y: scroll;
-  max-height: 100%;
+
+.scrollable {
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  /* for Firefox */
+  min-height:0%;
 }
-.card-columns {
-  column-count: 4;
+
+.wrapper-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 20rem);
+}
+.name {
+  font-weight: bold;
+  font-size: 1.5rem;
+  margin-left: 1rem;
+}
+.about {
+  font-size: 0.9rem;
+  margin-left: 1rem;
+}
+.btn {
+  width: 100%;
+  border: none;
+  font-size: 1rem;
+  font-weight: bold;
+  color: white;
+  padding: 1rem;
+  background-color: var(--clr-primary);
+}
+
+.card {
+  overflow: hidden;
+  box-shadow: 0px 2px 8px 0px var(--clr-gray-light);
+  background-color: white;
+  border-radius: 1rem;
+  position: relative;
+  margin: 0.5rem;
+}
+
+.flex-container-column{
+  flex-direction: column;
+  display:flex;
+  height:100%;
+  flex-wrap: nowrap;
+}
+
+.flex-item-grow{
+  flex-grow: 1;
 }
 </style>
