@@ -10,7 +10,9 @@
         <div class="modal-dialog modal-dialog-centered" role="education">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLongTitle">Session Booking</h5>
+              <h5 class="modal-title" id="exampleModalLongTitle">
+                Session Booking
+              </h5>
               <button v-on:click="cancel" type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -39,7 +41,12 @@
         </div>
       </div>
     </transition>
-    <p id="title"> {{ selectedQuestion.title }} </p>
+    <p id="title">
+      <button id="go-back-btn" type="button" class="btn btn-link shadow-none" v-on:click="goBack">
+         <span class="material-icons-outlined">arrow_back</span>
+      </button>
+      {{ selectedQuestion.title }}
+    </p>
     <p class="my-1"> Posted By : {{ selectedQuestion.from.firstName }} {{ selectedQuestion.from.lastName }} </p>
     <p class="my-1"> Created At : {{ timeAgoFormat(selectedQuestion.createdAt) }} </p>
     <button
@@ -81,6 +88,11 @@ export default {
   methods: {
     ...mapActions('chatRooms', ['createRoom']),
     ...mapActions('questions', ['applyToQuestion']),
+
+    goBack() {
+      console.log('hello');
+      this.$emit('goback');
+    },
 
     timeAgoFormat(newDate) {
       return timeAgo.format(newDate);
@@ -162,5 +174,15 @@ textarea {
 }
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;
+}
+
+#go-back-btn {
+  display: none;
+}
+
+@media only screen and (max-width: 900px) {
+  #go-back-btn {
+    display: inline-block;
+  }
 }
 </style>

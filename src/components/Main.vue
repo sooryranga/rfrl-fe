@@ -9,28 +9,45 @@
         <div class="logo">
           <router-link to="/">TutorMe</router-link>
         </div>
-        <div class="nav-links">
-          <router-link class="text-dark" to="/questions">Ask Question</router-link>
-          <router-link
-            v-if="currentProfile.isTutor"
-            class="text-dark" to="/clients">
-            Find Clients
-          </router-link>
-          <router-link
-            v-if="currentProfile.isLookingForReferral"
-            class="text-dark" to="/tutors">
-            Find Tutor
-          </router-link>
-          <router-link class="text-dark" to="/chat">Messages</router-link>
-          <div v-if="loggedIn">
+        <div class="nav-links-with-profile">
+          <div class="nav-links">
+            <router-link class="text-dark" to="/questions">Questions</router-link>
+            <router-link
+              v-if="currentProfile.isTutor"
+              class="text-dark" to="/clients">
+              Clients
+            </router-link>
+            <router-link
+              v-if="currentProfile.isLookingForReferral"
+              class="text-dark" to="/tutors">
+              Tutor
+            </router-link>
+            <router-link class="text-dark" to="/chat">Messages</router-link>
+          </div>
+          <div v-if="loggedIn" class="to-right">
             <div class="dropdown">
               <button
               class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <img id="navProfilePicture" v-bind:src="currentProfile.photo"/>
-                {{currentProfile.firstName}} {{currentProfile.lastName}}
+                {{currentProfile.firstName}} {{currentProfile.lastName[0]}}
               </button>
               <div class="dropdown-menu dropdown-menu-left" aria-labelledby="dropdownMenuButton">
+                <div class="drop-down-router-links">
+                  <router-link class="dropdown-item" to="/questions">Question</router-link>
+                  <router-link
+                    v-if="currentProfile.isTutor"
+                    class="dropdown-item" to="/clients">
+                    Clients
+                  </router-link>
+                  <router-link
+                    v-if="currentProfile.isLookingForReferral"
+                    class="dropdown-item" to="/tutors">
+                    Tutor
+                  </router-link>
+                  <router-link class="dropdown-item" to="/chat">Messages</router-link>
+                  <div class="dropdown-divider"></div>
+                </div>
                 <router-link
                     class="dropdown-item text-dark"
                     :to="profileLink">
@@ -41,7 +58,7 @@
               </div>
             </div>
           </div>
-          <div class="align-items-center" v-else>
+          <div class="align-items-center to-right" v-else>
             <router-link class="btn btn-dark mr-2" to="/signup">Sign Up</router-link>
           </div>
         </div>
@@ -118,16 +135,24 @@ export default {
     margin: 0 auto;
 }
 
-.nav-links {
+.nav-links-with-profile {
     display: flex;
-    justify-content: space-around;
-    width: 60%;
+    justify-content: space-between;
+    flex: 1;
+    max-width: 40rem;
     vertical-align: middle;
 }
 
-.nav-links a {
+.nav-links-with-profile a {
   margin-bottom: auto;
   margin-top: auto;
+}
+
+.nav-links {
+  display: flex;
+  justify-content: space-between;
+  width: 60%;
+  vertical-align: middle;
 }
 
 .logo {
@@ -135,7 +160,11 @@ export default {
     text-transform: uppercase;
     letter-spacing: 5px;
     font-size: 20px;
-    padding-left: 2em;
+    width: 30%;
+}
+
+.to-right{
+  margin-left: auto;
 }
 
 .sticky-top{
@@ -156,5 +185,18 @@ export default {
 .flex-item-grow{
   flex: 1;
   min-height: 0; /* new */
+}
+
+.drop-down-router-links {
+  display: none;
+}
+
+@media only screen and (max-width: 653px) {
+  .nav-links {
+    display: none;
+  }
+  .drop-down-router-links {
+    display: block;
+  }
 }
 </style>

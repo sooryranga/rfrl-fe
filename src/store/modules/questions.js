@@ -81,25 +81,28 @@ const actions = {
       {commit, getters},
       {getMore=false},
   ) {
-    const questions = getters.questions;
-    if (getMore == false && questions != null) {
-      return questions;
+    const existingQuestions = getters.questions;
+    if (getMore == false && existingQuestions.length != 0) {
+      return existingQuestions;
     }
 
-    const lastQuestion = questions.length > 0 ?
-      questions[questions.length-1].id :
+    const lastQuestion = existingQuestions.length > 0 ?
+      existingQuestions[existingQuestions.length-1].id :
       null;
 
     try {
-      const questions = await Question.QuestionService.getQuestions(
+      const newQuestions = await Question.QuestionService.getQuestions(
           {lastQuestion},
       );
-      commit(SET_MORE_QUESTIONS, questions);
+      const questions = [...existingQuestions, ...newQuestions];
+      if (newQuestions.length > 0) {
+        commit(SET_MORE_QUESTIONS, questions);
+      }
 
       if (getters.selectedQuestion == null && questions) {
         commit(SET_SELECT_QUESTION, questions[0].id);
       }
-      return questions;
+      return newQuestions;
     } catch (error) {
       console.error(error);
       const errorString = getErrorMessageFromRequest(error);
@@ -188,7 +191,7 @@ const mutations = {
     state.questions.push(question);
   },
   [SET_MORE_QUESTIONS](state, questions) {
-    state.questions =[...state.questions, ...questions];
+    state.questions = questions;
   },
   [SET_SELECT_QUESTION](state, selectedQuestionID) {
     state.selectedQuestionID = selectedQuestionID;
@@ -197,10 +200,10 @@ const mutations = {
     state.error = error;
   },
   [SET_UPDATE_QUESTION](state, updatedQuestion) {
-    const filteredQuestion = state.questions.filter(
-        (q) => q.id != updatedQuestion.id,
+    const index = state.questions.indexOf(
+        (q) => q.id === updatedQuestion.id,
     );
-    state.questions = [...filteredQuestion, updatedQuestion];
+    Vue.set(state.questions, index, updatedQuestion);
   },
   [SET_QUESTION_EDITOR](state, {isOpen, editorQuestionID}) {
     state.editorOpen = isOpen;
