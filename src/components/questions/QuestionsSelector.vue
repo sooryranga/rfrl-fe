@@ -84,6 +84,7 @@ export default {
       return timeAgo.format(newDate);
     },
     routeToQuestion: function(index) {
+      this.$emit('selected');
       if (this.questions[index].id === this.$route?.params?.questionId) {
         return;
       }
@@ -95,9 +96,6 @@ export default {
         query: this.$route.query,
       });
     },
-  },
-  async mounted() {
-    await this.getQuestions({});
   },
 };
 </script>
