@@ -48,7 +48,7 @@ export default {
   --clr-gray-6:#A5A5A5;
   --clr-gray-7:#BEBEBE;
   --clr-gray-8:#D7D7D7;
-  --clr-gray-9:#F0F0F0;
+  --clr-gray-9:#fcfcfc;
 
 
   --clr-primary-darkest: #3400A3;
@@ -95,6 +95,9 @@ export default {
   margin: 0;
   padding: 0;
   font-weight: 300;
+}
+
+body {
   background-color: var(--clr-gray-9);
 }
 
