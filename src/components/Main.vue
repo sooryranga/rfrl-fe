@@ -131,7 +131,7 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    min-height: 7vh;
+    min-height: 5vh;
     margin: 0 auto;
 }
 
