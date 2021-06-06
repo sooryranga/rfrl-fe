@@ -9,7 +9,7 @@ import {
 
 const state = {
   error: null,
-  companies: [],
+  companies: {},
 };
 
 const getters = {
@@ -18,9 +18,19 @@ const getters = {
 };
 
 const actions = {
-  async getCompanies({commit}) {
+  async getCompanies({getters, commit}) {
+    if (
+      getters.companies &&
+      Object.keys(getters.companies).length != 0
+    ) return;
+
     try {
-      const companies = await Company.CompanyService.getList();
+      const companies = (await Company.CompanyService.getList()).reduce(
+          (map, company) => {
+            map[company.id] = company;
+            return map;
+          }, {});
+
       commit(SET_COMPANIES, companies);
     } catch (err) {
       console.log(err);
