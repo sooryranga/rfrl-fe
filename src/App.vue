@@ -95,6 +95,7 @@ export default {
   margin: 0;
   padding: 0;
   font-weight: 300;
+  font-size: 1rem;
 }
 
 body {
