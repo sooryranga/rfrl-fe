@@ -14,6 +14,10 @@ const profileState = () => {
     fieldOfStudy: null,
     startYear: null,
     endYear: null,
+    linkedInProfile: null,
+    githubProfile: null,
+    yearsOfExperience: null,
+    workTitle: null,
 
     workEmail: null,
     verifiedWorkEmail: null,

@@ -59,7 +59,7 @@ export default {
     ...mapGetters('companies', ['companies']),
   },
   methods: {
-    ...mapGetters('companies', ['getCompanies']),
+    ...mapActions('companies', ['getCompanies']),
     ...mapActions('listTutors', ['getTutors']),
     async infiniteHandler($state) {
       const newTutors = await this.getTutors({reset: false});

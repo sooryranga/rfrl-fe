@@ -15,6 +15,7 @@ const state = {
 const getters = {
   companies: (state) => state.companies,
   companyError: (state) => state.error,
+  companyList: (state) => Object.values(state.companies),
 };
 
 const actions = {
