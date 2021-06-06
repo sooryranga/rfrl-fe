@@ -4,24 +4,19 @@
   <div class="scrollable flex-item-grow pb-2">
     <div class="wrapper-grid">
       <div v-for="(tutor) in tutors" v-bind:key="tutor.id">
-        <div class="card">
-          <img v-bind:src="getTutorPhoto(tutor)" class="profile-img">
-          <p class="name">{{name(tutor.firstName, tutor.lastName)}}</p>
-          <div v-if="tutor.about">
-            <p class="about">{{shortAbout(tutor.about)}}</p>
-          </div>
-          <div class="row">
-            <span class="material-icons col">
-                block
-            </span>
-            <div class="col">
-              <p> Work Verification </p>
-            </div>
-          </div>
+        <card-wrapper>
+          <profile-image v-bind:src="getTutorPhoto(tutor)"/>
+          <name>{{name(tutor.firstName, tutor.lastName)}}</name>
+          <work-verification v-if="tutor.verifiedWorkEmail && tutor.companyId">
+            {{getCompanyName(tutor.companyId)}} <span class="material-icons">check_circle</span>
+          </work-verification>
+          <work-verification v-else>
+            Not Verified
+          </work-verification>
           <router-link class="stretched-link text-decoration-none" :to="routeToTutor(tutor.id)">
             <button class='btn'>Profile</button>
           </router-link>
-        </div>
+        </card-wrapper>
       </div>
       <infinite-loading :identifier="params" @infinite="infiniteHandler">
         <div slot="no-more">
@@ -43,16 +38,28 @@
 <script>
 import {mapActions, mapGetters} from 'vuex';
 import InfiniteLoading from 'vue-infinite-loading';
+import {
+  CardWrapper,
+  ProfileImage,
+  Name,
+  WorkVerification,
+} from '@/components/style/ClientCard';
 
 export default {
   name: 'Tutors',
   components: {
     InfiniteLoading,
+    CardWrapper,
+    ProfileImage,
+    Name,
+    WorkVerification,
   },
   computed: {
     ...mapGetters('listTutors', ['tutors', 'params']),
+    ...mapGetters('companies', ['companies']),
   },
   methods: {
+    ...mapGetters('companies', ['getCompanies']),
     ...mapActions('listTutors', ['getTutors']),
     async infiniteHandler($state) {
       const newTutors = await this.getTutors({reset: false});
@@ -61,6 +68,12 @@ export default {
       } else {
         $state.complete();
       }
+    },
+    getCompanyName(companyId) {
+      if (companyId in this.companies) {
+        return this.companies[companyId]?.name;
+      }
+      return '';
     },
     getTutorPhoto(client) {
       return client.photo || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQB8oKGDdE1XOkEAYG_Xmo3HObzakQbY4oHnQ&usqp=CAU'; //eslint-disable-line
@@ -95,21 +108,14 @@ export default {
       };
     },
   },
+  async mounted() {
+    await this.getCompanies();
+  },
 };
 </script>
 
 
 <style scoped>
-.profile-img {
-  width: 8rem;
-  clip-path: circle(60px at center);
-  margin-top: 2rem;
-  margin-left: 1rem;
-}
-
-.clientProfile{
-  min-height: 20vh;
-}
 
 .scrollable {
   overflow-y: auto;
@@ -123,15 +129,7 @@ export default {
   display: grid;
   grid-template-columns: repeat(auto-fit, 20rem);
 }
-.name {
-  font-weight: bold;
-  font-size: 1.5rem;
-  margin-left: 1rem;
-}
-.about {
-  font-size: 0.9rem;
-  margin-left: 1rem;
-}
+
 .btn {
   width: 100%;
   border: none;
@@ -140,15 +138,6 @@ export default {
   color: white;
   padding: 1rem;
   background-color: var(--clr-primary);
-}
-
-.card {
-  overflow: hidden;
-  box-shadow: 0px 2px 8px 0px var(--clr-gray-light);
-  background-color: white;
-  border-radius: 1rem;
-  position: relative;
-  margin: 0.5rem;
 }
 
 .flex-container-column{

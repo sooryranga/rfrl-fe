@@ -97,9 +97,15 @@ export default {
           getWantingCompanyReferral({
             profileId: this.currentProfile.id,
           });
-      const companyIdSet = new Set(companyIds);
-      this.checkedCompanies = this.companies.filter(
-          (c) => companyIdSet.has(c.id),
+
+      this.checkedCompanies = companyIds.reduce(
+          (arr, id) => {
+            if (id in this.companies) {
+              arr.push(this.companies[id]);
+            }
+            return arr;
+          },
+          [],
       );
     }
   },
