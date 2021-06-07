@@ -4,28 +4,43 @@
   <div class="scrollable flex-item-grow pb-2">
     <div class="wrapper-grid">
       <div v-for="(tutor) in tutors" v-bind:key="tutor.id">
-        <card-wrapper>
-          <profile-image v-bind:src="getTutorPhoto(tutor)"/>
-          <name>{{name(tutor.firstName, tutor.lastName)}}</name>
-          <work-verification v-if="tutor.verifiedWorkEmail && tutor.companyId">
-            {{getCompanyName(tutor.companyId)}} <span class="material-icons">check_circle</span>
-          </work-verification>
-          <work-verification v-else>
-            Not Verified
-          </work-verification>
-          <router-link class="stretched-link text-decoration-none" :to="routeToTutor(tutor.id)">
-            <button class='btn'>Profile</button>
-          </router-link>
-        </card-wrapper>
+        <profile-card
+          :img="getTutorPhoto(tutor)"
+          :routeTo="routeToTutor(tutor.id)"
+        >
+          <p class="name">{{cardName(tutor.firstName, tutor.lastName)}}</p>
+          <div class="current-work">
+            <p v-if="tutor.workTitle">
+              {{tutor.workTitle}} <span v-if="tutor.yearsOfExperience"> - {{tutor.yearsOfExperience}} yrs </span>
+            </p>
+            <p v-if="tutor.verifiedWorkEmail && tutor.companyId">
+              {{getCompanyName(tutor.companyId)}}
+              <span class="material-icons check-mark">
+                check_circle
+              </span>
+            </p>
+            <p v-else>
+              Not Verified
+            </p>
+          </div>
+          <div class="external-profiles">
+            <p><a v-if="tutor.linkedInProfile" :href="toLinkedIn(tutor.linkedInProfile)">
+              <i class="fab fa-linkedin"></i> {{tutor.linkedInProfile}}
+            </a></p>
+            <p><a v-if="tutor.githubProfile" :href="toGithub(tutor.githubProfile)">
+              <i class="fab fa-github"></i> {{tutor.githubProfile}}
+            </a></p>
+          </div>
+        </profile-card>
       </div>
       <infinite-loading :identifier="params" @infinite="infiniteHandler">
         <div slot="no-more">
-          <div class="card">
+          <div :style="{marginTop:'4rem'}">
             <h6 class="my-2 text-muted">No more tutors</h6>
           </div>
         </div>
         <div slot="no-results">
-          <div class="card">
+          <div :style="{marginTop:'4rem'}">
             <h6 class="my-2 text-muted">No more tutors</h6>
           </div>
         </div>
@@ -38,21 +53,13 @@
 <script>
 import {mapActions, mapGetters} from 'vuex';
 import InfiniteLoading from 'vue-infinite-loading';
-import {
-  CardWrapper,
-  ProfileImage,
-  Name,
-  WorkVerification,
-} from '@/components/style/ClientCard';
+import ProfileCard from '@/components/ProfileCard';
 
 export default {
   name: 'Tutors',
   components: {
     InfiniteLoading,
-    CardWrapper,
-    ProfileImage,
-    Name,
-    WorkVerification,
+    ProfileCard,
   },
   computed: {
     ...mapGetters('listTutors', ['tutors', 'params']),
@@ -75,18 +82,17 @@ export default {
       }
       return '';
     },
+    toLinkedIn(shortenedLinkedIn) {
+      return 'https://www.linkedin.com/' + shortenedLinkedIn;
+    },
+    toGithub(shortenedGithub) {
+      return 'https://' + shortenedGithub;
+    },
     getTutorPhoto(client) {
       return client.photo || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQB8oKGDdE1XOkEAYG_Xmo3HObzakQbY4oHnQ&usqp=CAU'; //eslint-disable-line
     },
-    name(firstName, lastName) {
-      const name = [];
-      if (firstName) {
-        name.push(firstName);
-      }
-      if (lastName) {
-        name.push(lastName[0]);
-      }
-      return name.length > 0 ? name.join(' '): 'test';
+    cardName(firstName, lastName) {
+      return firstName;
     },
     shortAbout(about) {
       const i = about?.indexOf(' ', 60);
@@ -130,16 +136,6 @@ export default {
   grid-template-columns: repeat(auto-fit, 20rem);
 }
 
-.btn {
-  width: 100%;
-  border: none;
-  font-size: 1rem;
-  font-weight: bold;
-  color: white;
-  padding: 1rem;
-  background-color: var(--clr-primary);
-}
-
 .flex-container-column{
   flex-direction: column;
   display:flex;
@@ -149,5 +145,31 @@ export default {
 
 .flex-item-grow{
   flex-grow: 1;
+}
+
+.name {
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+p {
+  margin-bottom: 0;
+}
+
+.check-mark {
+    display:inline-flex;
+    vertical-align:top;
+    color: var(--clr-success);
+}
+
+.external-profiles{
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+
+.current-work {
+  font-size: 0.9rem;
+  letter-spacing: 1px;
 }
 </style>
