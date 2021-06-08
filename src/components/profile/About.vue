@@ -12,20 +12,41 @@
       />
       <div class="row">
         <div class="col-3">
-          <img class="profilePicture" v-bind:src="profile.photo" v-on:click="updateImage"/>
-          <div v-if="bookTutorButton">
-            <router-link class="btn btn-dark p-2 mr-2"  :to="bookTutorRoute">Book Tutor</router-link>
-          </div>
+          <img id="profile-picture" v-bind:src="profile.photo" v-on:click="updateImage"/>
+          <router-link
+          class="btn btn-dark p-2"
+          id="book-tutor-btn"
+          v-if="!isLoggedInUser"
+          :to="bookTutorRoute">Book Tutor</router-link>
         </div>
         <div class="col">
-          <h4 class="">{{profile.firstName}} {{profile.lastName}}</h4>
-          <p class="">{{profile.about}}</p>
-          <p>{{profile.workTitle}} - {{profile.yearsOfExperience}}</p>
-          <p><i class="fab fa-linkedin"></i> {{profile.linkedInProfile}}</p>
-          <p><i class="fab fa-github"></i> {{profile.githubProfile}}</p>
+          <h1 class="primary-color">{{profile.firstName}}</h1>
+          <div class="current-work">
+            <p v-if="profile.workTitle">
+              {{profile.workTitle}} <span v-if="profile.yearsOfExperience"> - {{profile.yearsOfExperience}} yrs </span>
+            </p>
+            <p v-if="profile.verifiedWorkEmail && profile.companyId">
+              {{getCompanyName(profile.companyId)}}
+              <span class="material-icons check-mark">
+                check_circle
+              </span>
+            </p>
+            <p v-else>
+              Not Verified
+            </p>
+          </div>
+          <div class="external-profiles">
+            <p><a v-if="profile.linkedInProfile" :href="toLinkedIn(profile.linkedInProfile)">
+              <i class="fab fa-linkedin"></i> {{profile.linkedInProfile}}
+            </a></p>
+            <p><a v-if="profile.githubProfile" :href="toGithub(profile.githubProfile)">
+              <i class="fab fa-github"></i> {{profile.githubProfile}}
+            </a></p>
+          </div>
+          <p id="about">{{profile.about}}</p>
         </div>
         <div class="col-2" v-if="isLoggedInUser">
-          <span v-on:click="edit" class="material-icons md-dark btn-outline-light btn">create</span>
+          <span v-on:click="edit" class="primary-color material-icons btn-outline-light btn">create</span>
         </div>
       </div>
     </div>
@@ -58,6 +79,7 @@ export default {
   },
   computed: {
     ...mapGetters('profile', ['currentProfile']),
+    ...mapGetters('companies', ['companies']),
     isLoggedInUser() {
       return this.currentProfile.id === this.profileId;
     },
@@ -92,6 +114,18 @@ export default {
     }
   },
   methods: {
+    toLinkedIn(shortenedLinkedIn) {
+      return 'https://www.linkedin.com/' + shortenedLinkedIn;
+    },
+    toGithub(shortenedGithub) {
+      return 'https://' + shortenedGithub;
+    },
+    getCompanyName(companyId) {
+      if (companyId in this.companies) {
+        return this.companies[companyId]?.name;
+      }
+      return '';
+    },
     closeAboutEditor() {
       this.aboutEditorOpen = false;
     },
@@ -108,3 +142,46 @@ export default {
 };
 </script>
 
+<style scoped>
+#profile-picture{
+  width: 70%;
+  min-width: 5rem;
+  clip-path: circle(40% at center);
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#book-tutor-btn{
+  display: block;
+}
+
+.primary-color{
+  color: var(--clr-primary)
+}
+
+p {
+  margin-bottom: 0;
+}
+
+.external-profiles{
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+
+.current-work {
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+}
+
+.check-mark {
+  display:inline-flex;
+  vertical-align:top;
+  color: var(--clr-success);
+}
+
+#about{
+  margin-top: 1rem;
+}
+</style>

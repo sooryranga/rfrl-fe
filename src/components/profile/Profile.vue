@@ -65,15 +65,6 @@ export default {
 </script>
 
 <style>
-.profilePicture{
-  background-size: cover;
-  background-position: top center;
-  border-radius: 50%;
-  background-color: #fff;
-  padding: 4px;
-  height: 5vh;
-  width: 5vh;
-}
 .studentPicture{
   background-size: cover;
   background-position: top center;

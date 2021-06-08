@@ -1,33 +1,49 @@
 <template>
   <div id="main">
-    <nav ref="nav" class="
+    <nav ref="nav" id="topbar" class="
       align-items-center p-1
-      bg-white border-bottom shadow-sm
+      border-bottom shadow-sm
       text-center
     ">
       <div class="container-xl nav-container">
         <div class="logo">
-          <router-link to="/">TutorMe</router-link>
+          <router-link to="/" style="text-decoration:none; color: white;">TutorMe</router-link>
         </div>
         <div class="nav-links-with-profile">
           <div class="nav-links">
-            <router-link class="text-dark" to="/questions">Questions</router-link>
-            <router-link
-              v-if="currentProfile.isTutor"
-              class="text-dark" to="/clients">
-              Clients
+            <router-link to="/questions"
+                v-slot="{href, navigate, isActive}"
+            >
+              <nav-link :navigate="navigate" v-bind:href="href" :active="isActive">
+                Questions
+              </nav-link>
             </router-link>
-            <router-link
-              v-if="currentProfile.isLookingForReferral"
-              class="text-dark" to="/tutors">
-              Tutor
+            <router-link to="/clients"
+                v-slot="{href, navigate, isActive}"
+            >
+              <nav-link :navigate="navigate" v-bind:href="href" :active="isActive">
+                Clients
+              </nav-link>
             </router-link>
-            <router-link class="text-dark" to="/chat">Messages</router-link>
+            <router-link to="/tutors"
+                v-slot="{href, navigate, isActive}"
+            >
+              <nav-link :navigate="navigate" v-bind:href="href" :active="isActive">
+                Tutor
+              </nav-link>
+            </router-link>
+            <router-link to="/chat"
+              v-slot="{href, navigate, isActive}"
+            >
+              <nav-link :navigate="navigate" v-bind:href="href" :active="isActive">
+                Messages
+              </nav-link>
+            </router-link>
           </div>
           <div v-if="loggedIn" class="to-right">
             <div class="dropdown">
               <button
-              class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+              class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton"
               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <img id="navProfilePicture" v-bind:src="currentProfile.photo"/>
                 {{currentProfile.firstName}} {{currentProfile.lastName[0]}}
@@ -59,7 +75,7 @@
             </div>
           </div>
           <div class="align-items-center to-right" v-else>
-            <router-link class="btn btn-dark mr-2" to="/signup">Sign Up</router-link>
+            <router-link class="btn btn-light mr-2" to="/signup">Sign Up</router-link>
           </div>
         </div>
       </div>
@@ -78,9 +94,10 @@
 import {mapGetters, mapActions} from 'vuex';
 import VerifyEmailBanner from './VerifyEmailBanner.vue';
 import {Profile} from '@/api';
+import NavLink from '@/components/NavLink.vue';
 
 export default {
-  components: {VerifyEmailBanner},
+  components: {VerifyEmailBanner, NavLink},
   name: 'tutor',
   computed: {
     ...mapGetters('profile', ['currentProfile', 'loggedIn', 'logInType']),
@@ -127,6 +144,10 @@ export default {
 </script>
 
 <style>
+#topbar{
+  background-color: var(--clr-primary-dark);
+}
+
 .nav-container {
     display: flex;
     justify-content: space-between;
@@ -143,11 +164,6 @@ export default {
     vertical-align: middle;
 }
 
-.nav-links-with-profile a {
-  margin-bottom: auto;
-  margin-top: auto;
-}
-
 .nav-links {
   display: flex;
   justify-content: space-between;
@@ -156,11 +172,12 @@ export default {
 }
 
 .logo {
-    color: rgb(0, 0, 0);
-    text-transform: uppercase;
-    letter-spacing: 5px;
-    font-size: 20px;
-    width: 30%;
+  color: rgb(0, 0, 0);
+  text-transform: uppercase;
+  letter-spacing: 5px;
+  font-size: 20px;
+  width: 30%;
+  font-weight: 600;
 }
 
 .to-right{

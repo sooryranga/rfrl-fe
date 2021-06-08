@@ -94,7 +94,6 @@ export default {
   font-family: 'Roboto', sans-serif;
   margin: 0;
   padding: 0;
-  font-weight: 300;
 }
 
 body {
