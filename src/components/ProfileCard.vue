@@ -60,6 +60,6 @@ export default {
 }
 
 .card-button:hover {
-  background-color: var(--clr-primary);
+  background-color: var(--clr-primary-dark);
 }
 </style>

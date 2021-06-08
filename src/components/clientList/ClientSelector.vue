@@ -1,23 +1,29 @@
 <template>
   <div class="wrapper-grid">
-    <div v-for="(client) in clients" v-bind:key="client.id" class="card">
-      <img v-bind:src="getClientPhoto(client)" class="profile-img">
-      <p class="name">{{name(client.firstName, client.lastName)}}</p>
-      <div v-if="client.about">
-        <p class="about">{{shortAbout(client.about)}}</p>
-      </div>
-      <router-link class="stretched-link text-decoration-none" :to="routeToClient(client.id)">
-        <button class='btn'>Profile</button>
-      </router-link>
+    <div v-for="(client) in clients" v-bind:key="client.id">
+      <profile-card
+          :img="getPhoto(client)"
+          :routeTo="routeToProfile(client.id)"
+        >
+        <p class="name">{{name(client.firstName, client.lastName)}}</p>
+        <div class="external-profiles">
+          <p><a v-if="client.linkedInProfile" :href="toLinkedIn(client.linkedInProfile)">
+            <i class="fab fa-linkedin"></i> {{client.linkedInProfile}}
+          </a></p>
+          <p><a v-if="client.githubProfile" :href="toGithub(client.githubProfile)">
+            <i class="fab fa-github"></i> {{client.githubProfile}}
+          </a></p>
+        </div>
+      </profile-card>
     </div>
     <infinite-loading @infinite="infiniteHandler">
       <div slot="no-more">
-        <div class="card">
+        <div :style="{marginTop:'4rem'}">
           <h6 class="my-2 text-muted">No more clients</h6>
         </div>
       </div>
       <div slot="no-results">
-        <div class="card">
+        <div :style="{marginTop:'4rem'}">
           <h6 class="my-2 text-muted">No more clients</h6>
         </div>
       </div>
@@ -28,11 +34,13 @@
 <script>
 import {mapGetters, mapActions} from 'vuex';
 import InfiniteLoading from 'vue-infinite-loading';
+import ProfileCard from '@/components/ProfileCard';
 
 export default {
   name: 'ClientSelector',
   components: {
     InfiniteLoading,
+    ProfileCard,
   },
   computed: {
     ...mapGetters('listClients', ['clients']),
@@ -55,6 +63,15 @@ export default {
         $state.complete();
       }
     },
+    getPhoto(client) {
+      return client.photo || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQB8oKGDdE1XOkEAYG_Xmo3HObzakQbY4oHnQ&usqp=CAU'; //eslint-disable-line
+    },
+    toLinkedIn(shortenedLinkedIn) {
+      return 'https://www.linkedin.com/' + shortenedLinkedIn;
+    },
+    toGithub(shortenedGithub) {
+      return 'https://' + shortenedGithub;
+    },
     name(firstName, lastName) {
       const name = [];
       if (firstName) {
@@ -76,7 +93,7 @@ export default {
         return about;
       }
     },
-    routeToClient(id) {
+    routeToProfile(id) {
       return {
         name: 'profile',
         params: {
@@ -90,45 +107,23 @@ export default {
 
 
 <style scoped>
-.profile-img {
-  width: 8rem;
-  clip-path: circle(60px at center);
-  margin-top: 2rem;
-  margin-left: 1rem;
-}
-
-.clientProfile{
-  min-height: 20vh;
-}
 .wrapper-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, 20rem);
 }
+
+.external-profiles{
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+
 .name {
   font-weight: bold;
   font-size: 1.5rem;
-  margin-left: 1rem;
-}
-.about {
-  font-size: 0.9rem;
-  margin-left: 1rem;
-}
-.btn {
-  width: 100%;
-  border: none;
-  font-size: 1rem;
-  font-weight: bold;
-  color: white;
-  padding: 1rem;
-  background-color: var(--clr-primary);
 }
 
-.card {
-  overflow: hidden;
-  box-shadow: 0px 2px 8px 0px var(--clr-gray-light);
-  background-color: white;
-  border-radius: 1rem;
-  position: relative;
-  margin: 0.5rem;
+p {
+  margin-bottom: 0;
 }
 </style>
