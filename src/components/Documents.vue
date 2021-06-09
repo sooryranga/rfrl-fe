@@ -167,6 +167,10 @@ export default {
   transition:opacity 0.5s linear;
 }
 
+.card-title{
+  color: var(--clr-gray-2)
+}
+
 .card:hover>.hover-to-show
 {
     display:block;

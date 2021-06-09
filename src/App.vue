@@ -102,6 +102,7 @@ body {
 
 p {
   max-width: 50ch;
+  color: var(--clr-gray-4)
 }
 
 .no-styling-button{

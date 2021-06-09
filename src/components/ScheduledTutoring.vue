@@ -28,10 +28,14 @@
             v-on:click="goToEvent(session)">
               <div v-if="showName" class="row">
                 <div class="col-6 my-auto">
-                  <div><p class="m-0">{{session.event.start.toLocaleTimeString()}}</p></div>
+                  <div><p
+                    class="m-0"
+                    style="color:var(--clr-gray-1)">
+                    {{session.event.start.toLocaleTimeString()}}
+                  </p></div>
                 </div>
                 <div class="col-auto my-auto">
-                  <p class="m-0">
+                  <p class="m-0" style="color:var(--clr-gray-1)">
                     With {{
                       currentProfileId === session.tutorId ?
                       getName(getMentee(session)) :
@@ -42,7 +46,7 @@
               </div>
               <div v-else class="row">
                 <div class="col my-auto">
-                  <div><p class="m-0">{{session.event.start.toLocaleTimeString()}}</p></div>
+                  <div class="m-0">{{session.event.start.toLocaleTimeString()}}</div>
                 </div>
               </div>
             </button>
@@ -166,7 +170,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .btn-circle {
   width: 30px;
   height: 30px;

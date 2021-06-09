@@ -108,14 +108,17 @@ export default {
 #institution-name{
   font-size: 1.3rem;
   margin-bottom: 0;
+  color: var(--clr-gray-2)
 }
 #degree{
   font-size: 0.9rem;
   margin-bottom: 0;
+  color: var(--clr-gray-3)
 }
 #field-of-study{
   font-size: 0.9rem;
   margin-bottom: 0;
+  color: var(--clr-gray-3)
 }
 #start-and-end-year{
   font-size: 0.6rem;
