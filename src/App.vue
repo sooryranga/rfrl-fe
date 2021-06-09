@@ -104,6 +104,13 @@ p {
   max-width: 50ch;
 }
 
+.no-styling-button{
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+}
+
 
 /**
  * Tooltip Styles

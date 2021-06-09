@@ -46,12 +46,12 @@
           <p id="about">{{profile.about}}</p>
         </div>
         <div class="col-2" v-if="isLoggedInUser">
-          <span
+          <button class="no-styling-button"><span
             v-on:click="edit"
             id="edit-about"
-            class="primary-color material-icons btn-outline-light btn">
+            class="primary-color material-icons">
             create
-          </span>
+          </span></button>
         </div>
       </div>
     </div>
@@ -151,6 +151,7 @@ export default {
 #edit-about{
   margin-left: auto;
   margin-right: auto;
+  color: var(--clr-primary-lighter)
 }
 
 #edit-about:hover{
