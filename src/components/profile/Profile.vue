@@ -9,11 +9,11 @@
         <documents :profile-id="userId"></documents>
         <tutor-review :profile-id="userId"></tutor-review>
       </div>
-      <div class="col overflowContainer">
+      <div class="col overflowContainer mt-4">
         <scheduled-tutoring
           showName
           v-if="isLoggedInUser"
-          class="p-2 my-1 bg-white"
+          class="p-2 my-1"
           :profile-id="userId"/>
         <answered-questions :profile-id="userId"></answered-questions>
         <asked-questions :profile-id="userId"></asked-questions>

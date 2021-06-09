@@ -18,7 +18,7 @@
             />
           </div>
         </div>
-        <div class="row pt-2">
+        <div class="row mt-3 pt-2">
           <div class="col">
             <scheduled-tutoring
             :room-id="roomId"
