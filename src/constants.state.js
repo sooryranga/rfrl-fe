@@ -64,7 +64,7 @@ const chatRoomState = ()=>{
     roomName: 'Room 1', // String
     lastMessage: {
       content: 'Last message received', // String
-      sender_id: 1234,
+      senderId: 1234,
       timestamp: '10:20',
       date: 123242424,
       seen: false,
