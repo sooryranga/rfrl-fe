@@ -171,6 +171,10 @@ export default {
   vertical-align: middle;
 }
 
+.primary-color{
+  color: var(--clr-primary)
+}
+
 .logo {
   color: rgb(0, 0, 0);
   text-transform: uppercase;

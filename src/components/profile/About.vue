@@ -46,7 +46,12 @@
           <p id="about">{{profile.about}}</p>
         </div>
         <div class="col-2" v-if="isLoggedInUser">
-          <span v-on:click="edit" class="primary-color material-icons btn-outline-light btn">create</span>
+          <span
+            v-on:click="edit"
+            id="edit-about"
+            class="primary-color material-icons btn-outline-light btn">
+            create
+          </span>
         </div>
       </div>
     </div>
@@ -143,6 +148,15 @@ export default {
 </script>
 
 <style scoped>
+#edit-about{
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#edit-about:hover{
+  color: var(--clr-primary-darkest)
+}
+
 #profile-picture{
   width: 70%;
   min-width: 5rem;
@@ -154,10 +168,6 @@ export default {
 
 #book-tutor-btn{
   display: block;
-}
-
-.primary-color{
-  color: var(--clr-primary)
 }
 
 p {
