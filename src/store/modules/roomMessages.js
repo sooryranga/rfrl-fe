@@ -48,16 +48,17 @@ const getters = {
  * @return {object}
  */
 function formatMessage(room, message) {
+  console.log(message);
   const senderUser = room.users.find(
-      (user) => message.sender_id === user._id,
+      (user) => message.senderId === user._id,
   );
 
-  const {sender_id, timestamp} = message; // eslint-disable-line
+  const {senderId, timestamp} = message; // eslint-disable-line
 
   return {
     ...message,
     ...{
-      sender_id,
+      senderId,
       _id: message._id,
       seconds: timestamp.seconds,
       timestamp: parseTimestamp(timestamp, 'HH:mm'),

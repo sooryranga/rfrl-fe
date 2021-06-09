@@ -119,7 +119,7 @@ export default {
       const roomId = await this.createRoom([this.selectedQuestion.from.id]);
 
       const message = {
-        sender_id: this.currentProfileId,
+        senderId: this.currentProfileId,
         content: this.introduction,
         timestamp: new Date(),
       };
