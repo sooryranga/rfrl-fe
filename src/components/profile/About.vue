@@ -186,6 +186,10 @@ p {
   letter-spacing: 1px;
 }
 
+.current-work p {
+  color: var(--clr-gray-1)
+}
+
 .check-mark {
   display:inline-flex;
   vertical-align:top;
