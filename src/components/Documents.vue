@@ -1,41 +1,47 @@
 <template>
   <div  id="localDocuments" class="shadow p-3 my-3 bg-white">
-    <document-editor
-      :documentprop="this.editingItem"
-      v-if="editorOpen"
-      v-on:saveEvent="saveEvent"
-      v-on:cancelEvent="cancelEvent"
-    ></document-editor>
-    <div class="row">
-      <div class="col">
-        <h4 class=" ml-4 my-2"> Documents </h4>
+    <div class="mx-4">
+      <document-editor
+        :documentprop="this.editingItem"
+        v-if="editorOpen"
+        v-on:saveEvent="saveEvent"
+        v-on:cancelEvent="cancelEvent"
+      ></document-editor>
+      <div class="row">
+        <div class="col">
+          <h4 class="my-2 primary-color"> Documents </h4>
+        </div>
+        <div class="col-2 section-button-container">
+          <button class="no-styling-button section-button"><span
+            v-if="allowToSave"
+            v-on:click="add"
+            class="material-icons section-button-span"
+          >add_circle</span></button>
+        </div>
       </div>
-      <div class="col-2 my-auto addHover">
-        <span
-          v-if="allowToSave"
-          v-on:click="add"
-          class="material-icons md-24 md-dark btn-outline-light btn"
-        >add</span>
-      </div>
-    </div>
-    <div v-if="localDocuments.length" class="mt-4 card-columns mx-3">
-      <div v-for="(document, index) in localDocuments" v-bind:key="document.id" class="card">
-        <div>
-          <embed v-bind:src="document.src" class="documentEmbed">
-          <div class="card-body  py-1 documentBody">
-            <h6 class="card-title">{{document.name}}</h6>
-            <p class="card-text">{{document.description}}</p>
+      <div v-if="localDocuments.length" class="mt-4 card-columns mx-3">
+        <div v-for="(document, index) in localDocuments" v-bind:key="document.id" class="card">
+          <div>
+            <embed v-bind:src="document.src" class="documentEmbed">
+            <div class="card-body  py-1 documentBody">
+              <h6 class="card-title">{{document.name}}</h6>
+              <p class="card-text">{{document.description}}</p>
+            </div>
+          </div>
+          <div v-if="allowToSave" class="documentEditor hover-to-show mt-1">
+            <span v-on:click="edit(index)" class="material-icons md-dark btn-outline-light btn">create</span>
+            <span class="material-icons md-dark btn-outline-light btn">drag_handle</span>
+            <span
+              v-on:click="deleteItem(document.id)"
+              class="material-icons md-dark btn-outline-light btn">
+              delete
+            </span>
           </div>
         </div>
-        <div v-if="allowToSave" class="documentEditor hover-to-show mt-1">
-          <span v-on:click="edit(index)" class="material-icons md-dark btn-outline-light btn">create</span>
-          <span class="material-icons md-dark btn-outline-light btn">drag_handle</span>
-          <span v-on:click="deleteItem(document.id)" class="material-icons md-dark btn-outline-light btn">delete</span>
-        </div>
       </div>
-    </div>
-    <div v-else style="height:50px" class="w-100 mx-auto my-auto">
-      <p>No documents to show</p>
+      <div v-else style="height:50px" class="w-100 mx-auto my-auto">
+        <p>No documents to show</p>
+      </div>
     </div>
   </div>
 </template>
@@ -167,18 +173,4 @@ export default {
     visibility:visible;
     opacity:1;
 }
-
-/* Rules for sizing the icon. */
-.material-icons.md-18 { font-size: 18px; }
-.material-icons.md-24 { font-size: 24px; }
-.material-icons.md-36 { font-size: 36px; }
-.material-icons.md-48 { font-size: 48px; }
-
-/* Rules for using icons as black on a light background. */
-.material-icons.md-dark { color: rgba(0, 0, 0, 0.54); }
-.material-icons.md-dark.md-inactive { color: rgba(0, 0, 0, 0.26); }
-
-/* Rules for using icons as white on a dark background. */
-.material-icons.md-light { color: rgba(255, 255, 255, 1); }
-.material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }
 </style>

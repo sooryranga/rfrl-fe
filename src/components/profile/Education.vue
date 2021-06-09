@@ -13,12 +13,11 @@
           <div class="col">
             <h4 class="my-2 primary-color"> Education </h4>
           </div>
-          <div class="col-2" style="display: flex;align-items: center;">
-            <button id="edit-button" class="no-styling-button"><span
+          <div class="col-2 section-button-container">
+            <button class="no-styling-button section-button"><span
               v-if="isLoggedInUser"
               v-on:click="add"
-              id="edit-education"
-              class="material-icons"
+              class="material-icons section-button-span"
             >create</span></button>
           </div>
         </div>
@@ -106,12 +105,6 @@ export default {
 </script>
 
 <style scoped>
-#edit-education{
-  color: var(--clr-primary-lighter)
-}
-#edit-education:hover{
-  color: var(--clr-primary-darkest)
-}
 #institution-name{
   font-size: 1.3rem;
   margin-bottom: 0;
