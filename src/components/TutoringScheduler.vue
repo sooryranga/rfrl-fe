@@ -7,7 +7,7 @@
     </transition>
     <div class="row">
       <div class="col">
-        <h5 class="my-2" id="component-name">Schedule</h5>
+        <h5 class="my-2 component-name">Schedule</h5>
       </div>
     </div>
     <div class="row mt-2 justify-content-between">
@@ -233,8 +233,9 @@ export default {
 
 <style>
 #component-name{
-  color: var(--clr-gray-2)
+  color:var(--clr-gray-2);
 }
+
 
 .btn-circle {
   width: 30px;

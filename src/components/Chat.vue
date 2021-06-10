@@ -4,6 +4,7 @@
       <div class="col h-100">
         <!--@typingMessage="typingMessage"-->
         <chat-window
+          class="chat-window"
           height="100%"
           :theme="theme"
           :styles="styles"
@@ -48,6 +49,7 @@ import {parseTimestamp, isSameDay} from '@/utils';
 
 import ChatWindow from 'vue-advanced-chat';
 import 'vue-advanced-chat/dist/vue-advanced-chat.css';
+
 
 export default {
   name: 'chat',
@@ -111,7 +113,18 @@ export default {
       messageVersion: 0,
       removeUsers: [],
       unsubscribeMutations: null,
-      styles: {container: {borderRadius: '2px'}},
+      styles: {
+        container: {borderRadius: '2px'},
+        message: {
+          backgroundMe: 'var(--bg-color-me)',
+        },
+        header: {
+          colorRoomName: 'var(--color-name)',
+        },
+        room: {
+          colorUsername: 'var(--room-color-username)',
+        },
+      },
       messageActions: [
         {
           name: 'replyMessage',
@@ -586,6 +599,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.chat-window{
+  --bg-color-me: var(--clr-primary-bg-color);
+  --color-name: var(--clr-primary);
+  --room-color-username: var(--clr-primary);
+}
+
 .window-container {
   width: 100%;
 }
