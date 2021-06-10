@@ -3,7 +3,7 @@
   <div id="scheduledTutoring">
     <div class="row">
       <div class="col">
-        <h5 class="my-2" id="component-name">Scheduled Tutoring</h5>
+        <h5 class="my-2 component-name">Scheduled Tutoring</h5>
       </div>
     </div>
     <div v-if="scheduledSessions.length">
@@ -172,7 +172,7 @@ export default {
 
 <style scoped>
 #component-name{
-  color:var(--clr-gray-2)
+  color:var(--clr-gray-2);
 }
 
 .btn-circle {

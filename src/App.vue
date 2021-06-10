@@ -40,6 +40,7 @@ export default {
   width: 100vw;
 }
 :root {
+  /* Basic Colors */
   --clr-gray-1:#282828;
   --clr-gray-2:#414141;
   --clr-gray-3:#5A5A5A;
@@ -58,6 +59,7 @@ export default {
   --clr-primary-light: #7C3FFF;
   --clr-primary-lighter: #915FFF;
   --clr-primary-lightest: #A77FFF;
+  --clr-primary-bg-color:#f9f7ff;
 
   --clr-success-darkest: #00723B;
   --clr-success-darker: #008E49;
@@ -83,11 +85,15 @@ export default {
   --clr-warning-lighter: #F8BE54;
   --clr-warning-lightest: #F9CB76;
 
+  /*
+    PROPERTY COLORS
+  */
 
-  --clr-background: #D1B8A9;
-  --clr-secondary: #683067;
-  --clr-gray: #37474f;
-  --clr-gray-light: #b0bec5;
+  /* Button Color */
+  --clr-button-primary: white;
+  --clr-button-primary-outline: var(--clr-primary);
+  --clr-button-secondary: var(--clr-gray-2);
+  --clr-button-secondary-outline: white;
 }
 * {
   box-sizing: border-box;

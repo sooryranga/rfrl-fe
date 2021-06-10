@@ -65,29 +65,24 @@ export default {
 </script>
 
 <style>
-#edit-education{
-  color: var(--clr-primary-lighter)
-}
-#edit-education:hover{
-  color: var(--clr-primary-darkest)
+:root{
+  --section-button-span-clr: var(--clr-primary-lighter);
+  --section-button-span-hover-clr: var(--clr-primary-darkest);
 }
 
 .section-button-container{
   display: flex;
   align-items: center;
 }
-
 .section-button{
   font-size:1rem;
   line-height: 1rem;
 }
-
 .section-button-span{
-  color: var(--clr-primary-lighter)
+  color: var(--section-button-span-clr)
 }
-
 .section-button-span:hover{
-  color: var(--clr-primary-darkest)
+  color: var(--section-button-span-hover-clr)
 }
 
 .studentPicture{

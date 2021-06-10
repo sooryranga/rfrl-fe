@@ -3,6 +3,7 @@
     <div class="row h-100">
       <div class="col-8 h-100">
         <chat
+        class="chat"
         :currentUserId="currentProfileId"
         :theme="theme"
         :room-id="selectedRoom"
@@ -79,7 +80,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 select {
   height: 20px;
   outline: none;

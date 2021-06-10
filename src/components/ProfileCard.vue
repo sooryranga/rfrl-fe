@@ -27,8 +27,14 @@ export default {
 
 <style scoped>
 .card {
-  box-shadow: 0px 2px 8px 0px var(--clr-gray-light);
-  background-color: white;
+  --card-bg-clr: var(--clr-gray-9);
+  --card-shdw-clr: var(--clr-gray-7);
+  --card-button-clr: var(--clr-gray-9);
+  --card-button-bg-clr: var(--clr-primary-light);
+  --card-button-bg-hover-clr: var(--clr-primary-dark);
+
+  box-shadow: 0px 2px 8px 0px var(--card-shdw-clr);
+  background-color: var(--card-bg-clr);
   border-radius: 1rem;
   position: relative;
   margin: 0.5rem;
@@ -52,14 +58,14 @@ export default {
   border: none;
   font-size: 1rem;
   font-weight: 600;
-  color: white;
+  color: var(--card-button-clr);
   padding: 1rem;
-  background-color: var(--clr-primary-light);
+  background-color: var(--card-button-bg-clr);
   border-bottom-left-radius: 1rem;
   border-bottom-right-radius: 1rem;
 }
 
 .card-button:hover {
-  background-color: var(--clr-primary-dark);
+  background-color: var(--card-button-bg-hover-clr);
 }
 </style>
