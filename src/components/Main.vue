@@ -42,13 +42,14 @@
           </div>
           <div v-if="loggedIn" class="to-right">
             <div class="dropdown">
-              <button
-              class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton"
-              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <button class="btn btn-light dropdown-toggle"
+                type="button" ref="profileDropdownRef"
+                id="dropdownMenuButton1"
+                data-bs-toggle="dropdown" aria-expanded="false">
                 <img id="navProfilePicture" v-bind:src="currentProfile.photo"/>
                 {{currentProfile.firstName}} {{currentProfile.lastName[0]}}
               </button>
-              <div class="dropdown-menu dropdown-menu-left" aria-labelledby="dropdownMenuButton">
+              <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
                 <div class="drop-down-router-links">
                   <router-link class="dropdown-item" to="/questions">Question</router-link>
                   <router-link
@@ -91,6 +92,7 @@
 </template>
 
 <script>
+import {Dropdown} from 'bootstrap';
 import {mapGetters, mapActions} from 'vuex';
 import VerifyEmailBanner from './VerifyEmailBanner.vue';
 import {Profile} from '@/api';
@@ -99,6 +101,11 @@ import NavLink from '@/components/NavLink.vue';
 export default {
   components: {VerifyEmailBanner, NavLink},
   name: 'tutor',
+  data() {
+    return {
+      profileDropdown: null,
+    };
+  },
   computed: {
     ...mapGetters('profile', ['currentProfile', 'loggedIn', 'logInType']),
     profileLink: function() {
@@ -139,6 +146,7 @@ export default {
   },
   async mounted() {
     await this.loginAuthorized();
+    new Dropdown(this.$refs.profileDropdownRef);
   },
 };
 </script>
