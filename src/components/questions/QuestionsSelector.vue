@@ -1,7 +1,7 @@
 <template>
   <div class="h-100" v-if="questions">
     <div class="row mb-2">
-      <div class="col-auto mr-auto my-auto">
+      <div class="col-auto me-auto my-auto">
         <div>
           <h5 class="m-0">Questions</h5>
           <p class="m-0">{{questions.length}} found</p>
