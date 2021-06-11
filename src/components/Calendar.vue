@@ -45,8 +45,9 @@
           </div>
           <div class="modal-footer">
             <button type="button"
-            v-on:click="cancelEventCreation" class="btn btn-secondary"
-            data-dismiss="modal">Close</button>
+            v-on:click="cancelEventCreation" class="btn btn-secondary">
+            Close
+            </button>
             <button type="button" v-on:click="saveEventCreation" class="btn btn-primary">Save changes</button>
           </div>
         </div>

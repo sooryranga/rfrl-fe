@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import ApiService from '@/api/ApiService';
 import {Profile} from '@/api/';
-import firebase from 'firebase';
+import {getAuth} from '@/firestore';
 
 const ID_TOKEN_KEY = 'id_token';
 
@@ -23,7 +23,7 @@ const processLoginResponse = async (response) => {
   const client = response.data?.client;
   const profile = Profile.responseToProfile(client);
 
-  await firebase.auth().signInWithCustomToken(auth.firebaseToken);
+  await getAuth().signInWithCustomToken(auth.firebaseToken);
   return {
     profile,
     auth,
@@ -35,7 +35,7 @@ const processSignUpResponse = async (response) => {
   const client = response.data?.client;
   const profile = Profile.responseToProfile(client);
 
-  await firebase.auth().signInWithCustomToken(auth.firebaseToken);
+  await getAuth().signInWithCustomToken(auth.firebaseToken);
   return {
     profile,
     auth,
@@ -113,7 +113,7 @@ export const AuthService = {
     );
   },
   async signOut() {
-    await firebase.auth().signOut();
+    await getAuth().signOut();
   },
 };
 
