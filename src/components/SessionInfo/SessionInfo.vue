@@ -7,7 +7,7 @@
     </transition>
     <div class="row p-3 my-3">
       <div class="col my-auto">
-        <h4 class="ml-4 my-2"> Tutoring Session </h4>
+        <h4 class="ms-4 my-2"> Tutoring Session </h4>
       </div>
       <div class="col">
         <button class="btn btn-secondary" v-on:click="routeToConference">Start Session</button>
@@ -16,14 +16,14 @@
     <div class="shadow p-3 my-3 bg-white">
       <div class="row">
         <div class="col">
-          <h4 class="ml-4 my-2"> Payment </h4>
+          <h4 class="ms-4 my-2"> Payment </h4>
         </div>
       </div>
     </div>
     <div class="shadow p-3 my-3 bg-white">
       <div class="row">
         <div class="col">
-          <h4 class="ml-4 my-2"> Date and time </h4>
+          <h4 class="ms-4 my-2"> Date and time </h4>
         </div>
       </div>
       <div class="row">

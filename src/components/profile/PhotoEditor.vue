@@ -10,7 +10,7 @@
             </button>
           </div>
           <div class="modal-body">
-            <div class="mb-2 ml-2 custom-file">
+            <div class="mb-2 ms-2 custom-file">
               <input type="file" class="custom-file-input" id="customFile" @change="croppie">
               <label class="custom-file-label" for="customFile">Choose file</label>
             </div>
