@@ -89,7 +89,7 @@ const routes = [
         path: '/session/:sessionId/info',
         name: 'session-info',
         props: true,
-        component: () => import('@/components/sessioninfo/SessionInfo.vue'),
+        component: () => import('@/components/sessionInfo/SessionInfo.vue'),
       },
       {
         path: '/session/:sessionId/conference/:conferenceId',
