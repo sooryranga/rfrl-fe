@@ -17,7 +17,7 @@
           <div
             v-for="tag in question.tags"
             v-bind:key="tag.name"
-            class="col-auto ml-0 pl-0">
+            class="col-auto ms-0 pl-0">
             <button
               type="button"
               class="btn btn-outline-secondary btn-sm small">

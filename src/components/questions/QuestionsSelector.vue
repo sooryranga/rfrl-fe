@@ -1,26 +1,29 @@
 <template>
   <div class="h-100" v-if="questions">
-    <div class="row mb-2">
-      <div class="col-auto me-auto my-auto">
+    <div class="row mb-2" style="height:4rem;">
+      <div class="col-auto me-auto">
         <div>
-          <h5 class="m-0">Questions</h5>
+          <h4 class="m-0 primary-color">Questions</h4>
           <p class="m-0">{{questions.length}} found</p>
         </div>
       </div>
-      <div class="col-auto my-auto" v-on:click="openEditor">
-        <span class="material-icons md-36">
-          add
-        </span>
+      <div class="col-auto" v-on:click="openEditor">
+        <button class="no-styling-button">
+          <span class="material-icons" id="add-question-button">
+            add
+          </span>
+        </button>
       </div>
     </div>
     <ul class="list-group list-group-flush border-top">
-      <li class="list-group-item p-0"
+      <li class="list-group-item p-0 question-item"
+        style="height:6rem"
         v-for="(question, index) in questions"
         v-bind:key="index">
         <div v-on:click="routeToQuestion(index)">
           <div>
-            <p class="m-0 h6 px-0">{{shortenTitle(question.title)}}</p>
-            <p class="m-0">{{question.from.firstName}} + {{question.from.lastName}}</p>
+            <p class="m-0 h6 px-0 question-name">{{shortenTitle(question.title)}}</p>
+            <p class="m-0 mb-4">{{question.from.firstName}} {{question.from.lastName[0]}}</p>
             <p class="m-0">
             <small>{{timeAgoFormat(question.createdAt)}} · {{question.applicants}} Applicants</small>
             </p>
@@ -101,20 +104,22 @@ export default {
 </script>
 
 <style scroped>
-/* Rules for sizing the icon. */
-.material-icons.md-18 { font-size: 18px; }
-.material-icons.md-24 { font-size: 24px; }
-.material-icons.md-36 { font-size: 36px; }
-.material-icons.md-48 { font-size: 48px; }
+#add-question-button{
+  font-size:2rem;
+  color: var(--clr-primary-lightest)
+}
 
-/* Rules for using icons as black on a light background. */
-.material-icons.md-dark { color: rgba(0, 0, 0, 0.54); }
-.material-icons.md-dark.md-inactive { color: rgba(0, 0, 0, 0.26); }
+#add-question-button:hover{
+  color: var(--clr-primary-dark)
+}
 
-/* Rules for using icons as white on a dark background. */
-.material-icons.md-light { color: rgba(255, 255, 255, 1); }
-.material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }
-.large-text {
-  font-size: 120%;
+.question-name{
+  font-size: 1.1rem;
+}
+.question-item{
+  cursor: pointer;
+}
+.question-item:hover .question-name{
+  color: var(--clr-primary-dark)
 }
 </style>

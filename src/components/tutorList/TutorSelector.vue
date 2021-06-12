@@ -1,6 +1,6 @@
 <template>
 <div class="flex-container-column h-100">
-  <h4 class="ml-4 my-2"> Tutors </h4>
+  <h3 class="ms-3 my-2 primary-color"> Tutors </h3>
   <div class="scrollable flex-item-grow pb-2">
     <div class="wrapper-grid">
       <div v-for="(tutor) in tutors" v-bind:key="tutor.id">

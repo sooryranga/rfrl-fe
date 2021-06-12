@@ -1,5 +1,5 @@
 <template>
-  <div class="h-100">
+  <div class="container-xl h-100 mt-3">
     <transition name="fade">
       <div v-if="clientError" class="alert alert-danger fade-in" role="alert">
         {{clientError}}
@@ -10,10 +10,10 @@
     </transition>
     <div v-if="currentProfile.verifiedWorkEmail" class="flex-container">
       <div class="flex-item-shrink">
-        <h4 class="ml-4 my-2"> Clients </h4>
+        <h4 class="ms-3 my-2 primary-color"> Clients </h4>
       </div>
       <div class="flex-item-shrink">
-        <p class="ml-4 my-2">You are shown clients who wants referral for {{companyName}}</p>
+        <p class="ms-3 my-2">You are shown clients who wants referral for {{companyName}}</p>
       </div>
       <div class="flex-item-grow">
         <client-selector/>

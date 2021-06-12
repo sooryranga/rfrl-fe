@@ -6,8 +6,8 @@
       text-center
     ">
       <div class="container-xl nav-container">
-        <div class="logo">
-          <router-link to="/" style="text-decoration:none; color: white;">TutorMe</router-link>
+        <div id="logo">
+          <router-link to="/" id="logo-text">rfrl</router-link>
         </div>
         <div class="nav-links-with-profile">
           <div class="nav-links">
@@ -183,13 +183,17 @@ export default {
   color: var(--clr-primary)
 }
 
-.logo {
-  color: rgb(0, 0, 0);
-  text-transform: uppercase;
-  letter-spacing: 5px;
-  font-size: 20px;
+#logo {
   width: 30%;
-  font-weight: 600;
+}
+
+#logo-text{
+  letter-spacing: 2px;
+  font-size: 1.9rem;
+  text-decoration:none;
+  color: white;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
 }
 
 .to-right{

@@ -66,7 +66,7 @@ export default {
 
   data: () => ({
     commands: {},
-    prompt: '~tutorme@code:#/',
+    prompt: '~rfrl@code:#/',
     isInProgress: false,
     hideBar: true,
     builtIn: undefined,

@@ -47,8 +47,10 @@
       </button>
       {{ selectedQuestion.title }}
     </p>
-    <p class="my-1"> Posted By : {{ selectedQuestion.from.firstName }} {{ selectedQuestion.from.lastName }} </p>
-    <p class="my-1"> Created At : {{ timeAgoFormat(selectedQuestion.createdAt) }} </p>
+    <p id="poster-name">
+      Posted By : {{ selectedQuestion.from.firstName }} {{ selectedQuestion.from.lastName[0] }}
+    </p>
+    <p id="post-time"> Created At : {{ timeAgoFormat(selectedQuestion.createdAt) }} </p>
     <button
     class="btn btn-outline-dark shadow-none my-3"
     v-if="canScheduleSession"
@@ -146,7 +148,20 @@ export default {
 }
 #title {
   font-size: 180%;
+  color: var(--clr-gray-2)
 }
+#poster-name{
+  margin-top: 0.1rem;
+  margin-bottom: 0;
+  font-size: 0.9rem;
+  color: var(--clr-gray-5)
+}
+#post-time{
+  margin-bottom: 0.1rem;
+  font-size: 0.9rem;
+  color: var(--clr-gray-5)
+}
+
 .modal-mask {
   position: fixed;
   z-index: 9998;
