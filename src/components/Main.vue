@@ -1,105 +1,29 @@
 <template>
   <div id="main">
-    <nav ref="nav" id="topbar" class="
-      align-items-center p-1
-      border-bottom shadow-sm
-      text-center
-    ">
-      <div class="container-xl nav-container">
-        <div id="logo">
-          <router-link to="/" id="logo-text">rfrl</router-link>
-        </div>
-        <div class="nav-links-with-profile">
-          <div class="nav-links">
-            <router-link to="/questions"
-                v-slot="{href, navigate, isActive}"
-            >
-              <nav-link :navigate="navigate" v-bind:href="href" :active="isActive">
-                Questions
-              </nav-link>
-            </router-link>
-            <router-link to="/clients"
-                v-slot="{href, navigate, isActive}"
-            >
-              <nav-link :navigate="navigate" v-bind:href="href" :active="isActive">
-                Clients
-              </nav-link>
-            </router-link>
-            <router-link to="/tutors"
-                v-slot="{href, navigate, isActive}"
-            >
-              <nav-link :navigate="navigate" v-bind:href="href" :active="isActive">
-                Tutor
-              </nav-link>
-            </router-link>
-            <router-link to="/chat"
-              v-slot="{href, navigate, isActive}"
-            >
-              <nav-link :navigate="navigate" v-bind:href="href" :active="isActive">
-                Messages
-              </nav-link>
-            </router-link>
-          </div>
-          <div v-if="loggedIn" class="to-right">
-            <div class="dropdown">
-              <button class="btn btn-light dropdown-toggle"
-                type="button" ref="profileDropdownRef"
-                id="dropdownMenuButton1"
-                data-bs-toggle="dropdown" aria-expanded="false">
-                <img id="navProfilePicture" v-bind:src="currentProfile.photo"/>
-                {{currentProfile.firstName}} {{currentProfile.lastName[0]}}
-              </button>
-              <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
-                <div class="drop-down-router-links">
-                  <router-link class="dropdown-item" to="/questions">Question</router-link>
-                  <router-link
-                    v-if="currentProfile.isTutor"
-                    class="dropdown-item" to="/clients">
-                    Clients
-                  </router-link>
-                  <router-link
-                    v-if="currentProfile.isLookingForReferral"
-                    class="dropdown-item" to="/tutors">
-                    Tutor
-                  </router-link>
-                  <router-link class="dropdown-item" to="/chat">Messages</router-link>
-                  <div class="dropdown-divider"></div>
-                </div>
-                <router-link
-                    class="dropdown-item text-dark"
-                    :to="profileLink">
-                  View Profile
-                </router-link>
-                <a class="dropdown-item" href="#">Settings & Privacy</a>
-                <a class="dropdown-item" v-on:click="logoutUser" href="#">Log Out</a>
-              </div>
-            </div>
-          </div>
-          <div class="align-items-center to-right" v-else>
-            <router-link class="btn btn-light mr-2" to="/signup">Sign Up</router-link>
-          </div>
-        </div>
+    <main-nav-bar></main-nav-bar>
+    <div id="seperator"></div>
+    <div class="flex-item-grow">
+      <verify-email-banner
+        v-if="emailBannerReqiured"
+        :email-type="emailBannerType"
+        class="flex-item-shrink"/>
+      <div id="content" class="h-100 w-100 flex-item-grow">
+        <transition name="fade" mode="out-in">
+          <router-view :key="routerViewKey"/>
+        </transition>
       </div>
-    </nav>
-    <verify-email-banner
-      v-if="emailBannerReqiured"
-      :email-type="emailBannerType"
-      class="flex-item-shrink"/>
-    <div id="content" class="w-100 flex-item-grow">
-      <router-view :key="routerViewKey"/>
     </div>
   </div>
 </template>
 
 <script>
-import {Dropdown} from 'bootstrap';
 import {mapGetters, mapActions} from 'vuex';
 import VerifyEmailBanner from './VerifyEmailBanner.vue';
 import {Profile} from '@/api';
-import NavLink from '@/components/NavLink.vue';
+import MainNavBar from './MainNavBar.vue';
 
 export default {
-  components: {VerifyEmailBanner, NavLink},
+  components: {VerifyEmailBanner, MainNavBar},
   name: 'tutor',
   data() {
     return {
@@ -138,90 +62,34 @@ export default {
     },
   },
   methods: {
-    ...mapActions('profile', ['loginAuthorized', 'logout']),
-    async logoutUser() {
-      await this.logout();
-      this.$router.push({name: 'home'});
-    },
+    ...mapActions('profile', ['loginAuthorized']),
   },
   async mounted() {
     await this.loginAuthorized();
-    new Dropdown(this.$refs.profileDropdownRef);
   },
 };
 </script>
 
 <style>
-#topbar{
-  background-color: var(--clr-primary-dark);
-}
-
-.nav-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    min-height: 5vh;
-    margin: 0 auto;
-}
-
-.nav-links-with-profile {
-    display: flex;
-    justify-content: space-between;
-    flex: 1;
-    max-width: 40rem;
-    vertical-align: middle;
-}
-
-.nav-links {
-  display: flex;
-  justify-content: space-between;
-  width: 60%;
-  vertical-align: middle;
-}
-
-.primary-color{
-  color: var(--clr-primary)
-}
-
-#logo {
-  width: 30%;
-}
-
-#logo-text{
-  letter-spacing: 2px;
-  font-size: 1.9rem;
-  text-decoration:none;
-  color: white;
-  font-family: 'Orbitron', sans-serif;
-  font-weight: 700;
-}
-
-.to-right{
-  margin-left: auto;
-}
-
-.sticky-top{
-  z-index:4
-}
-#navProfilePicture{
-  width: 2rem;
-  background-size: cover;
-  background-position: top center;
-  border-radius: 50%;
-}
 #main{
-  flex-direction: column;
+  flex-direction: row;
   display:flex;
   height:100%;
   flex-wrap: nowrap;
 }
 .flex-item-grow{
   flex: 1;
-  min-height: 0; /* new */
+  min-width: 0; /* new */
 }
 
 .drop-down-router-links {
   display: none;
+}
+
+#seperator{
+  height:100%;
+  width: 0.5rem;
+  background: var(--clr-primary-lighter);
 }
 
 @media only screen and (max-width: 653px) {
@@ -231,5 +99,16 @@ export default {
   .drop-down-router-links {
     display: block;
   }
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

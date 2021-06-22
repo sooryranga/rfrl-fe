@@ -1,5 +1,5 @@
 <template>
-  <div class="container-xl pt-3 h-100">
+  <div class="pt-3 h-100">
     <div class="row h-100">
       <div class="col-8 h-100">
         <chat
