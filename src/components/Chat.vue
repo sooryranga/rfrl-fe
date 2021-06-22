@@ -1,5 +1,5 @@
 <template>
-  <div class="window-container h-100">
+  <div class="h-100">
     <div class="row h-100">
       <div class="col h-100">
         <!--@typingMessage="typingMessage"-->
@@ -115,15 +115,6 @@ export default {
       unsubscribeMutations: null,
       styles: {
         container: {borderRadius: '2px'},
-        message: {
-          backgroundMe: 'var(--bg-color-me)',
-        },
-        header: {
-          colorRoomName: 'var(--color-name)',
-        },
-        room: {
-          colorUsername: 'var(--room-color-username)',
-        },
       },
       messageActions: [
         {
@@ -600,7 +591,7 @@ export default {
 
 <style lang="scss" scoped>
 .chat-window{
-  --bg-color-me: var(--clr-primary-bg-color);
+  --bg-color-me: var(--clr-primary-lightest);
   --color-name: var(--clr-primary);
   --room-color-username: var(--clr-primary);
 }

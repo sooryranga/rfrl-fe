@@ -48,7 +48,6 @@ const getters = {
  * @return {object}
  */
 function formatMessage(room, message) {
-  console.log(message);
   const senderUser = room.users.find(
       (user) => message.senderId === user._id,
   );
