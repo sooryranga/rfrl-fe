@@ -1,68 +1,70 @@
 <template>
-  <div>
-    <div class="row">
-      <div class="col mx-3">
-        <label>Referral Companies</label>
+  <div id="side-bar" class="h-100">
+    <h1 id="title"> Referrers </h1>
+
+    <div class="filter">
+      <label>Referral Companies</label>
+      <multiselect
+      v-model="checkedCompanies" :options="companyList" :multiple="true"
+      :close-on-select="false" :clear-on-select="false"
+      :preserve-search="false" placeholder="Search for Companies"
+      :select-label="''" :taggable="false" :deselect-label="''"
+      @remove="changeCompany" @select="changeCompany" @close="updatedCompany"
+      label="name" track-by="name" :preselect-first="false">
+        <template slot="tag"><div></div></template>
+        <template slot="selection" slot-scope="{ values, isOpen }">
+          <span
+          class="multiselect__single"
+          v-if="values.length &amp;&amp; !isOpen">
+            Companies ({{values.length}})
+          </span>
+        </template>
+      </multiselect>
+    </div>
+
+    <div class="filter">
+      <label>Industry</label>
+      <multiselect
+      placeholder="Software Engineering"
+      :disabled="true" :options="industry"
+      label="name" track-by="name" :preselect-first="false"/>
+    </div>
+
+    <div class="filter">
+      <div class="row">
+        <div class="col">
+          <label>Tutoring</label>
+        </div>
+        <div class="col my-auto mx-auto">
+          <label class="switch">
+            <input
+              v-model="forTutoring"
+              v-on:click="updateForTutoring"
+              :disabled="true"
+              type="checkbox"
+              id="flexSwitchCheckDefault"/>
+              <div></div>
+          </label>
+        </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col mx-3">
-        <multiselect
-        v-model="checkedCompanies" :options="companyList" :multiple="true"
-        :close-on-select="false" :clear-on-select="false"
-        :preserve-search="false" placeholder="Search for Companies"
-        :select-label="''" :taggable="false" :deselect-label="''"
-        @remove="changeCompany" @select="changeCompany" @close="updatedCompany"
-        label="name" track-by="name" :preselect-first="false">
-          <template slot="tag"><div></div></template>
-          <template slot="selection" slot-scope="{ values, isOpen }">
-            <span
-            class="multiselect__single"
-            v-if="values.length &amp;&amp; !isOpen">
-              Companies ({{values.length}})
-            </span>
-          </template>
-        </multiselect>
-      </div>
-    </div>
-    <div class="row mt-3">
-      <div class="col mx-3">
-        <label>Industry</label>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col mx-3">
-        <multiselect
-        placeholder="Software Engineering"
-        :disabled="true" :options="industry"
-        label="name" track-by="name" :preselect-first="false">
-        </multiselect>
-      </div>
-    </div>
-    <div class="row mt-3">
-      <div class="col mx-3">
-        <label>Tutoring</label>
-      </div>
-      <div class="col my-auto mx-auto">
-        <input
-          v-model="forTutoring"
-          v-on:click="updateForTutoring"
-          type="checkbox"
-          :disabled="true"
-          id="flexSwitchCheckDefault">
-      </div>
-    </div>
-    <div class="row mt-3">
-      <div class="col mx-3">
-        <label>Referral</label>
-      </div>
-      <div class="col my-auto mx-auto">
-        <input
-          v-model="forReferral"
-          v-on:click="updateForReferral"
-          type="checkbox"
-          :disabled="true"
-          id="flexSwitchCheckDefault">
+
+    <div class="filter">
+      <div class="row">
+        <div class="col">
+          <label>Referral</label>
+        </div>
+        <div class="col my-auto mx-auto">
+          <label class="switch">
+            <input
+              v-model="forReferral"
+              v-on:click="updateForReferral"
+              :disabled="true"
+              type="checkbox"
+              id="flexSwitchCheckDefault"/>
+              <div></div>
+          </label>
+        </div>
       </div>
     </div>
   </div>
@@ -145,6 +147,27 @@ export default {
 };
 </script>
 
+<style scoped src="@/css/switch-input.css">
+</style>
+
+<style scoped>
+#title{
+  padding-top: 3.5rem;
+  font-size: 3rem;
+  font-weight: 400;
+}
+#side-bar{
+  width:340px;
+  padding-left: 1rem;
+  padding-right: 2rem;
+  background-color: var(--clr-primary);
+  color: white;
+  font-size:1.1rem;
+}
+.filter{
+  margin-top: 1rem;
+}
+</style>
 
 <style src = "vue-multiselect/dist/vue-multiselect.min.css">
 .selected{

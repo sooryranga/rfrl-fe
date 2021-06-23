@@ -1,5 +1,5 @@
 <template>
-  <div class="container-xl mt-3 mx-auto">
+  <div class="h-100">
     <transition name="fade">
       <div v-if="tutorError" class="alert alert-danger fade-in" role="alert">
         {{tutorError}}
@@ -8,7 +8,7 @@
         {{companyError}}
       </div>
     </transition>
-    <div class="flex-container-row">
+    <div class="flex-container-row h-100">
       <div id="tutor-filter" class="flex-item-shrink h-100">
         <tutor-filter></tutor-filter>
       </div>
