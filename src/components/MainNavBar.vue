@@ -64,17 +64,24 @@
 <script>
 import NavIconLink from '@/components/NavIconLink.vue';
 import {mapGetters, mapActions} from 'vuex';
-import icons from '@/components/icons/';
+import {
+  TutorIcon,
+  QuestionIcon,
+  ClientIcon,
+  MessageIcon,
+  SettingsIcon,
+  SignOutIcon,
+} from '@/components/icons/';
 
 export default {
   components: {
     NavIconLink,
-    'tutor-icon': icons.TutorIcon,
-    'question-icon': icons.QuestionIcon,
-    'client-icon': icons.ClientIcon,
-    'message-icon': icons.MessageIcon,
-    'settings-icon': icons.SettingsIcon,
-    'sign-out-icon': icons.SignOutIcon,
+    TutorIcon,
+    QuestionIcon,
+    ClientIcon,
+    MessageIcon,
+    SettingsIcon,
+    SignOutIcon,
   },
   computed: {
     ...mapGetters('profile', ['currentProfile', 'loggedIn', 'logInType']),

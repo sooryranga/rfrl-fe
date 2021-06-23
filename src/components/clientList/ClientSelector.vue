@@ -6,13 +6,17 @@
           :routeTo="routeToProfile(client.id)"
         >
         <p class="name">{{name(client.firstName, client.lastName)}}</p>
-        <div class="external-profiles">
-          <p><a v-if="client.linkedInProfile" :href="toLinkedIn(client.linkedInProfile)">
-            <i class="fab fa-linkedin"></i> {{client.linkedInProfile}}
-          </a></p>
-          <p><a v-if="client.githubProfile" :href="toGithub(client.githubProfile)">
-            <i class="fab fa-github"></i> {{client.githubProfile}}
-          </a></p>
+        <div class="profile-items">
+          <p v-if="client.linkedInProfile" class="profile-item">
+            <linked-in-icon :hoverExpand="false" :iconColor="iconColor"/>
+            <a :href="toLinkedIn(client.linkedInProfile)">{{client.linkedInProfile}}</a>
+          </p>
+          <p v-if="client.githubProfile" class="profile-item">
+            <github-icon :hoverExpand="false" :iconColor="iconColor"/>
+            <a :href="toGithub(client.githubProfile)">
+              {{client.githubProfile}}
+            </a>
+          </p>
         </div>
       </profile-card>
     </div>
@@ -32,6 +36,7 @@
 </template>
 
 <script>
+import {LinkedInIcon, GithubIcon} from '@/components/icons';
 import {mapGetters, mapActions} from 'vuex';
 import InfiniteLoading from 'vue-infinite-loading';
 import ProfileCard from '@/components/ProfileCard';
@@ -41,6 +46,13 @@ export default {
   components: {
     InfiniteLoading,
     ProfileCard,
+    LinkedInIcon,
+    GithubIcon,
+  },
+  data() {
+    return {
+      iconColor: 'var(--clr-gray-3)',
+    };
   },
   computed: {
     ...mapGetters('listClients', ['clients']),
@@ -110,19 +122,35 @@ export default {
 .wrapper-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, 30rem);
-  justify-content: space-between;
+  justify-content: space-around;
 }
 
-.external-profiles{
+.profile-items{
   margin-top: 0.5rem;
   font-size: 0.8rem;
   line-height: 1.6;
 }
 
+.profile-item{
+  margin-top:10px;
+}
+
+.profile-item a {
+  color: var(--clr-gray-4);
+}
+.profile-item a:hover {
+  color: var(--clr-gray-2);
+}
+
 .name {
-  font-weight: bold;
+  font-weight: 300;
   font-size: 1.5rem;
   color: var(--clr-gray-2)
+}
+
+.profile-item #icon{
+  font-size:1.2rem;
+  margin-right:8px;
 }
 
 p {

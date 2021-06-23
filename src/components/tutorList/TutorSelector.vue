@@ -8,27 +8,27 @@
           :routeTo="routeToProfile(tutor.id)"
         >
           <p class="name">{{cardName(tutor.firstName, tutor.lastName)}}</p>
-          <div class="current-work">
-            <p v-if="tutor.workTitle">
-              {{tutor.workTitle}} <span v-if="tutor.yearsOfExperience"> - {{tutor.yearsOfExperience}} yrs </span>
-            </p>
-            <p v-if="tutor.verifiedWorkEmail && tutor.companyId">
-              {{getCompanyName(tutor.companyId)}}
-              <span class="material-icons check-mark">
-                check_circle
+          <div class="profile-items">
+            <p class="profile-item">
+              <work-icon :hoverExpand="false" :iconColor="iconColor"/>
+              <span v-if="tutor.verifiedWorkEmail && tutor.companyId">
+                {{getCompanyName(tutor.companyId)}}
+                <span v-if="tutor.yearsOfExperience"> - {{tutor.yearsOfExperience}} yrs </span>
+              </span>
+              <span v-else>
+                Not Verified
               </span>
             </p>
-            <p v-else>
-              Not Verified
+            <p v-if="tutor.linkedInProfile" class="profile-item">
+              <linked-in-icon :hoverExpand="false" :iconColor="iconColor"/>
+              <a :href="toLinkedIn(tutor.linkedInProfile)">{{tutor.linkedInProfile}}</a>
             </p>
-          </div>
-          <div class="external-profiles">
-            <p><a v-if="tutor.linkedInProfile" :href="toLinkedIn(tutor.linkedInProfile)">
-              <i class="fab fa-linkedin"></i> {{tutor.linkedInProfile}}
-            </a></p>
-            <p><a v-if="tutor.githubProfile" :href="toGithub(tutor.githubProfile)">
-              <i class="fab fa-github"></i> {{tutor.githubProfile}}
-            </a></p>
+            <p v-if="tutor.githubProfile" class="profile-item">
+              <github-icon :hoverExpand="false" :iconColor="iconColor"/>
+              <a :href="toGithub(tutor.githubProfile)">
+                {{tutor.githubProfile}}
+              </a>
+            </p>
           </div>
         </profile-card>
       </div>
@@ -50,6 +50,7 @@
 </template>
 
 <script>
+import {LinkedInIcon, GithubIcon, WorkIcon} from '@/components/icons';
 import {mapActions, mapGetters} from 'vuex';
 import InfiniteLoading from 'vue-infinite-loading';
 import ProfileCard from '@/components/ProfileCard';
@@ -59,6 +60,14 @@ export default {
   components: {
     InfiniteLoading,
     ProfileCard,
+    LinkedInIcon,
+    GithubIcon,
+    WorkIcon,
+  },
+  data() {
+    return {
+      iconColor: 'var(--clr-gray-3)',
+    };
   },
   computed: {
     ...mapGetters('listTutors', ['tutors', 'params']),
@@ -131,7 +140,8 @@ export default {
 
 .wrapper-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, 20rem);
+  grid-template-columns: repeat(auto-fit, 30rem);
+  justify-content: space-around;
 }
 
 .flex-container-column{
@@ -139,16 +149,11 @@ export default {
   display:flex;
   height:100%;
   flex-wrap: nowrap;
+  margin-top:2rem;
 }
 
 .flex-item-grow{
   flex-grow: 1;
-}
-
-.name {
-  font-weight: bold;
-  font-size: 1.5rem;
-  color: var(--clr-gray-2)
 }
 
 p {
@@ -161,11 +166,35 @@ p {
     color: var(--clr-success);
 }
 
-.external-profiles{
+.profile-items{
   margin-top: 0.5rem;
   font-size: 0.8rem;
   line-height: 1.6;
 }
+
+.profile-item{
+  margin-top:5px;
+  color: var(--clr-gray-4);
+}
+
+.profile-item a {
+  color: var(--clr-gray-4);
+}
+.profile-item a:hover {
+  color: var(--clr-gray-2);
+}
+
+.name {
+  font-weight: 300;
+  font-size: 1.5rem;
+  color: var(--clr-gray-2)
+}
+
+.profile-item #icon{
+  font-size:1.2rem;
+  margin-right:8px;
+}
+
 
 .current-work {
   font-size: 0.9rem;
