@@ -13,6 +13,17 @@ export default {
       type: Boolean,
       default: false,
     },
+    hoverExpand: {
+      type: Boolean,
+      default: true,
+    },
+  },
+  computed: {
+    iconClass() {
+      return {
+        'icon-hover': this.hoverExpand,
+      };
+    },
   },
 };
 </script>

@@ -8,12 +8,12 @@
     </div>
     <div v-if="scheduledSessions.length">
       <div class="row mt-1 h-100" v-for="(dateSession,index) in dateScheduledSessions" v-bind:key="index">
-        <div class="col-1 my-1" id="date">
-          <div
-            class="btn btn-default btn-circle"
-            v-bind:class="[isToday(dateSession.date) ?'btn-primary': 'btn-light']">
+        <div class="col-1 p-0 my-1">
+          <button
+            class="circle-btn mx-auto"
+            v-bind:class="[isToday(dateSession.date) ?'date-dark': 'date-light']">
             {{dateSession.date.getDate()}}
-          </div>
+          </button>
         </div>
         <div class="col-3 my-1">
           <div class="text-center">{{dateSession.date.getMonth()}} {{toDay(dateSession.date.getDay())}}</div>
@@ -175,29 +175,18 @@ export default {
   color:var(--clr-gray-2);
 }
 
-.btn-circle {
+.circle-btn {
   width: 30px;
   height: 30px;
   text-align: center;
   padding: 6px 0;
   font-size: 12px;
-  line-height: 1.428571429;
   border-radius: 15px;
+  border-width: 0px;
 }
-.btn-circle.btn-lg {
-  width: 50px;
-  height: 50px;
-  padding: 10px 16px;
-  font-size: 18px;
-  line-height: 1.33;
-  border-radius: 25px;
-}
-.btn-circle.btn-xl {
-  width: 70px;
-  height: 70px;
-  padding: 10px 16px;
-  font-size: 24px;
-  line-height: 1.33;
-  border-radius: 35px;
+
+.date-dark{
+  background-color: var(--clr-accent);
+  color: white;
 }
 </style>
