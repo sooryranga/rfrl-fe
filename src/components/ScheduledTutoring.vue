@@ -1,56 +1,46 @@
 
 <template>
-  <div id="scheduledTutoring">
-    <div class="row">
-      <div class="col">
-        <h5 class="my-2 component-name">Scheduled Tutoring</h5>
-      </div>
-    </div>
+  <div id="scheduled-tutoring">
+    <h5 id="component-name">Scheduled Tutoring</h5>
     <div v-if="scheduledSessions.length">
-      <div class="row mt-1 h-100" v-for="(dateSession,index) in dateScheduledSessions" v-bind:key="index">
-        <div class="col-1 p-0 my-1">
+      <div class="mt-1" v-for="(dateSession,index) in dateScheduledSessions" v-bind:key="index">
+        <div
+            class="mb-1 sections-container"
+            v-for="(session,index) in dateSession.sessions"
+            v-bind:key="session.id">
           <button
-            class="circle-btn mx-auto"
-            v-bind:class="[isToday(dateSession.date) ?'date-dark': 'date-light']">
+            class="circle-btn"
+            v-bind:class="[isToday(dateSession.date) ?'date-dark': 'date-light', index===0 ? 'opaque': 'transparent']">
             {{dateSession.date.getDate()}}
           </button>
-        </div>
-        <div class="col-3 my-1">
-          <div class="text-center">{{dateSession.date.getMonth()}} {{toDay(dateSession.date.getDay())}}</div>
-        </div>
-        <div class="col align-middle" id="sessions">
-          <div
-            class="row mb-1"
-            v-for="session in dateSession.sessions"
-            v-bind:key="session.id">
-            <button
-            class="btn btn-outline-dark w-100"
-            v-on:click="goToEvent(session)">
-              <div v-if="showName" class="row">
-                <div class="col-6 my-auto">
-                  <div><p
-                    class="m-0"
-                    style="color:var(--clr-gray-1)">
-                    {{session.event.start.toLocaleTimeString()}}
-                  </p></div>
-                </div>
-                <div class="col-auto my-auto">
-                  <p class="m-0" style="color:var(--clr-gray-1)">
-                    With {{
-                      currentProfileId === session.tutorId ?
-                      getName(getMentee(session)) :
-                      getName(session.tutor)
-                    }}
-                  </p>
-                </div>
+          <div class="text-center month-txt">{{toMonth(dateSession.date.getMonth())}}</div>
+          <button
+          class="primary-btn primary-btn-dark event-button"
+          v-on:click="goToEvent(session)">
+            <div v-if="showName" class="row">
+              <div class="col-6 my-auto">
+                <div><p
+                  class="m-0"
+                  style="color:var(--clr-gray-1)">
+                  {{session.event.start.toLocaleTimeString()}}
+                </p></div>
               </div>
-              <div v-else class="row">
-                <div class="col my-auto">
-                  <div class="m-0">{{session.event.start.toLocaleTimeString()}}</div>
-                </div>
+              <div class="col-auto my-auto">
+                <p class="m-0" style="color:var(--clr-gray-1)">
+                  With {{
+                    currentProfileId === session.tutorId ?
+                    getName(getMentee(session)) :
+                    getName(session.tutor)
+                  }}
+                </p>
               </div>
-            </button>
-          </div>
+            </div>
+            <div v-else class="row">
+              <div class="col my-auto">
+                <div class="m-0">{{session.event.start.toLocaleTimeString()}}</div>
+              </div>
+            </div>
+          </button>
         </div>
       </div>
     </div>
@@ -64,7 +54,7 @@
 
 <script>
 import {mapGetters} from 'vuex';
-import {dayOfWeekMapping} from '@/utils.js';
+import {monthOfYearMapping} from '@/utils.js';
 import {Session} from '@/api';
 
 export default {
@@ -100,7 +90,7 @@ export default {
 
       for (let i = 0; i < this.scheduledSessions.length; i++) {
         const session = this.scheduledSessions[i];
-        const _compDate = session.event.start;
+        const _compDate = new Date(session.event.start.getTime());
         _compDate.setHours(0, 0, 0, 0);
 
         if (_compDate > _date) {
@@ -135,8 +125,8 @@ export default {
         today.getDate() === checkingDate.getDate()
       );
     },
-    toDay(day) {
-      return dayOfWeekMapping[day];
+    toMonth(month) {
+      return monthOfYearMapping[month];
     },
     async importSessionForUser() {
       this.scheduledSessions = await Session.
@@ -173,13 +163,36 @@ export default {
 <style scoped>
 #component-name{
   color:var(--clr-gray-2);
+  font-weight: 400;
+}
+
+#scheduled-tutoring{
+  margin-top: 2rem;
+  padding-right: 1rem;
+}
+
+.sections-container{
+  align-items: center;
+  display: flex;
+  flex-direction:row;
+  flex-wrap: nowrap;
+  justify-content: flex-start
+}
+.month-txt{
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+.event-button{
+  width:100%;
+  max-width:16rem;
 }
 
 .circle-btn {
   width: 30px;
   height: 30px;
   text-align: center;
-  padding: 6px 0;
+  padding: 6px 6px;
   font-size: 12px;
   border-radius: 15px;
   border-width: 0px;
@@ -188,5 +201,13 @@ export default {
 .date-dark{
   background-color: var(--clr-accent);
   color: white;
+}
+
+.opaque{
+  opacity: 1;
+}
+
+.transparent{
+  opacity: 0;
 }
 </style>
