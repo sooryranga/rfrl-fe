@@ -43,7 +43,6 @@ export const responseToSession = (response) => {
   if (session.event) {
     session.event = responseToEvent(session.event);
   }
-
   return session;
 };
 
@@ -84,6 +83,7 @@ export const SessionService = {
       return responseToSession(session);
     });
 
+    console.log(sessions);
     return sessions;
   },
   async createSessionEvent({sessionId, start, end, title}) {
