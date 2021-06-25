@@ -34,3 +34,15 @@
   border: none;
   background-color: var(--clr-accent-light);
 }
+
+.primary-btn-light {
+  color: var(--clr-accent);
+  border: none;
+  background-color: var(--clr-background);
+}
+
+.primary-btn-light:hover {
+  color: var(--clr-accent);
+  border: none;
+  background-color: var(--clr-background-darker);
+}
