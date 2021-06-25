@@ -1,12 +1,12 @@
 <template>
-  <div class="h-100 mt-3 container-xl mx-auto">
+  <div class="h-100">
     <transition name="fade">
       <div v-if="error" class="alert alert-danger fade-in" role="alert">
         {{error}}
       </div>
     </transition>
     <questions-editor v-if="isEditorOpen"></questions-editor>
-    <div id="questions-container" class="w-100 mt-4">
+    <div id="questions-container" class="w-100">
       <div
         id="questions-selector"
         ref="selectorContainer"
