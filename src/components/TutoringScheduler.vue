@@ -5,90 +5,85 @@
         {{error}}
       </div>
     </transition>
-    <div class="row">
-      <div class="col">
-        <h5 class="my-2 component-name">Schedule</h5>
-      </div>
-    </div>
-    <div class="row mt-2 justify-content-between">
-      <div class="col my-auto">
-        <div v-for="(session) in pendingSessions" v-bind:key="session.id">
-          <div class="row h-100" v-if="isWaitingForResponseFromOthers(session)">
+    <h5 class="my-2" id="component-name">Schedule</h5>
+      <div v-for="(session) in pendingSessions" v-bind:key="session.id">
+        <div class="h-100" v-if="isWaitingForResponseFromOthers(session)">
+          <p class="m-0"> Waiting for response</p>
+          <button @click="modify(session)" class="btn-no-style">
+            <edit-icon  class="mr-2 scheduler-icon"/>
+          </button>
+          <button @click="deleteSession(session)" class="btn-no-style">
+            <delete-icon class="mr-2 scheduler-icon"/>
+          </button>
+        </div>
+        <div v-else>
+          <div class="row h-100" v-if="isWaitingForResponseFromYou(session)">
             <div class="col my-auto">
-              <div>
-                <p class="m-0"> Waiting for response</p>
-              </div>
+              <p class="align-middle" v-if="session.tutorId != currentProfile.id">
+                {{session.tutor.firstName}} wants to tutor you
+              </p>
+              <p class="align-middle" v-else>
+                {{wantsToLearnFromYou}}
+              </p>
             </div>
-            <div class="h-100">
-              <span v-on:click="modify(session)" class="material-icons btn btn-outline-dark mr-2">
-                create
-              </span>
-              <span v-on:click="deleteSession(session)" class="material-icons btn btn-outline-dark">
-                delete
-              </span>
-            </div>
-          </div>
-          <div v-else>
-            <div class="row h-100" v-if="isWaitingForResponseFromYou(session)">
-              <div class="col my-auto">
-                <p class="align-middle" v-if="session.tutorId != currentProfile.id">
-                  {{session.tutor.firstName}} wants to tutor you
-                </p>
-                <p class="align-middle" v-else>
-                  {{wantsToLearnFromYou}}
-                </p>
-              </div>
-              <div class="h-100">
-                <span v-on:click="modify(session)" class="material-icons btn btn-outline-dark mr-2">
-                  check
-                </span>
-                <span v-on:click="deleteSession(session)" class="material-icons btn btn-outline-dark">
-                  delete
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col h-100">
-            <button
-            v-if="currentProfile.isTutor"
-            v-on:click="create(currentProfile.id)"
-            class="btn btn-outline-dark mx-2 float-left">
-              Tutor
-            </button>
-            <button
-            v-bind:class="{ tutorDropDownActive: 'dropdown-toggle' }"
-            v-on:click="selectTutor"
-            class="btn btn-outline-dark float-left">
-              Learn from
-            </button>
-
-            <div v-if="showDropDown" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-              <a v-for="(user, id) in selectableTutor" v-bind:key="id" class="dropdown-item">
-                <div class="row">
-                  <div class="col-2 my-2 mx-2">
-                    <img class="profilePicture" v-bind:src="user.photo"/>
-                  </div>
-                  <div class="col">
-                    {user.username}
-                  </div>
-                </div>
-              </a>
-            </div>
+            <p>
+              <button  v-on:click="modify(session)" class="btn-no-style">
+                <check-icon class="mr-2 scheduler-icon"/>
+              </button>
+              <button v-on:click="deleteSession(session)" class="btn-no-style">
+                <delete-icon class="mr-2 scheduler-icon"/>
+              </button>
+            </p>
           </div>
         </div>
       </div>
-    </div>
+      <div id="create-session-container">
+        <h6 id="component-subheader">Create New</h6>
+        <p>
+          <button
+          v-if="currentProfile.isTutor"
+          v-on:click="create(currentProfile.id)"
+          class="primary-btn primary-btn-light mx-2 float-left scheduler-btn">
+            Tutor
+          </button>
+        </p>
+        <p>
+          <button
+          v-bind:class="{ tutorDropDownActive: 'dropdown-toggle' }"
+          v-on:click="selectTutor"
+          class="primary-btn primary-btn-light mx-2 float-left scheduler-btn">
+            Learn from
+          </button>
+        </p>
+        <div v-if="showDropDown" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <a v-for="(user, id) in selectableTutor" v-bind:key="id" class="dropdown-item">
+            <div class="row">
+              <div class="col-2 my-2 mx-2">
+                <img class="profilePicture" v-bind:src="user.photo"/>
+              </div>
+              <div class="col">
+                {user.username}
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
   </div>
 </template>
 
 <script>
 import {mapGetters} from 'vuex';
+import {EditIcon, DeleteIcon, CheckIcon} from '@/components/icons/';
 import {SessionService} from '@/api/SessionService';
 
 export default {
   name: 'tutoring-scheduler',
+
+  components: {
+    EditIcon,
+    DeleteIcon,
+    CheckIcon,
+  },
 
   props: {
     'roomId': {
@@ -207,6 +202,7 @@ export default {
       });
     },
     deleteSession: async function(session) {
+      console.log('deleteSession');
       try {
         await SessionService.delete(session.id);
       } catch (error) {
@@ -231,11 +227,36 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 #component-name{
   color:var(--clr-gray-2);
+  font-weight: 400;
+  font-size: 1.5rem;
+  padding-bottom: 1rem;
 }
 
+#component-subheader{
+  color:var(--clr-gray-2);
+  font-weight: 400;
+  font-size: 1.1rem;
+  padding-bottom: 1rem;
+}
+
+#create-session-container{
+  padding-top: 1rem;
+}
+
+.scheduler-btn{
+  width: 100%;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  max-width:18rem;
+}
+
+.scheduler-icon{
+  font-size:2rem;
+  height:100%;
+}
 
 .btn-circle {
   width: 30px;
@@ -269,5 +290,14 @@ export default {
   background-color: #fff;
   height: 5vh;
   width: 5vh;
+}
+.btn-no-style{
+  background: none;
+  color: inherit;
+  border: none;
+  cursor: pointer;
+  outline: inherit;
+  height:3rem;
+  width:3rem;
 }
 </style>

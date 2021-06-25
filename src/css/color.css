@@ -22,6 +22,7 @@
   --clr-accent: hsl(73.8,31.7%,32.2%);
   --clr-accent-light: hsl(73.8,31.7%,45.2%);
 
+  --clr-background-darker: hsl(52,93.8%,92.5%, 1);
   --clr-background-dark: hsl(52,93.8%,98.5%, 1);
   --clr-background: hsl(52,93.8%,99.7%, 1);
 
