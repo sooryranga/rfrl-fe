@@ -166,6 +166,7 @@ export default {
   font-weight: 400;
   font-size: 1.5rem;
   padding-bottom: 1rem;
+  color:white;
 }
 
 #scheduled-tutoring{
@@ -184,6 +185,7 @@ export default {
 .month-txt{
   padding-left: 2rem;
   padding-right: 2rem;
+  color:white;
 }
 
 .event-button{
@@ -194,12 +196,13 @@ export default {
 }
 
 .circle-btn {
+  flex: 0 0 30px;
   width: 30px;
   height: 30px;
   text-align: center;
   padding: 6px 6px;
   font-size: 12px;
-  border-radius: 15px;
+  border-radius: 50%;
   border-width: 0px;
 }
 
