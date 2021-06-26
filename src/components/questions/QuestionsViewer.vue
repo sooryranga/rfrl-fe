@@ -1,7 +1,7 @@
 <template>
   <div v-if="selectedQuestion" class="">
     <transition name="modal">
-      <div v-if="showModal" class="modal-mask ">
+      <div v-if="showModal" class="modal-mask">
         <transition name="fade">
           <div v-if="showError" class="alert alert-danger fade-in" role="alert">
             {{error}}
@@ -47,12 +47,18 @@
       </button>
       {{ selectedQuestion.title }}
     </p>
-    <p id="poster-name">
-      Posted By : {{ selectedQuestion.from.firstName }} {{ selectedQuestion.from.lastName[0] }}
+    <p id="poster-client">
+      <img
+          v-if="selectedQuestion.from.photo"
+          id="profile-picture"
+          v-bind:src="selectedQuestion.from.photo"
+        />
+      {{ selectedQuestion.from.firstName }} {{ selectedQuestion.from.lastName[0] }} ·
+      {{ timeAgoFormat(selectedQuestion.createdAt) }}
     </p>
-    <p id="post-time"> Created At : {{ timeAgoFormat(selectedQuestion.createdAt) }} </p>
     <button
-    class="btn btn-outline-dark shadow-none my-3"
+    class="primary-btn primary-btn-dark shadow-none my-3"
+    id="schedule-btn"
     v-if="canScheduleSession"
     v-on:click="scheduleSession">
     <small>Schedule Session</small>
@@ -76,6 +82,7 @@ export default {
     ...mapGetters('questions', ['selectedQuestion']),
     ...mapGetters('profile', ['currentProfileId']),
     canScheduleSession() {
+      console.log(this.selectedQuestion);
       return this.selectedQuestion.from.id != this.currentProfileId;
     },
   },
@@ -147,19 +154,36 @@ export default {
   font-size: 100%;
 }
 #title {
-  font-size: 180%;
-  color: var(--clr-gray-2)
+  font-size: 2.1rem;
+  padding-top: 3.5rem;
+  font-weight: 350;
+  color: var(--clr-primary)
 }
-#poster-name{
-  margin-top: 0.1rem;
+#poster-client{
+  margin-top: 0.5rem;
   margin-bottom: 0;
-  font-size: 0.9rem;
-  color: var(--clr-gray-5)
+  font-weight: 300;
+  color: var(--clr-primary);
 }
 #post-time{
   margin-bottom: 0.1rem;
   font-size: 0.9rem;
   color: var(--clr-gray-5)
+}
+
+#profile-picture{
+  width: 3rem;
+  background-size: cover;
+  background-position: top center;
+  border-radius: 50%;
+  margin-right: 1.5rem;
+}
+
+#schedule-btn{
+  padding-top:0.75rem;
+  padding-bottom: 0.75rem;
+  padding-left: 2rem;
+  padding-right:2rem;
 }
 
 .modal-mask {
