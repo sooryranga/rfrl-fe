@@ -81,6 +81,7 @@ export default {
   background-color: var(--clr-primary);
   color: white;
   font-size:1.1rem;
+  padding-top: 2rem;
   flex: 0 0 380px;
 }
 
@@ -88,6 +89,7 @@ export default {
   padding-left: 1rem;
   padding-right: 1rem;
   flex: 1 1 100%;
+  overflow-y: scroll;
 }
 
 .section-button-container{

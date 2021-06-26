@@ -1,5 +1,5 @@
 <template>
-  <div class="shadow p-3 my-4 pt-5 pb-4 bg-white">
+  <div id="about-container">
     <loading :active.sync="isLoading"/>
     <div v-if="!isLoading">
       <about-editor
@@ -10,48 +10,43 @@
         v-if="photoEditorOpen"
         v-on:closeEditor="closePhotoEditor"
       />
-      <div class="row">
-        <div class="col-3">
+      <div class="flex-container-column">
+        <div id="left-container">
           <img id="profile-picture" v-bind:src="profile.photo" v-on:click="updateImage"/>
           <router-link
-          class="btn btn-dark p-2"
+          class="primary-btn primary-btn-dark p-2 m-2"
           id="book-tutor-btn"
           v-if="!isLoggedInUser"
           :to="bookTutorRoute">Book Tutor</router-link>
         </div>
-        <div class="col">
-          <h1 class="primary-color">{{profile.firstName}}</h1>
-          <div class="current-work">
-            <p v-if="profile.workTitle">
-              {{profile.workTitle}} <span v-if="profile.yearsOfExperience"> - {{profile.yearsOfExperience}} yrs </span>
-            </p>
-            <p v-if="profile.verifiedWorkEmail && profile.companyId">
-              {{getCompanyName(profile.companyId)}}
-              <span class="material-icons check-mark">
-                check_circle
+        <div id="right-container">
+          <h1 id="name">{{profile.firstName}}</h1>
+          <p id="description">{{profile.about}}</p>
+          <div class="profile-items">
+            <p class="profile-item">
+              <work-icon class="profile-item-icon" :hoverExpand="false" :iconColor="iconColor"/>
+              <span v-if="profile.verifiedWorkEmail && profile.companyId">{{getCompanyName(profile.companyId)}}
+              <span v-if="profile.yearsOfExperience"> - {{profile.yearsOfExperience}} yrs </span>
+              </span>
+              <span v-else>
+                Not Verified
               </span>
             </p>
-            <p v-else>
-              Not Verified
+            <p v-if="profile.linkedInProfile" class="profile-item">
+              <linked-in-icon class="profile-item-icon" :hoverExpand="false" :iconColor="iconColor"/>
+              <a :href="toLinkedIn(profile.linkedInProfile)">{{profile.linkedInProfile}}</a>
+            </p>
+            <p v-if="profile.githubProfile" class="profile-item">
+              <github-icon class="profile-item-icon" :hoverExpand="false" :iconColor="iconColor"/>
+              <a :href="toGithub(profile.githubProfile)">{{profile.githubProfile}}</a>
             </p>
           </div>
-          <div class="profile-items">
-            <p><a v-if="profile.linkedInProfile" :href="toLinkedIn(profile.linkedInProfile)">
-              <i class="fab fa-linkedin"></i> {{profile.linkedInProfile}}
-            </a></p>
-            <p><a v-if="profile.githubProfile" :href="toGithub(profile.githubProfile)">
-              <i class="fab fa-github"></i> {{profile.githubProfile}}
-            </a></p>
-          </div>
-          <p id="about">{{profile.about}}</p>
         </div>
         <div class="col-2" v-if="isLoggedInUser">
-          <button class="no-styling-button"><span
-            v-on:click="edit"
-            id="edit-about"
-            class="primary-color material-icons">
-            create
-          </span></button>
+          <button class="no-styling-button primary-color" id="edit-about" v-on:click="edit">
+            <edit-icon :iconColor="'var(--clr-accent)'">
+            </edit-icon>
+          </button>
         </div>
       </div>
     </div>
@@ -64,18 +59,25 @@ import {Client} from '@/api';
 import AboutEditor from '@/components/profile/AboutEditor.vue';
 import PhotoEditor from '@/components/profile/PhotoEditor.vue';
 import {profileState} from '@/constants.state.js';
+import {EditIcon} from '@/components/icons';
+import {GithubIcon, WorkIcon, LinkedInIcon} from '@/components/icons';
 
 export default {
   name: 'about',
   components: {
     'about-editor': AboutEditor,
     'photo-editor': PhotoEditor,
+    EditIcon,
+    GithubIcon,
+    WorkIcon,
+    LinkedInIcon,
   },
   data: function() {
     return {
       aboutEditorOpen: false,
       photoEditorOpen: false,
       otherProfile: profileState(),
+      iconColor: 'var(--clr-gray-3)',
     };
   },
   props: {
@@ -148,10 +150,63 @@ export default {
 </script>
 
 <style scoped>
+#about-container{
+  padding-top:3rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+#name{
+  color:var(--clr-primary);
+  font-weight: 400;
+  padding-bottom: 0.5rem;
+  margin-bottom: 0;
+}
+
+#left-container{
+  flex: 0 0 15rem;
+}
+
+#right-container{
+  flex: 1 1;
+}
+
+.flex-container-column{
+  flex-direction: row;
+  display:flex;
+  height:16rem;
+  flex-wrap: nowrap;
+}
+
+.profile-items{
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.profile-item{
+  margin-top:5px;
+  color: var(--clr-gray-4);
+}
+
+.profile-item a {
+  color: var(--clr-gray-4);
+}
+
+
+.profile-item a:hover {
+  color: var(--clr-gray-2);
+}
+
+.profile-item-icon {
+  font-size: 1.5rem;
+  margin-right: 1rem;
+}
+
 #edit-about{
   margin-left: auto;
   margin-right: auto;
-  color: var(--clr-primary-lighter)
+  color: var(--clr-primary-lighter);
+  font-size: 2rem;
 }
 
 #edit-about:hover{
@@ -175,28 +230,14 @@ p {
   margin-bottom: 0;
 }
 
-.profile-items{
-  margin-top: 0.5rem;
-  font-size: 0.8rem;
-  line-height: 1.6;
-}
-
-.current-work {
-  font-size: 0.9rem;
-  letter-spacing: 1px;
-}
-
-.current-work p {
-  color: var(--clr-gray-1)
-}
-
 .check-mark {
   display:inline-flex;
   vertical-align:top;
   color: var(--clr-success);
 }
 
-#about{
-  margin-top: 1rem;
+#description{
+  padding-bottom: 0.5rem;
+  font-weight: 300;
 }
 </style>
