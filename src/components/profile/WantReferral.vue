@@ -1,33 +1,29 @@
 <template>
-  <div id="want-referrals" class="shadow p-3 my-3 bg-white">
-    <div class="mx-4">
-      <div class="row">
-        <div class="col">
-          <h4 class="my-2 primary-color" for="flexSwitchCheckDefault" >Want Referrals?</h4>
-        </div>
-        <div class="col-2 my-auto">
-          <label class="switch">
-            <input
-              v-model="isLookingForReferral"
-              v-on:click="onClickReferralButton"
-              type="checkbox"
-              id="flexSwitchCheckDefault"/>
-              <div></div>
-          </label>
-        </div>
+  <div>
+    <div class="flex-container-column">
+      <div id="left-container">
+        <h4 id="title" for="flexSwitchCheckDefault" >Want Referrals?</h4>
       </div>
-      <div v-if="isLookingForReferral" class="row w-100">
-        <div class="col w-100">
-          <multiselect
-          v-model="checkedCompanies" :options="companyList" :multiple="true"
-          :close-on-select="false" :clear-on-select="false"
-          :preserve-search="false" placeholder="Search for tags"
-          :select-label="''" :taggable="false" :deselect-label="''"
-          @remove="removeCompany" @select="addCompany" @close="multiselectClose"
-          @open="multiselectOpen"
-          label="name" track-by="name" :preselect-first="false" open-direction="bottom"/>
-        </div>
+      <div>
+        <label class="switch">
+          <input
+            v-model="isLookingForReferral"
+            v-on:click="onClickReferralButton"
+            type="checkbox"
+            id="flexSwitchCheckDefault"/>
+            <div></div>
+        </label>
       </div>
+    </div>
+    <div v-if="isLookingForReferral" id="company-selector-container">
+      <multiselect
+      v-model="checkedCompanies" :options="companyList" :multiple="true"
+      :close-on-select="false" :clear-on-select="false"
+      :preserve-search="false" placeholder="Search for tags"
+      :select-label="''" :taggable="false" :deselect-label="''"
+      @remove="removeCompany" @select="addCompany" @close="multiselectClose"
+      @open="multiselectOpen"
+      label="name" track-by="name" :preselect-first="false" open-direction="bottom"/>
     </div>
   </div>
 </template>
@@ -116,6 +112,12 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+#left-container{
+  flex: 1 1;
+}
+</style>
 
 <style src = "vue-multiselect/dist/vue-multiselect.min.css">
 .selected{

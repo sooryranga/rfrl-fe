@@ -1,37 +1,33 @@
 
 <template>
-  <div id="education" class="shadow p-3 my-3 bg-white">
-    <div class="mx-4">
-      <loading :active.sync="isLoading"/>
-      <div v-if="!isLoading">
-        <education-editor
-          v-if="editorOpen"
-          v-on:saveEvent="saveEvent"
-          v-on:cancelEvent="cancelEvent"
-        ></education-editor>
-        <div class="row">
-          <div class="col">
-            <h4 class="my-2 primary-color"> Education </h4>
-          </div>
-          <div class="col-2 section-button-container">
-            <button class="no-styling-button section-button"><span
-              v-if="isLoggedInUser"
-              v-on:click="add"
-              class="material-icons section-button-span"
-            >create</span></button>
-          </div>
+  <div>
+    <loading :active.sync="isLoading"/>
+    <div v-if="!isLoading">
+      <education-editor
+        v-if="editorOpen"
+        v-on:saveEvent="saveEvent"
+        v-on:cancelEvent="cancelEvent"
+      ></education-editor>
+      <div class="flex-container-column">
+        <div id="left-container">
+          <h4 id="title"> Education </h4>
         </div>
-        <div class="mt-1"  v-if="profile">
-          <div class="educationRow row">
-            <div class="col-3 my-auto">
-              <img class="institutionLogo" src="https://tinyurl.com/54ze666n"/>
-            </div>
-            <div class="col my-auto">
-              <p id="institution-name">{{profile.institution}}</p>
-              <p id="degree">{{profile.degree}}</p>
-              <p id="field-of-study">{{profile.fieldOfStudy}}</p>
-              <p id="start-and-end-year">{{profile.startYear}}-{{profile.endYear}}</p>
-            </div>
+        <div id="right-button-area">
+          <button class="no-styling-button primary-color" id="add-education" v-on:click="add">
+            <edit-icon :iconColor="'var(--clr-accent)'"/>
+          </button>
+        </div>
+      </div>
+      <div class="pt-1"  v-if="profile">
+        <div class="educationRow row">
+          <div class="col-3 my-auto">
+            <img class="institutionLogo" src="https://tinyurl.com/54ze666n"/>
+          </div>
+          <div class="col my-auto">
+            <p id="institution-name">{{profile.institution}}</p>
+            <p id="degree">{{profile.degree}}</p>
+            <p id="field-of-study">{{profile.fieldOfStudy}}</p>
+            <p id="start-and-end-year">{{profile.startYear}}-{{profile.endYear}}</p>
           </div>
         </div>
       </div>
@@ -43,6 +39,7 @@
 import {mapGetters, mapActions} from 'vuex';
 import EducationEditor from '@/components/profile/EducationEditor.vue';
 import {Profile} from '@/api';
+import {EditIcon} from '@/components/icons';
 
 export default {
   name: 'education',
@@ -56,7 +53,7 @@ export default {
       otherProfile: null,
     };
   },
-  components: {'education-editor': EducationEditor},
+  components: {'education-editor': EducationEditor, EditIcon},
   computed: {
     ...mapGetters('profile', ['currentProfile']),
     isLoggedInUser() {
@@ -105,6 +102,17 @@ export default {
 </script>
 
 <style scoped>
+#left-container{
+  flex: 1 1;
+}
+
+#add-education{
+  margin-left: auto;
+  margin-right: auto;
+  color: var(--clr-primary-lighter);
+  font-size: 2rem;
+}
+
 #institution-name{
   font-size: 1.3rem;
   margin-bottom: 0;
