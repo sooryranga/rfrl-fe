@@ -16,12 +16,8 @@
         </button>
       </div>
     </div>
-    <div v-if="resume" class="mt-4 card-columns mx-3">
+    <div v-if="resume">
       <embed v-bind:src="resume.src" class="documentEmbed">
-      <div class="card-body  py-1 documentBody">
-        <h6 class="card-title">{{resume.name}}</h6>
-        <p class="card-text">{{resume.description}}</p>
-      </div>
     </div>
     <div v-else style="height:50px" class="w-100 mx-auto my-auto">
       <p>No Resume to Show</p>
@@ -82,24 +78,31 @@ export default {
       this.editorOpen = false;
       await this.saveItem(state);
     },
-    async saveItem({name, description, src, id}) {
+    async saveItem({src, id}) {
       if (id != null) {
         const newDocument = await Document.DocumentService.put(
-            {id, src, description, name},
+            {
+              id,
+              src,
+              name: 'resume',
+              description: `${this.currentProfileId} - resume`,
+            },
         );
         this.resume = newDocument;
       } else {
-        const ids = this.localDocuments.map((doc) => doc.id) || [];
         const newDocument = await Document.DocumentService.post(
-            {src, name, description},
+            {
+              src,
+              name: 'resume',
+              description: `${this.currentProfileId} - resume`,
+            },
         );
-        ids.push(newDocument.id);
-        const documents = await Document.DocumentService.putOrder({
+        await Document.DocumentService.putOrder({
           refId: this.refId,
           refType: 'client',
-          documentIds: ids,
+          documentIds: [newDocument.id],
         });
-        this.localDocuments = documents;
+        this.resume = newDocument;
       }
       this.clearEditorState();
     },
@@ -109,7 +112,8 @@ export default {
       refId: this.refId,
       refType: 'client',
     });
-    this.resume = documents.length > 0 ? documents.length[0] : null;
+    console.log(documents);
+    this.resume = documents.length > 0 ? documents[0] : null;
   },
 };
 </script>

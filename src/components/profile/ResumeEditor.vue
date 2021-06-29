@@ -12,6 +12,7 @@
           <div class="modal-body p-0">
             <file-drop
                 v-model="files"
+                :accept="supportedResumeTypes"
                 :picker-trigger="filePickerTrigger"
                 id="file-picker"
             >
@@ -76,6 +77,7 @@ export default {
     return {
       filePickerTrigger: {},
       files: [],
+      supportedResumeTypes: ['application/pdf'],
     };
   },
   computed: {
@@ -85,38 +87,34 @@ export default {
     },
   },
   methods: {
-    handleFileUpload() {
-      this.file = this.$refs.file.files[0];
-    },
     removeFile(file) {
       this.files = this.files.filter((x) => x !== file);
     },
     async save() {
       // Save file to bucket and update src
-      console.log(this.file);
-      if (!this.file && !this.src) return;
+      if (!this.files.length) return;
 
-      if (this.file) {
-        const today = new Date();
-        const dateStr = today.toISOString().replace(/\D/g, '');
-        const snapshot = await documentRef
-            .child(`${this.currentProfileId}-${dateStr}`)
-            .put(this.file);
+      const resume = this.files[0];
 
-        this.src = await snapshot.ref.getDownloadURL();
-      }
+      const today = new Date();
+      const dateStr = today.toISOString().replace(/\D/g, '');
+      const snapshot = await documentRef
+          .child(`${this.currentProfileId}-${dateStr}`)
+          .put(resume);
+
+      this.src = await snapshot.ref.getDownloadURL();
+
 
       this.$emit(
           'saveEvent',
           {
             id: this.documentId,
-            name: this.name,
-            description: this.description,
             src: this.src,
           },
       );
     },
     cancel() {
+      console.log(this.files);
       this.$emit(
           'cancelEvent',
       );
@@ -124,9 +122,6 @@ export default {
   },
   mounted() {
     this.documentId = this.documentprop.id;
-    this.description = this.documentprop.description;
-    this.name = this.documentprop.name;
-    this.src = this.documentprop.src;
   },
 };
 </script>
