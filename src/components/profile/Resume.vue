@@ -17,7 +17,7 @@
       </div>
     </div>
     <div v-if="resume">
-      <embed v-bind:src="resume.src" class="documentEmbed">
+      <pdf-viewer :src="resume.src"/>
     </div>
     <div v-else style="height:50px" class="w-100 mx-auto my-auto">
       <p>No Resume to Show</p>
@@ -31,11 +31,15 @@ import ResumeEditor from '@/components/profile/ResumeEditor.vue';
 import {documentState} from '@/constants.state.js';
 import {Document} from '@/api';
 import {AddIcon} from '@/components/icons/';
-
+import PDFViewer from '@/components/PDFViewer';
 
 export default {
   name: 'resume',
-  components: {'resume-editor': ResumeEditor, AddIcon},
+  components: {
+    'resume-editor': ResumeEditor,
+    AddIcon,
+    'pdf-viewer': PDFViewer,
+  },
   data: function() {
     return {
       editorOpen: false,
