@@ -134,6 +134,7 @@ export default {
 
 #nav-profile-picture{
   width: 2.6rem;
+  height: 2.6rem;
   background-size: cover;
   background-position: top center;
   border-radius: 50%;
