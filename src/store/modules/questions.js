@@ -1,3 +1,5 @@
+import Vue from 'vue';
+
 import {Question} from '@/api';
 import {getErrorMessageFromRequest} from '@/utils';
 
