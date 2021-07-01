@@ -7,7 +7,7 @@
             <h5 class="modal-title" id="exampleModalLongTitle">
               Do you want to report {{accusedClient.username}}
             </h5>
-            <button v-on:click="cancel" type="button" class="close" aria-label="Close">
+            <button v-on:click="cancel" type="button" class="no-styling-button" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>

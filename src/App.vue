@@ -40,7 +40,7 @@ export default {
 @import './css/button.css';
 
 #app {
-  height: 100%;
+  height: 100vh;
   width: 100vw;
   box-sizing: border-box;
   font-family: 'Roboto', sans-serif;

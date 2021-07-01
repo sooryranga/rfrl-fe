@@ -5,7 +5,8 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLongTitle">About Editor</h5>
-            <button v-on:click="cancel" type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button v-on:click="cancel" type="button"
+              class="no-styling-button" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
