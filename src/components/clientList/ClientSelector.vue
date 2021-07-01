@@ -1,41 +1,49 @@
 <template>
-  <div class="wrapper-grid">
-    <div v-for="(client) in clients" v-bind:key="client.id">
-      <profile-card
-          :img="getPhoto(client)"
-          :routeTo="routeToProfile(client.id)"
-        >
-        <p class="name">{{name(client.firstName, client.lastName)}}</p>
-        <div class="profile-items">
-          <p v-if="client.linkedInProfile" class="profile-item">
-            <linked-in-icon :hoverExpand="false" :iconColor="iconColor"/>
-            <a :href="toLinkedIn(client.linkedInProfile)">{{client.linkedInProfile}}</a>
-          </p>
-          <p v-if="client.githubProfile" class="profile-item">
-            <github-icon :hoverExpand="false" :iconColor="iconColor"/>
-            <a :href="toGithub(client.githubProfile)">
-              {{client.githubProfile}}
-            </a>
-          </p>
+  <div>
+    <chat-introduction-modal
+      v-if="showModal"
+      @cancel="cancel"
+      :clientId="chatClientId"/>
+    <div class="wrapper-grid">
+      <div v-for="(client) in clients" v-bind:key="client.id">
+        <profile-card
+            :img="getPhoto(client)"
+            :routeToProfile="routeToProfile(client.id)"
+            @startChatting="startChatting(client)"
+          >
+          <p class="name">{{name(client.firstName, client.lastName)}}</p>
+          <div class="profile-items">
+            <p v-if="client.linkedInProfile" class="profile-item">
+              <linked-in-icon :hoverExpand="false" :iconColor="iconColor"/>
+              <a :href="toLinkedIn(client.linkedInProfile)">{{client.linkedInProfile}}</a>
+            </p>
+            <p v-if="client.githubProfile" class="profile-item">
+              <github-icon :hoverExpand="false" :iconColor="iconColor"/>
+              <a :href="toGithub(client.githubProfile)">
+                {{client.githubProfile}}
+              </a>
+            </p>
+          </div>
+        </profile-card>
+      </div>
+      <infinite-loading @infinite="infiniteHandler">
+        <div slot="no-more">
+          <div :style="{marginTop:'4rem'}">
+            <h6 class="my-2 text-muted">No more clients</h6>
+          </div>
         </div>
-      </profile-card>
+        <div slot="no-results">
+          <div :style="{marginTop:'4rem'}">
+            <h6 class="my-2 text-muted">No more clients</h6>
+          </div>
+        </div>
+      </infinite-loading>
     </div>
-    <infinite-loading @infinite="infiniteHandler">
-      <div slot="no-more">
-        <div :style="{marginTop:'4rem'}">
-          <h6 class="my-2 text-muted">No more clients</h6>
-        </div>
-      </div>
-      <div slot="no-results">
-        <div :style="{marginTop:'4rem'}">
-          <h6 class="my-2 text-muted">No more clients</h6>
-        </div>
-      </div>
-    </infinite-loading>
   </div>
 </template>
 
 <script>
+import ChatIntroductionModal from '@/components/ChatIntroductionModal.vue';
 import {LinkedInIcon, GithubIcon} from '@/components/icons';
 import {mapGetters, mapActions} from 'vuex';
 import InfiniteLoading from 'vue-infinite-loading';
@@ -48,10 +56,13 @@ export default {
     ProfileCard,
     LinkedInIcon,
     GithubIcon,
+    ChatIntroductionModal,
   },
   data() {
     return {
       iconColor: 'var(--clr-gray-3)',
+      chatClientId: null,
+      showModal: false,
     };
   },
   computed: {
@@ -62,6 +73,13 @@ export default {
     ...mapActions('listClients', ['getClients']),
     getClientPhoto(client) {
       return client.photo || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQB8oKGDdE1XOkEAYG_Xmo3HObzakQbY4oHnQ&usqp=CAU'; //eslint-disable-line
+    },
+    startChatting(client) {
+      this.chatClientId = client.id;
+      this.showModal = true;
+    },
+    cancel() {
+      this.showModal = false;
     },
     async infiniteHandler($state) {
       const companyId = this.currentProfile.companyId;
