@@ -1,11 +1,16 @@
 <template>
 <div class="flex-container-column h-100">
   <div class="scrollable flex-item-grow pb-2">
+    <chat-introduction-modal
+      v-if="showModal"
+      @cancel="cancel"
+      :clientId="chatClientId"/>
     <div class="wrapper-grid">
       <div v-for="(tutor) in tutors" v-bind:key="tutor.id">
         <profile-card
           :img="getPhoto(tutor)"
-          :routeTo="routeToProfile(tutor.id)"
+          :routeToProfile="routeToProfile(tutor.id)"
+          @startChatting="startChatting(tutor)"
         >
           <p class="name">{{cardName(tutor.firstName, tutor.lastName)}}</p>
           <div class="profile-items">
@@ -50,6 +55,7 @@
 </template>
 
 <script>
+import ChatIntroductionModal from '@/components/ChatIntroductionModal.vue';
 import {LinkedInIcon, GithubIcon, WorkIcon} from '@/components/icons';
 import {mapActions, mapGetters} from 'vuex';
 import InfiniteLoading from 'vue-infinite-loading';
@@ -63,10 +69,13 @@ export default {
     LinkedInIcon,
     GithubIcon,
     WorkIcon,
+    ChatIntroductionModal,
   },
   data() {
     return {
       iconColor: 'var(--clr-gray-3)',
+      chatClientId: null,
+      showModal: false,
     };
   },
   computed: {
@@ -83,6 +92,13 @@ export default {
       } else {
         $state.complete();
       }
+    },
+    startChatting(tutor) {
+      this.chatClientId = tutor.id;
+      this.showModal = true;
+    },
+    cancel() {
+      this.showModal = false;
     },
     getCompanyName(companyId) {
       if (companyId in this.companies) {
