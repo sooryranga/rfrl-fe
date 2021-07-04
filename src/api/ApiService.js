@@ -31,6 +31,8 @@ const ApiService = {
         if (status === 401 && data === 'invalid or expired jwt') {
           Auth.destroyToken();
         }
+
+        return Promise.reject(error.response);
       } else if (error.request) {
         // The request was made but no response was received
         // `error.request` is an instance of XMLHttpRequest
