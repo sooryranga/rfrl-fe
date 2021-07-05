@@ -1,48 +1,58 @@
 <template>
-<div class="row h-100 w-100 p-0 m-0">
-  <loading :active.sync="isLoading"/>
-  <div class="col h-100 p-0">
-    <img src="@/assets/pexels-djordje-petrovic-2102416.jpg" id="feature-img"/>
-  </div>
-  <div class="col h-100 p-0">
-    <transition name="fade">
-      <div v-if="showError" class="alert alert-danger fade-in fixed-current-top" role="alert">
-        {{error}}
-      </div>
-    </transition>
-    <div id="parent">
-      <div class="referrer">
-        <button class="primary-btn primary-btn-dark h-100 w-100" v-on:click="setTutor">
-          Be a Refferer
-        </button>
-      </div>
-      <div class="referrer">
-        <button class="primary-btn primary-btn-dark h-100 w-100" v-on:click="goNext">
-          Get Referred
-        </button>
-      </div>
+  <register-template
+    :imageSrc="require('@/assets/pexels-djordje-petrovic-2102416.jpg')"
+    :isLoading="isLoading"
+    :error="error"
+    :showError="showError"
+  >
+    <div class="referrer">
+      <button class="primary-btn primary-btn-dark h-100 w-100" v-on:click="setTutor">
+        Be a Refferer
+      </button>
     </div>
-  </div>
-</div>
+    <div class="referrer">
+      <button class="primary-btn primary-btn-dark h-100 w-100" v-on:click="goNext">
+        Get Referred
+      </button>
+    </div>
+  </register-template>
 </template>
 
 <script>
+import {ErrorMixin} from '@/components/mixins/';
+import RegisterTemplate from './RegisterTemplate.vue';
 import {flowToNextStep, typeOfUser} from './RegisterFlow';
 import {mapActions, mapGetters} from 'vuex';
 
 export default {
   name: 'TypeOfUser',
+  components: {
+    RegisterTemplate,
+  },
+  mixins: [ErrorMixin],
+  data() {
+    return {
+      isLoading: false,
+    };
+  },
   computed: {
     ...mapGetters('profile', ['currentProfile']),
   },
   methods: {
     ...mapActions('profile', ['updateProfile']),
     async setTutor() {
-      await this.updateProfile(
-          {isTutor: true},
-      );
+      this.isLoading = true;
 
-      await this.goNext();
+      try {
+        await this.updateProfile(
+            {isTutor: true},
+        );
+        await this.goNext();
+      } catch (errResponse) {
+        const {data} = errResponse;
+        this.setError(data.message);
+      }
+      this.isLoading = false;
     },
     async goNext() {
       await flowToNextStep({
