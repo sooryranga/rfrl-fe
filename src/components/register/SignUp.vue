@@ -175,9 +175,8 @@ export default {
           email: this.email,
           password: this.password,
         });
-      } catch (errResponse) {
-        const {data} = errResponse;
-        this.setError(data.message);
+      } catch (error) {
+        this.setError(error?.message);
       }
 
       if (auth != null) {

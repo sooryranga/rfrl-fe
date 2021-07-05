@@ -17,10 +17,7 @@ class RequestError extends Error {
    */
   constructor({message, statusCode = null}) {
     super(message);
-    this.data = {
-      message,
-      statusCode,
-    };
+    this.statusCode = statusCode;
   }
 }
 
