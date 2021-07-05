@@ -106,6 +106,12 @@ export default {
   flex: 1 1;
 }
 
+.flex-container-column{
+  flex-direction: row;
+  display:flex;
+  flex-wrap: nowrap;
+}
+
 #add-education{
   margin-left: auto;
   margin-right: auto;
