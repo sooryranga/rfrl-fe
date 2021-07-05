@@ -5,6 +5,25 @@ import {API_URL} from '@/conf';
 
 import {Auth} from '.';
 
+/**
+ * Class representing a RequestError.
+ * @extends Error
+ */
+class RequestError extends Error {
+  /**
+   * Create a RequestError.
+   * @param {object} message - The error message.
+   * @param {number} code - The error code value.
+   */
+  constructor({message, statusCode = null}) {
+    super(message);
+    this.data = {
+      message,
+      statusCode,
+    };
+  }
+}
+
 
 const ApiService = {
   init() {
@@ -32,13 +51,23 @@ const ApiService = {
           Auth.destroyToken();
         }
 
-        return Promise.reject(error.response);
+        return Promise.reject(
+            new RequestError({
+              statusCode: status,
+              message: data?.message,
+            }),
+        );
       } else if (error.request) {
         // The request was made but no response was received
         // `error.request` is an instance of XMLHttpRequest
         // in the browser and an instance of
         // http.ClientRequest in node.js
-        console.log(error.request);
+        return Promise.reject(
+            new RequestError({
+              statusCode: status,
+              message: error.message,
+            }),
+        );
       } else {
         // Something happened in setting up the request that triggered an Error
         console.log('Error', error.message);
