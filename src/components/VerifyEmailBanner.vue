@@ -1,16 +1,15 @@
 <template>
   <div class="alert alert-warning m-0 p-1" id="notification">
-    <div class="container-xl">
+    <div id="container">
       <div v-if="isUserEmail" class="float-left pl-3">
         <strong>Verify your email!</strong> You need to verify your email.
       </div>
       <div v-else class="float-left pl-3">
         <strong>Where do you work?</strong> associate your work email to get more views.
       </div>
-      <div class="float-right pr-4">
+      <div id="verify-button">
         <button v-on:click="verify" class="btn btn-warning btn-sm">Verify</button>
       </div>
-      <div class="clearfix"></div>
     </div>
   </div>
 </template>
@@ -50,7 +49,14 @@ export default {
 </script>
 
 <style scoped>
-#notification {
-  height: 40px;
+#container{
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  align-items: center;
+}
+
+#verify-button{
+  margin-left: 4rem;
 }
 </style>
