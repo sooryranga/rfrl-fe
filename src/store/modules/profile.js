@@ -180,7 +180,7 @@ const actions = {
     }
   },
   async logout({commit, getters}) {
-    const loginType = getters.type;
+    const loginType = getters.logInType;
     if (loginType === GOOGLE) {
       const auth2 = gapi.auth2.getAuthInstance();
       await auth2.signOut();

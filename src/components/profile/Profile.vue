@@ -30,7 +30,7 @@ import Loading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/vue-loading.css';
 
 export default {
-  name: 'tutor',
+  name: 'profile-component',
   data: function() {
     return {
       profile: null,

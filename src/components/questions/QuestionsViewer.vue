@@ -47,7 +47,6 @@ export default {
     ...mapGetters('questions', ['selectedQuestion']),
     ...mapGetters('profile', ['currentProfileId']),
     canScheduleSession() {
-      console.log(this.selectedQuestion);
       return this.selectedQuestion.from.id != this.currentProfileId;
     },
   },
