@@ -10,6 +10,7 @@
         <asked-questions :profile-id="userId"></asked-questions>
       </div>
       <div id="profile-section">
+        <slot name="global-banner"/>
         <profile-about :profile-id="userId" :fetched-profile="profile"/>
         <want-referral class="profile-component" v-if="isLoggedInUser"/>
         <education class="profile-component" :profile-id="userId" :fetched-profile="profile"/>
