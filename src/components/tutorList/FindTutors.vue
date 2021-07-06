@@ -13,6 +13,7 @@
         <tutor-filter></tutor-filter>
       </div>
       <div id="tutor-selector" class="flex-item-grow h-100">
+        <slot name="global-banner"/>
         <tutor-selector></tutor-selector>
       </div>
     </div>
@@ -53,6 +54,11 @@ export default {
 
 #tutor-filter{
   min-width: 20rem;
+}
+
+#tutor-selector{
+  padding-right:2rem;
+  padding-left:2rem;
 }
 
 .flex-item-grow{

@@ -1,5 +1,6 @@
 <template>
   <div id="container" class="w-100 h-100">
+    <slot name="global-banner"/>
     <transition name="fade">
       <div v-if="clientError" class="alert alert-danger fade-in" role="alert">
         {{clientError}}
@@ -78,7 +79,6 @@ export default {
 <style scoped>
 #container{
   padding-right:2rem;
-  padding-top:2.5rem;
   padding-left:2rem;
 }
 
@@ -104,6 +104,7 @@ export default {
   display:flex;
   max-height:100%;
   flex-wrap: nowrap;
+  padding-top:2.5rem;
 }
 .flex-item-grow{
   flex-grow: 1;
