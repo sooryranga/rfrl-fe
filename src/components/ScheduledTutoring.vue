@@ -17,28 +17,15 @@
           <button
           class="primary-btn primary-btn-light event-button"
           v-on:click="goToEvent(session)">
-            <div v-if="showName" class="row">
-              <div class="col-6 my-auto">
-                <div><p
-                  class="m-0"
-                  style="color:var(--clr-gray-1)">
-                  {{session.event.start.toLocaleTimeString()}}
-                </p></div>
-              </div>
-              <div class="col-auto my-auto">
-                <p class="m-0" style="color:var(--clr-gray-1)">
-                  With {{
-                    currentProfileId === session.tutorId ?
-                    getName(getMentee(session)) :
-                    getName(session.tutor)
-                  }}
-                </p>
-              </div>
+            <div>
+              {{session.event.start.toLocaleTimeString()}}
             </div>
-            <div v-else class="row">
-              <div class="col my-auto">
-                <div class="m-0">{{session.event.start.toLocaleTimeString()}}</div>
-              </div>
+            <div v-if="showName">
+              {{
+                currentProfileId === session.tutorId ?
+                getName(getMentee(session)) :
+                getName(session.tutor)
+              }}
             </div>
           </button>
         </div>
@@ -90,6 +77,9 @@ export default {
 
       for (let i = 0; i < this.scheduledSessions.length; i++) {
         const session = this.scheduledSessions[i];
+        if (session.event == null) {
+          continue;
+        }
         const _compDate = new Date(session.event.start.getTime());
         _compDate.setHours(0, 0, 0, 0);
 
@@ -140,9 +130,8 @@ export default {
     },
     getMentee(session) {
       const mentees = session.clients.filter((client) => {
-        client.id != session.tutorId;
+        return client.id != session.tutorId;
       });
-
       return mentees[0];
     },
     getName(profile) {
@@ -199,6 +188,11 @@ export default {
   max-width:18rem;
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
+  font-size: 0.9rem;
+  display: flex;
+  justify-content: space-around;
+  align-items:center;
+  flex-flow: row;
 }
 
 .circle-btn {
