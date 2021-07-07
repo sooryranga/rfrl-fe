@@ -1,47 +1,45 @@
 <template>
-  <div  id="localDocuments" class="shadow p-3 my-3 bg-white">
-    <div class="mx-4">
-      <document-editor
-        :documentprop="this.editingItem"
-        v-if="editorOpen"
-        v-on:saveEvent="saveEvent"
-        v-on:cancelEvent="cancelEvent"
-      ></document-editor>
-      <div class="row">
-        <div class="col">
-          <h4 class="my-2 primary-color"> Documents </h4>
-        </div>
-        <div class="col-2 section-button-container">
-          <button class="no-styling-button section-button"><span
-            v-if="allowToSave"
-            v-on:click="add"
-            class="material-icons section-button-span"
-          >add_circle</span></button>
-        </div>
+  <div>
+    <document-editor
+      :documentprop="this.editingItem"
+      v-if="editorOpen"
+      v-on:saveEvent="saveEvent"
+      v-on:cancelEvent="cancelEvent"
+    ></document-editor>
+    <div class="flex-container-column">
+      <div id="left-container">
+        <h4 id="title"> Documents </h4>
       </div>
-      <div v-if="localDocuments.length" class="mt-4 card-columns mx-3">
-        <div v-for="(document, index) in localDocuments" v-bind:key="document.id" class="card">
-          <div>
-            <embed v-bind:src="document.src" class="documentEmbed">
-            <div class="card-body  py-1 documentBody">
-              <h6 class="card-title">{{document.name}}</h6>
-              <p class="card-text">{{document.description}}</p>
-            </div>
-          </div>
-          <div v-if="allowToSave" class="documentEditor hover-to-show mt-1">
-            <span v-on:click="edit(index)" class="material-icons md-dark btn-outline-light btn">create</span>
-            <span class="material-icons md-dark btn-outline-light btn">drag_handle</span>
-            <span
-              v-on:click="deleteItem(document.id)"
-              class="material-icons md-dark btn-outline-light btn">
-              delete
-            </span>
+      <div>
+        <button class="no-styling-button primary-color" id="add-document" v-on:click="allowToSave">
+          <add-icon :iconColor="'var(--clr-accent)'"/>
+        </button>
+      </div>
+    </div>
+    <div v-if="localDocuments.length" class="mt-4 card-columns mx-3">
+      <div v-for="(document, index) in localDocuments" v-bind:key="document.id" class="card">
+        <div>
+          <embed v-bind:src="document.src" class="documentEmbed">
+          <div class="card-body  py-1 documentBody">
+            <h6 class="card-title">{{document.name}}</h6>
+            <p class="card-text">{{document.description}}</p>
           </div>
         </div>
+        <div v-if="allowToSave" class="documentEditor hover-to-show mt-1">
+          <button @click="edit(index)" class="btn-no-style">
+            <edit-icon/>
+          </button>
+          <button class="btn-no-style">
+            <drag-icon/>
+          </button>
+          <button v-on:click="deleteItem(document.id)" class="btn-no-style">
+            <delete-icon/>
+          </button>
+        </div>
       </div>
-      <div v-else style="height:50px" class="w-100 mx-auto my-auto">
-        <p>No documents to show</p>
-      </div>
+    </div>
+    <div v-else style="height:50px" class="w-100 mx-auto my-auto">
+      <p>No documents to show</p>
     </div>
   </div>
 </template>
@@ -51,11 +49,18 @@ import {mapGetters, mapActions} from 'vuex';
 import DocumentEditor from '@/components/DocumentsEditor.vue';
 import {documentState} from '@/constants.state.js';
 import {Document} from '@/api';
+import {AddIcon, EditIcon, DragIcon, DeleteIcon} from '@/components/icons/';
 
 
 export default {
   name: 'document',
-  components: {'document-editor': DocumentEditor},
+  components: {
+    'document-editor': DocumentEditor,
+    AddIcon,
+    EditIcon,
+    DragIcon,
+    DeleteIcon,
+  },
   data: function() {
     return {
       editorOpen: false,
@@ -148,6 +153,29 @@ export default {
 </script>
 
 <style scoped>
+.flex-container-column{
+  flex-direction: row;
+  display:flex;
+  flex-wrap: nowrap;
+}
+
+#left-container{
+  flex: 1 1;
+}
+
+#title{
+  color: var(--clr-primary);
+  font-size: 2rem;
+  font-weight: 400;
+}
+
+#add-document{
+  margin-left: auto;
+  margin-right: auto;
+  color: var(--clr-primary-lighter);
+  font-size: 2rem;
+}
+
 .documentEmbed{
   height:12vh;
   padding:5px;

@@ -120,6 +120,12 @@ export default {
   flex-wrap: nowrap;
 }
 
+#title{
+  color: var(--clr-primary);
+  font-size: 2rem;
+  font-weight: 400;
+}
+
 #left-container{
   flex: 1 1;
 }

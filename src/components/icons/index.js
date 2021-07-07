@@ -13,6 +13,7 @@ import EditIcon from './EditIcon.vue';
 import DeleteIcon from './DeleteIcon.vue';
 import CheckIcon from './CheckIcon.vue';
 import AddIcon from './AddIcon.vue';
+import DragIcon from './DragIcon.vue';
 
 export {
   QuestionIcon,
@@ -30,4 +31,5 @@ export {
   DeleteIcon,
   CheckIcon,
   AddIcon,
+  DragIcon,
 };

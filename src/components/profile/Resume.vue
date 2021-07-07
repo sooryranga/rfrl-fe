@@ -163,6 +163,12 @@ export default {
   color: var(--clr-gray-2)
 }
 
+#title{
+  color: var(--clr-primary);
+  font-size: 2rem;
+  font-weight: 400;
+}
+
 .card:hover>.hover-to-show
 {
     display:block;
