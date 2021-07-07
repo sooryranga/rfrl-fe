@@ -105,7 +105,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .studentImage{
   background-size: cover;
   background-position: top center;
@@ -117,5 +117,11 @@ export default {
 
 .stars {
   width: 10px;
+}
+
+#title{
+  color: var(--clr-primary);
+  font-size: 2rem;
+  font-weight: 400;
 }
 </style>

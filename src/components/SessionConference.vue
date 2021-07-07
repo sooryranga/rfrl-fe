@@ -208,7 +208,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 #tutor-nav{
   flex: 0 0 auto!important;
 }
