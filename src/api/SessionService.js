@@ -65,7 +65,7 @@ export const SessionService = {
   async getPrendingSession(roomId) {
     const response = await Vue.axios.get(
         `sessions/`,
-        {params: {room_id: roomId, state: SessionState.PENDING}},
+        {params: {roomId: roomId, state: SessionState.PENDING}},
     );
     const sessions = response.data.map((session) => {
       return responseToSession(session);
@@ -76,7 +76,7 @@ export const SessionService = {
   async getScheduledSessions(roomId) {
     const response = await Vue.axios.get(
         `sessions/`,
-        {params: {room_id: roomId, state: SessionState.SCHEDULED}},
+        {params: {roomId: roomId, state: SessionState.SCHEDULED}},
     );
 
     const sessions = response.data.map((session) => {
