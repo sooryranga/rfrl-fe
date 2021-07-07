@@ -3,10 +3,12 @@
     <div id="chat-container">
       <div id="left-container">
         <tutoring-scheduler
+          v-if="roomId"
           :room-id="roomId"
         />
         <scheduled-tutoring
-        :room-id="roomId"
+          v-if="roomId"
+          :room-id="roomId"
         />
       </div>
       <div id="right-container">
