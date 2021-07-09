@@ -1,19 +1,24 @@
 <template>
-  <div class="row h-100">
-    <div class="col h-100">
-    </div>
-    <div class="col h-100">
-      <div>
-        <pre>
+  <register-template
+    :imageSrc="require('@/assets/pexels-djordje-petrovic-2102416.jpg')"
+    :isLoading="isLoading"
+    :error="error"
+    :showError="showError"
+  >
+    <div id="company-email">
+      <div id="explain-why-container">
+        <p class="explain-why-company-email">
           You wanna tutor and recruit some good co-workers
           then you gotta tell them where you work!
           Referal bonus is on the line :P
-
+        </p>
+        <p class="explain-why-company-email">
           We will sent a passcode to your work email and
           you will need to submit the passcode back to us.
-
+        </p>
+        <p class="explain-why-company-email">
           Don't worry, your email is encrypted.
-        </pre>
+        </p>
       </div>
       <form v-if="!askForPasscode">
         <div class="form-group">
@@ -42,17 +47,17 @@
           <div class="row">
             <button
               type="button"
-              class="col btn btn-primary mt-3"
-              v-on:click="skipCompanyVerification">
-            Skip Verification
+              class="col primary-btn primary-btn-dark mt-3 p-2"
+              v-on:click="setCompanyVerification">
+            Verify Company
             </button>
           </div>
           <div class="row">
             <button
               type="button"
-              class="col btn btn-primary mt-3"
-              v-on:click="setCompanyVerification">
-            Verify Company
+              class="col primary-btn primary-btn-dark mt-3 p-2"
+              v-on:click="skipCompanyVerification">
+            Skip Verification
             </button>
           </div>
       </form>
@@ -80,16 +85,16 @@
         </div>
         <div class="row">
           <button
-            type="button"
-            class="col btn btn-primary mt-3"
-            v-on:click="verifyPasscode">
+              type="button"
+              class="col primary-btn primary-btn-dark mt-3 p-2"
+              v-on:click="verifyPasscode">
           Verify
           </button>
         </div>
         <div class="row">
           <button
             type="button"
-            class="col btn btn-primary mt-3"
+            class="col primary-btn primary-btn-dark mt-3 p-2"
             v-on:click="deleteEmailRelation">
           Change Email
           </button>
@@ -97,17 +102,18 @@
         <div class="row">
           <button
             type="button"
-            class="col btn btn-primary mt-3"
+            class="col primary-btn primary-btn-dark mt-3 p-2"
             v-on:click="skipCompanyVerification">
           Skip
           </button>
         </div>
       </form>
     </div>
-  </div>
+  </register-template>
 </template>
 
 <script>
+import RegisterTemplate from '@/components/register/RegisterTemplate.vue';
 import {mapGetters, mapActions} from 'vuex';
 import {flowToNextStep, companyEmail} from './RegisterFlow';
 import {required, email} from 'vuelidate/lib/validators';
@@ -120,6 +126,9 @@ export default {
       email,
       required,
     },
+  },
+  components: {
+    RegisterTemplate,
   },
   data: function() {
     return {
@@ -208,6 +217,17 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+.explain-why-company-email{
+  text-align: center;
+  font-size: 1.1rem;
+  color: var(--clr-accent);
+  font-weight: 400;
+}
 
+#explain-why-container{
+  padding: 2rem;
+  margin-bottom: 2rem;
+  color: white;
+}
 </style>
