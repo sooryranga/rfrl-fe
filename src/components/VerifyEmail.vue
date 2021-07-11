@@ -7,7 +7,7 @@
         <pre v-if = "isWorkEmailVerification">
           You wanna tutor and recruit some good co-workers
           then you gotta tell them where you work!
-          Referal bonus is on the line :P
+          Referral bonus is on the line :P
 
           We will sent a passcode to your work email and
           you will need to submit the passcode back to us.
