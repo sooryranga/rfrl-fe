@@ -18,10 +18,10 @@
           </button>
         </div>
       </div>
-      <div class="pt-1"  v-if="profile">
+      <div class="pt-1" v-if="profile && profile.institution">
         <div class="educationRow row">
-          <div class="col-3 my-auto">
-            <img class="institutionLogo" src="https://tinyurl.com/54ze666n"/>
+          <div class="col-3">
+            <education-icon :size="'70%'" :hoverExpand="false"/>
           </div>
           <div class="col my-auto">
             <p id="institution-name">{{profile.institution}}</p>
@@ -29,6 +29,11 @@
             <p id="field-of-study">{{profile.fieldOfStudy}}</p>
             <p id="start-and-end-year">{{profile.startYear}}-{{profile.endYear}}</p>
           </div>
+        </div>
+      </div>
+      <div v-else>
+        <div id="fall-back-text" class="center">
+          {{educationFallBackText}}
         </div>
       </div>
     </div>
@@ -39,7 +44,7 @@
 import {mapGetters, mapActions} from 'vuex';
 import EducationEditor from '@/components/profile/EducationEditor.vue';
 import {Profile} from '@/api';
-import {EditIcon} from '@/components/icons';
+import {EditIcon, EducationIcon} from '@/components/icons';
 
 export default {
   name: 'education',
@@ -53,7 +58,7 @@ export default {
       otherProfile: null,
     };
   },
-  components: {'education-editor': EducationEditor, EditIcon},
+  components: {'education-editor': EducationEditor, EditIcon, EducationIcon},
   computed: {
     ...mapGetters('profile', ['currentProfile']),
     isLoggedInUser() {
@@ -61,6 +66,13 @@ export default {
     },
     isLoading() {
       return this.profile === null;
+    },
+    educationFallBackText() {
+      if (this.isLoggedInUser) {
+        return 'Add your education to get more views on your profile';
+      }
+
+      return 'User has not added their education background';
     },
     profile() {
       if (this.isLoggedInUser) {
@@ -102,6 +114,22 @@ export default {
 </script>
 
 <style scoped>
+.center{
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  text-align: center;
+  flex-direction: column;
+}
+
+#fall-back-text{
+  text-align: center;
+  height: 3rem;
+  background: var(--clr-gray-8);
+  padding-top:1rem;
+  padding-bottom: 1rem;
+}
+
 #left-container{
   flex: 1 1;
 }
