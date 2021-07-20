@@ -13,7 +13,7 @@
     <div class="parent">
       <div class="mx-auto my-auto">
         <div id="google-signin-btn">
-          <button type="button" class="btn btn-outline-dark btn-lg" v-on:click="loginToGoogle">
+          <button type="button" class="btn btn-outline-dark btn-lg" v-on:click="loginToGoogle" disabled>
             <i class="fab fa-google"></i>
             Register with Google
           </button>
@@ -110,6 +110,14 @@ export default {
     },
   },
 
+  props: {
+    email: {
+      type: String,
+      required: false,
+      default: '',
+    },
+  },
+
   mixins: [ErrorMixin],
   data: function() {
     return {
@@ -117,7 +125,6 @@ export default {
       user: null,
       googleOauth: null,
       password: '',
-      email: '',
       isLoading: false,
     };
   },
