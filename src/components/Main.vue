@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import {mapGetters, mapActions} from 'vuex';
+import {mapGetters} from 'vuex';
 import VerifyEmailBanner from './VerifyEmailBanner.vue';
 import {Profile} from '@/api';
 import MainNavBar from './MainNavBar.vue';
@@ -71,15 +71,11 @@ export default {
     },
   },
   methods: {
-    ...mapActions('profile', ['loginAuthorized']),
     seperatorColor() {
       return WITH_SEPARATOR_MODAL_ROUTES.has(this.$route.name) ?(
           'var(--clr-primary-lighter)'
         ) : 'var(--clr-primary)';
     },
-  },
-  async mounted() {
-    await this.loginAuthorized();
   },
 };
 </script>
