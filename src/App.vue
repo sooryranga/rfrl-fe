@@ -20,16 +20,26 @@ export default {
   methods: {
     ...mapActions('profile', ['loginAuthorized']),
   },
-  async mounted() {
-    if (this.loggedIn) return;
-    try {
-      await this.loginAuthorized();
-    } catch (err) {
-      this.$router.push({
-        name: 'signup',
-      });
-      throw err;
-    }
+  watch: {
+    '$route.name': function() {
+      if (this.loggedIn) return;
+
+      this.loginAuthorized()
+          .then(()=>{
+            if (this.$route.name === 'signup') {
+              this.$router.push({
+                name: 'home',
+              });
+            }
+          })
+          .catch((err)=>{
+            if (this.$route.name === 'signup') return;
+            console.log(err);
+            this.$router.push({
+              name: 'signup',
+            });
+          });
+    },
   },
 };
 </script>

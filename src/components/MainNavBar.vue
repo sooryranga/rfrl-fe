@@ -93,7 +93,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions('profile', ['loginAuthorized', 'logout']),
+    ...mapActions('profile', ['logout']),
     async logoutUser() {
       await this.logout();
       this.$router.push({name: 'signup'});
