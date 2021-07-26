@@ -5,16 +5,12 @@
     :error="error"
     :showError="showError"
   >
-    <div class="referrer">
-      <button class="primary-btn primary-btn-dark h-100 w-100" v-on:click="setTutor">
-        Be a Refferer
-      </button>
-    </div>
-    <div class="referrer">
-      <button class="primary-btn primary-btn-dark h-100 w-100" v-on:click="goNext">
-        Get Referred
-      </button>
-    </div>
+    <button class="ref-btn" v-on:click="setTutor">
+      Be a Refferer
+    </button>
+    <button class="ref-btn" v-on:click="goNext">
+      Get Referred
+    </button>
   </register-template>
 </template>
 
@@ -66,41 +62,27 @@ export default {
 </script>
 
 <style scoped>
-.btn{
-  width: 400px;
-}
-
-#parent{
-  display: flex;
-  justify-content: space-around;
-  height: 100%;
-  flex-direction:column;
-  align-items: center;
-  padding-top: 5rem;
-  padding-bottom: 5rem;
-}
-
-#feature-img{
-  height: 100%;
+.ref-btn{
   width: 100%;
-  object-fit: cover;
+  height: 50%;
+  font-size: 2rem;
+  border-radius: 0rem;
+  display: inline-block;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--clr-accent);
+  background-color: var(--clr-gray-9);
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  user-select: none;
+  border: 0;
+  transition: all 0.1s linear;
 }
 
-.fixed-current-top {
-  position: absolute;
-  top: 1rem;
-  width: calc(100% - 2rem);
-  margin-left: 1rem;
-  margin-right: 1rem;
-  z-index: 123;
-}
-
-.referrer{
-  flex: 0 0 10%;
-  width: 50%;
-  max-width: 30rem;
-  height: 30%;
-  max-height: 30rem;
-  font-size: 1.5rem;
+.ref-btn:hover{
+  color: white;
+  border: none;
+  background-color: var(--clr-accent);
 }
 </style>
