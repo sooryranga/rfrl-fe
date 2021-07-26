@@ -248,7 +248,7 @@ export default {
 <style scoped>
 .parent{
   max-width: 30rem;
-  width: 95%;
+  width: 90%;
 }
 
 #feature-img{
