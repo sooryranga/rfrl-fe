@@ -230,4 +230,13 @@ export default {
   margin-bottom: 2rem;
   color: white;
 }
+
+#company-email{
+  width:90%;
+  max-width: 30rem;
+}
+
+.primary-btn{
+  height:2.5rem;
+}
 </style>
