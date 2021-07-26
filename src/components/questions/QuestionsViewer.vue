@@ -141,7 +141,7 @@ textarea {
   display: none;
 }
 
-@media only screen and (max-width: 900px) {
+@media (max-width: 900px) {
   #go-back-btn {
     display: inline-block;
   }
