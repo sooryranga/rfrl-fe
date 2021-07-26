@@ -93,7 +93,7 @@ export default {
   padding-left:2rem;
 }
 
-@media only screen and (max-width: 900px) {
+@media (max-width: 900px) {
   #questions-selector{
     flex: 0 1 100%;
      padding-right: 0rem;
