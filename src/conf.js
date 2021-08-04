@@ -7,7 +7,7 @@ const API_URL = process.env.NODE_ENV === 'development' ?
 
 const WS_URL = process.env.NODE_ENV === 'development' ?
   'ws://localhost:8080/conference':
-  'ws://backend.rfrl.ca/conference';
+  'wss://backend.rfrl.ca/conference';
 
 export {
   DaysEnum,
