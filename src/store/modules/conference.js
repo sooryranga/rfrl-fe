@@ -183,7 +183,7 @@ const mutations = {
   },
   [SET_RESET_CONFERENCE](state) {
     if (state.listener) {
-      this.listener();
+      state.listener();
     }
     state = {...state, ...blankCodeState()};
   },
