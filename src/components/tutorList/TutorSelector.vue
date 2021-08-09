@@ -113,7 +113,7 @@ export default {
       return 'https://' + shortenedGithub;
     },
     getPhoto(client) {
-      return client.photo || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQB8oKGDdE1XOkEAYG_Xmo3HObzakQbY4oHnQ&usqp=CAU'; //eslint-disable-line
+      return client.photo;
     },
     cardName(firstName, lastName) {
       return firstName;
