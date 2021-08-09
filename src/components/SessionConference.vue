@@ -18,6 +18,7 @@
               ref="chat"
               :isSingleRoom="true"
               :roomId="session.roomId"
+              v-if="loggedIn"
               :currentUserId="currentProfileId">
             </chat>
           </div>
@@ -110,6 +111,7 @@ export default {
       idToType: {},
     };
   },
+
   props: {
     sessionId: {
       value: [Number, String],
@@ -121,7 +123,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters('profile', ['currentProfileId']),
+    ...mapGetters('profile', ['currentProfileId', 'loggedIn']),
   },
   methods: {
     async report() {
