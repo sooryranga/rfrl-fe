@@ -51,6 +51,11 @@ export const TutorReviewService = {
     const response = await Vue.axios.get(`pending-tutor-reviews/`);
     return response.data;
   },
+  async ignoreTutorReview({tutorId}) {
+    return await Vue.axios.delete(
+        `pending-tutor-reviews/${tutorId}/`,
+    );
+  },
 };
 
 
