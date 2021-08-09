@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import {DEFAULT_PROFILE_PIC_URL} from '@/conf';
 
 export const responseToProfile = (profileResponse) => {
   if (!profileResponse) return;
@@ -10,6 +11,10 @@ export const responseToProfile = (profileResponse) => {
 
   if (profile.updatedAt) {
     profile.updatedAt = new Date(profile.updatedAt);
+  }
+
+  if (!profile.photo) {
+    profile.photo = DEFAULT_PROFILE_PIC_URL;
   }
 
   return profile;
