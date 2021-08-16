@@ -1,5 +1,5 @@
 <template>
-<div class='mt-3 h-100'>
+<div class='h-100'>
   <transition name="fade">
     <div v-if="showError" class="alert alert-danger fade-in fixed-top" role="alert">
       {{error}}
