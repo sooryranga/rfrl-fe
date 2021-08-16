@@ -33,6 +33,13 @@ export class WebrtcConn {
       );
     });
     this.peer.on('connect', () => {
+      Object.values(this.webrtcManager.trackAndStream).forEach(
+          ({track, stream, meta}) => {
+            const stringifiedData = JSON.stringify(meta);
+            this.peer.send(stringifiedData);
+            this.peer.addTrack(track, stream);
+          },
+      );
       this.connected = true;
     });
 
@@ -94,6 +101,7 @@ export class WebrtcManager {
     this.setMediaTrack = setMediaTrack;
     this.announceData = announceData;
     this.maxConns = maxConns;
+    this.trackAndStream = {};
 
     this.conn = new WebSocket(this.url);
     this.conn.addEventListener('message', (m) => this.onMessage(m));
@@ -119,7 +127,10 @@ export class WebrtcManager {
    * @param {obj} track
    * @param {obj} stream
    */
-  addTrack({track, stream}) {
+  addTrack({track, stream, meta}) {
+    this.sendData(meta);
+
+    this.trackAndStream[track.id] = {track, stream, meta};
     Object.values(this.webrtcConns).forEach((webrtc) =>{
       webrtc.peer.addTrack(track, stream);
     });
@@ -142,6 +153,7 @@ export class WebrtcManager {
    * @param {obj} stream
    */
   removeTrack({track, stream}) {
+    delete this.trackAndStream[track.id];
     Object.values(this.webrtcConns).forEach((webrtc) =>{
       webrtc.peer.removeTrack(track, stream);
     });
@@ -164,6 +176,17 @@ export class WebrtcManager {
   onDisconnect() {
     console.log(`disconnect (${this.url})`);
   }
+
+  /**
+  * destroy
+  */
+  destroy() {
+    Object.values(this.webrtcConns).forEach((peerConn) => {
+      peerConn.destroy();
+    });
+    this.conn.close();
+  }
+
 
   /**
   * onConnect

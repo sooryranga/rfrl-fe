@@ -27,10 +27,9 @@
       <div class="col p-0 h-100">
         <div id="session-tools">
           <div id="session-tools-nav">
-            <nav class="navbar navbar-expand-lg navbar-light bg-light h-100">
-              <div class="collapse navbar-collapse" id="navbarNav">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light h-100 p-0">
                 <ul class="navbar-nav">
-                  <li class="nav-item active">
+                  <li class="nav-item">
                     <router-link
                       class="nav-link"
                       :to="{ name: 'code', params: {userId: $route.params.userId, conferenceId}}">
@@ -51,8 +50,6 @@
                       Screen Share
                     </router-link>
                   </li>
-                </ul>
-                <ul class="navbar-nav ms-auto">
                   <li class="nav-item">
                     <button v-on:click="report" class="btn btn-sm btn-light" type="button" aria-label="report">
                       <span class="material-icons-outlined" style="vertical-align: middle;">
@@ -61,7 +58,6 @@
                     </button>
                   </li>
                 </ul>
-              </div>
             </nav>
           </div>
           <div id="session-tool-view">
@@ -130,12 +126,12 @@ export default {
       this.$refs.chat.reportClient(this.session.roomId);
     },
     setTrackOnPeers({stream, track, type}) {
-      this.sendDataToPeers({
+      const meta = {
         type,
         streamId: stream.id,
-      });
+      };
 
-      this.webrtcManger.addTrack({track, stream});
+      this.webrtcManger.addTrack({track, stream, meta});
     },
     removeTrackFromPeers({track, stream}) {
       this.webrtcManger.removeTrack({track, stream});
@@ -173,9 +169,6 @@ export default {
         stream: this.idToStream[streamId],
       });
     },
-    sendDataToPeers(data) {
-      this.webrtcManger.sendData(data);
-    },
   },
   async mounted() {
     try {
@@ -204,6 +197,7 @@ export default {
   beforeDestroy() {
     this.provider.disconnect();
     this.provider.destroy();
+    this.webrtcManger.destroy();
   },
 };
 </script>
@@ -227,7 +221,7 @@ export default {
   width: 100%;
 }
 #session-tool-view{
-  flex: 1 1 100%;
+  flex: 1 1;
   width: 100%;
   min-height: 0;
 }
