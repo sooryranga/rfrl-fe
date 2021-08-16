@@ -39,20 +39,7 @@ export default {
   },
   watch: {
     videoStream(val, _) {
-      this.othersSharing = true;
-      const tracks = val.getVideoTracks();
-      const webrtcTrack = tracks.length > 0? tracks[0]: null;
-
-      if (webrtcTrack) {
-        webrtcTrack.onmute = () => {
-          webrtcTrack.stop();
-          this.othersSharing = false;
-        };
-      }
-
-      this.videortc.srcObject = val;
-      this.videortc.muted = true;
-      this.videortc.play();
+      this.onVideoStreamChange(val);
     },
     async allowScreenShare(val, _) {
       if (val === false) {
@@ -84,6 +71,10 @@ export default {
     this.video = this.$refs.video;
     this.videortc = this.$refs.videortc;
 
+    if (this.videoStream) {
+      this.onVideoStreamChange(this.videoStream);
+    }
+
     await this.connectPeers();
   },
   beforeDestroy() {
@@ -95,6 +86,22 @@ export default {
     }
   },
   methods: {
+    onVideoStreamChange(stream) {
+      this.othersSharing = true;
+      const tracks = stream.getVideoTracks();
+      const webrtcTrack = tracks.length > 0? tracks[0]: null;
+
+      if (webrtcTrack) {
+        webrtcTrack.onmute = () => {
+          webrtcTrack.stop();
+          this.othersSharing = false;
+        };
+      }
+
+      this.videortc.srcObject = stream;
+      this.videortc.muted = true;
+      this.videortc.play();
+    },
     async connectPeers() {
     // Create the local connection and its event listeners
     },
