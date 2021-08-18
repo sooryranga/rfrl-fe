@@ -28,11 +28,21 @@ export class WebrtcConn {
      */
     this.peer = new Peer({initiator, ...peerOpts});
     this.peer.on('signal', (signal) => {
+      console.log('signal', this.peerId, this.remotePeerId);
       this.webrtcManager.publishSignalingMessage(
-          {to: remotePeerId, from: peerId, type: 'signal', signal},
+          {
+            to: this.remotePeerId,
+            from: this.peerId,
+            type: 'signal',
+            signal,
+          },
       );
     });
     this.peer.on('connect', () => {
+      console.log(
+          'signal', this.peerId, this.remotePeerId,
+          this.webrtcManager.trackAndStream,
+      );
       Object.values(this.webrtcManager.trackAndStream).forEach(
           ({track, stream, meta}) => {
             const stringifiedData = JSON.stringify(meta);
@@ -49,23 +59,22 @@ export class WebrtcConn {
       this.closed = true;
       this.webrtcManager.deleteRemotePeer(this.remotePeerId);
       this.peer.destroy();
-      this.webrtcManager.announceSignalingInfo();
     });
 
     this.peer.on('data', (data) => {
       const parsedData = new TextDecoder().decode(data);
       const jsonData = JSON.parse(parsedData);
+      console.log('data', jsonData);
       this.webrtcManager.announceData(jsonData);
     });
 
     this.peer.on('error', (err) => {
-      console.log(
-          'Error in connection to ', remotePeerId, ': ', err,
-      );
-      this.webrtcManager.announceSignalingInfo();
+      console.error(err);
+      console.log('error', this.peerId, this.remotePeerId, err);
     });
 
     this.peer.on('stream', (stream) => {
+      console.error('error', this.peerId, this.remotePeerId, stream);
       this.webrtcManager.onPeerStream(stream);
     });
   }
@@ -164,6 +173,7 @@ export class WebrtcManager {
   * @param {string} peerId
   */
   deleteRemotePeer(peerId) {
+    console.log('deleteRemotePeer', peerId);
     if (peerId in this.webrtcConns) {
       delete this.webrtcConns[peerId];
     }
