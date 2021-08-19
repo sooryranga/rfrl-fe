@@ -105,7 +105,7 @@ export default {
                 width: {ideal: 640},
                 height: {ideal: 480},
                 aspectRatio: 1.777777778,
-                frameRate: {ideal: 12},
+                frameRate: {ideal: 10},
               },
               audio,
             },

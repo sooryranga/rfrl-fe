@@ -108,7 +108,15 @@ export default {
     async startStream() {
       try {
         const stream = await navigator.mediaDevices.getDisplayMedia(
-            {video: true, audio: true},
+            {
+              video: {
+                width: {ideal: 1280},
+                height: {ideal: 720},
+                aspectRatio: 1.777777778,
+                frameRate: {ideal: 10},
+              },
+              audio: true,
+            },
         );
         if (this.videoTrack) {
           this.videoTrack.stop();
