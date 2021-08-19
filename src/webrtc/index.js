@@ -73,8 +73,13 @@ export class WebrtcConn {
       console.log('error', this.peerId, this.remotePeerId, err);
     });
 
-    this.peer.on('stream', (stream) => {
-      console.error('error', this.peerId, this.remotePeerId, stream);
+    // this.peer.on('stream', (stream) => {
+    //   console.log('stream', this.peerId, this.remotePeerId, stream);
+    //   this.webrtcManager.onPeerStream(stream);
+    // });
+
+    this.peer.on('track', (track, stream) => {
+      console.log('track', this.peerId, this.remotePeerId, stream, track);
       this.webrtcManager.onPeerStream(stream);
     });
   }
