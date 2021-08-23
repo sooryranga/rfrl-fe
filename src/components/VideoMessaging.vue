@@ -1,12 +1,12 @@
 <template>
     <div ref="parent" id="parent">
       <div>
-        <video id="rtcvideo" ref="videortc" class="video" playsinline>
+        <video id="rtcvideo" ref="videortc" class="video" muted="muted" playsinline>
           RTC Video stream not available.
         </video>
       </div>
       <div>
-        <video id="myvideo" ref="video" class="video" playsinline>
+        <video id="myvideo" ref="video" class="video" muted="muted" playsinline>
           Video stream not available.
         </video>
       </div>
@@ -48,13 +48,10 @@ export default {
       this.videortc.srcObject = stream;
       this.videortc.play();
 
-      const videoTacks = stream.getVideoTracks();
-      if (videoTacks.length > 0) {
-        const videoTrack = videoTacks[0];
-        videoTrack.onmute = () => {
-          console.log('stream stopped');
-        };
-      }
+      stream.onremovetrack = (event) => {
+        event.track.stop();
+        this.videortc.load();
+      };
     },
     async allowVideo(val, _) {
       if (this.videoTrack != null && val === false) {
