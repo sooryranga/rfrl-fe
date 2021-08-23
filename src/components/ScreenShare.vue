@@ -93,13 +93,12 @@ export default {
 
       if (webrtcTrack) {
         webrtcTrack.onmute = () => {
-          webrtcTrack.stop();
+          console.log('stream stopped');
           this.othersSharing = false;
         };
       }
 
       this.videortc.srcObject = stream;
-      this.videortc.muted = true;
       this.videortc.play();
     },
     async connectPeers() {
