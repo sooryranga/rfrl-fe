@@ -8,7 +8,7 @@ const profileState = () => {
     education: null,
     workExperience: [],
     canBeTutor: true,
-    tutoredStudents: [],
+    referredClients: [],
     institution: null,
     degree: null,
     fieldOfStudy: null,
@@ -37,7 +37,7 @@ const documentState = () => {
   };
 };
 
-const tutoredStudentsState = () => {
+const referredClientsState = () => {
   return {
     profileId: null,
     name: null,
@@ -94,7 +94,7 @@ const chatRoomState = ()=>{
 export {
   profileState,
   documentState,
-  tutoredStudentsState,
+  referredClientsState,
   tutorReview,
   chatRoomState,
 };
