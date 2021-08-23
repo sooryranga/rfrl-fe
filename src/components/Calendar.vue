@@ -10,7 +10,7 @@
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLongTitle">Tutoring Session</h5>
+            <h5 class="modal-title" id="exampleModalLongTitle">Mentoring Session</h5>
             <button
             v-on:click="cancelEventCreation"
             type="button" class="no-styling-button" data-dismiss="modal" aria-label="Close">
@@ -59,7 +59,7 @@
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLongTitle">Proposed Tutoring Session</h5>
+            <h5 class="modal-title" id="exampleModalLongTitle">Proposed Mentoring Session</h5>
             <button
             v-on:click="cancelEventAcceptation"
             type="button" class="no-styling-button" data-dismiss="modal" aria-label="Close">

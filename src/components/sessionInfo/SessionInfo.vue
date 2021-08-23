@@ -7,7 +7,7 @@
     </transition>
     <div class="row p-3 my-3">
       <div class="col my-auto">
-        <h4 class="ms-4 my-2"> Tutoring Session </h4>
+        <h4 class="ms-4 my-2"> Mentoring Session </h4>
       </div>
       <div class="col">
         <button class="btn btn-secondary" v-on:click="routeToConference">Start Session</button>

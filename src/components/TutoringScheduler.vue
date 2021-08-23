@@ -23,10 +23,10 @@
               <p class="align-middle"
                 style="color:white"
                 v-if="session.tutorId != currentProfile.id">
-                {{session.tutor.firstName}} wants to tutor you
+                {{session.tutor.firstName}} wants to mentor you
               </p>
               <p class="align-middle" style="color:white" v-else>
-                {{wantsToLearnFromYou}}
+                {{wantsToBeRefferedByYou}}
               </p>
             </div>
             <p>
@@ -48,7 +48,7 @@
         v-if="currentProfile.isTutor"
         v-on:click="create(currentProfile.id)"
         class="primary-btn primary-btn-light mx-2 float-left scheduler-btn">
-          Tutor
+          Mentor
         </button>
       </p>
       <p>
@@ -98,8 +98,8 @@ export default {
 
   computed: {
     ...mapGetters('profile', ['currentProfile']),
-    wantsToLearnFromYou() {
-      return 'Students wants to learn from you';
+    wantsToBeRefferedByYou() {
+      return 'Client wants to be referred by you';
     },
     tutorDropDownActive() {
       return Object.keys(this.users).length > 2;
