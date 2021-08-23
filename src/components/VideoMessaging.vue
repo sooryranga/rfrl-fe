@@ -1,12 +1,12 @@
 <template>
     <div ref="parent" id="parent">
       <div>
-        <video id="rtcvideo" ref="videortc" class="video" playsinline autoplay>
+        <video id="rtcvideo" ref="videortc" class="video" playsinline>
           RTC Video stream not available.
         </video>
       </div>
       <div>
-        <video id="myvideo" ref="video" class="video" playsinline autoplay>
+        <video id="myvideo" ref="video" class="video" playsinline>
           Video stream not available.
         </video>
       </div>
