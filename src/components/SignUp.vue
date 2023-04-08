@@ -6,6 +6,6 @@
 
 <script>
 export default {
-  name: 'question'
+  name: 'SignUp'
 }
 </script>

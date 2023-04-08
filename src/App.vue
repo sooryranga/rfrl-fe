@@ -3,17 +3,17 @@
     <div id="topbar">
       <div class="nav left">
         <router-link to="/">Home</router-link> |
-        <router-link to="/ask-question">Ask Question</router-link> |
-        <router-link to="find-tutor">Find Tutor</router-link> |
-        <router-link to="about">About</router-link>
+        <router-link to="/questions">Ask Question</router-link> |
+        <router-link to="/tutors">Find Tutor</router-link> |
+        <router-link to="/about">About</router-link>
       </div>
       <div class="nav right">
-        <div v-if="user">
-            <router-link to="/"></router-link> |
+        <div v-if="currentUser">
+            <router-link to="/"> {{currentUser.name}}</router-link> |
         </div>
         <div v-else>
-            <tab>Sign Up</tab>
-            <tab>
+            <router-link to="/signup">Sign Up</router-link> |
+            <router-link to="/login">Login</router-link>
         </div>
       </div>
     </div>
@@ -23,13 +23,10 @@
 
 <script>
 import { mapGetters } from 'vuex'
+
 export default {
-  name: 'HelloWorld',
-  computed: {
-    ...mapGetters([
-      'getUser'
-    ])
-  }
+  name: 'tutor',
+  computed: mapGetters(['currentUser'])
 }
 </script>
 
@@ -53,5 +50,15 @@ export default {
 
 #nav a.router-link-exact-active {
   color: #42b983;
+}
+
+#topbar {
+  display: flex;
+}
+.left {
+  float: left;
+}
+.right {
+  float: right;
 }
 </style>
