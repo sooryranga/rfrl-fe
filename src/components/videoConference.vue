@@ -1,38 +1,24 @@
 <template>
-    <div ref="parent" class="container">
-      <div class="row">
-        <div class="col camera">
-          <video ref="video">
-            Video stream not available.
-          </video>
-          <video ref="videortc">
-            RTC Video stream not available.
-          </video>
-        </div>
+    <div ref="parent" id="parent">
+      <div>
+        <video id="rtcvideo" ref="videortc" class="video">
+          RTC Video stream not available.
+        </video>
       </div>
-      <div class="row">
-        <div class="col">
-          <button v-on:click="allowVideo=!allowVideo" class="btn btn-dark">
-            Video
-          </button>
-        </div>
-        <div class="col">
-          <button ref="takepicturebutton" class="btn btn-dark">
-            Take Picture
-          </button>
-        </div>
-        <div class="col">
-          <button v-on:click="allowAudio=!allowAudio" class="btn btn-dark">
-            Audio
-          </button>
-        </div>
+      <div>
+        <video id="myvideo" ref="video" class="video">
+          Video stream not available.
+        </video>
       </div>
-      <div class="row">
-        <canvas ref="canvas" class="mx-auto">
-          <div class="output">
-            <img ref="photo" alt="The screen capture will appear in this box.">
-          </div>
-        </canvas>
+      <div id="buttonrow" class="row">
+        <div class="col">
+          <i class="material-icons md-36 md-light" v-on:click="allowVideo=!allowVideo" v-if="!allowVideo">videocam</i>
+          <i class="material-icons md-36 md-light" v-on:click="allowVideo=!allowVideo" v-else>videocam_off</i>
+        </div>
+        <div class="col">
+          <i class="material-icons md-36 md-light" v-on:click="allowAudio=!allowAudio" v-if="!allowAudio">volume_up</i>
+          <i class="material-icons md-36 md-light" v-on:click="allowAudio=!allowAudio" v-else>volume_mute</i>
+        </div>
       </div>
     </div>
 </template>
@@ -46,13 +32,10 @@ export default {
       allowAudio: false,
       video: null,
       video2: null,
-      canvas: null,
-      photo: null,
-      startbutton: null,
       audioTrack: null,
       videoTrack: null,
       audioTrackSender: null,
-      videioTrackSender: null,
+      videoTrackSender: null,
       stream: null,
       height: 0,
       width: 320,
@@ -71,67 +54,30 @@ export default {
   watch: {
     allowVideo: function(val, _) {
       if (this.videoTrack != null && val == false) {
-        if (this.localConnection) {
-          this.localConnection.removeTrack(this.videioTrackSender, this.stream);
-          this.videioTrackSender = null;
+        if (this.localConnection && this.videoTrackSender) {
+          this.localConnection.removeTrack(this.videoTrackSender);
+          this.videoTrackSender = null;
         }
         this.videoTrack.stop();
         this.videoTrack = null;
       } else {
         this.startStream(val, this.allowAudio)
-            .then(() => {
-              if (this.localConnection) {
-                this.localConnection.addTrack(this.videoTrack, this.stream);
-                this.localConnection.getSenders().forEach((sender)=>{
-                  if (sender.track == this.videoTrack) {
-                    this.videioTrackSender = sender;
-                  }
-                });
-              }
-            });
+            .then(() => this.setTracks());
       }
     },
     allowAudio: function(val, _) {
-      if (this.audioTrack != null && val == false) {
-        if (this.localConnection) {
-          this.localConnection.removeTrack(this.audioTrackSender);
-          this.audioTrackSender = null;
-        }
-        this.audioTrack.stop();
-        this.audioTrack = null;
+      if (this.audioTrack != null) {
+        this.audioTrack.enabled = val;
       } else {
         this.startStream(this.allowVideo, val)
-            .then(() => {
-              if (this.localConnection) {
-                this.localConnection.addTrack(this.audioTrack);
-                this.localConnection.getSenders().forEach((sender)=>{
-                  if (sender.track == this.audioTrack) {
-                    this.audioTrackSender = sender;
-                  }
-                });
-              }
-            });
+            .then(() => this.setTracks());
       }
     },
   },
   mounted: function() {
-    this.matchDemension();
     this.video = this.$refs.video;
     this.video2 = this.$refs.videortc;
-    this.canvas = this.$refs.canvas;
-    this.photo = this.$refs.photo;
-    this.startbutton = this.$refs.takepicturebutton;
-    const self = this;
 
-    this.video.oncanplay = this.setCanPlay;
-    this.video2.oncanplay = this.setCanPlay;
-
-    this.startbutton.addEventListener('click', function(ev) {
-      self.takepicture();
-      ev.preventDefault();
-    }, false);
-
-    this.clearphoto();
     this.connectPeers();
   },
   methods: {
@@ -193,39 +139,12 @@ export default {
       }
     },
     setMediaTrack: function(e) {
-      console.log(e);
       if (
         this.video2.srcObject !== e.streams[0]
       ) {
-        console.log(e.streams);
         this.video2.srcObject = e.streams[0];
         this.video2.play();
-        console.log(e.streams);
         console.log('pc1: received remote stream');
-      }
-    },
-    matchDemension: function() {
-      this.width = Math.floor(this.$refs.parent.clientWidth/2);
-    },
-    clearphoto: function() {
-      const context = this.canvas.getContext('2d');
-      context.fillStyle = '#AAA';
-      context.fillRect(0, 0, this.canvas.width, this.canvas.height);
-
-      const data = this.canvas.toDataURL('image/png');
-      this.photo.setAttribute('src', data);
-    },
-    takepicture: function() {
-      const context = this.canvas.getContext('2d');
-      if (this.width && this.height) {
-        canvas.width = this.width;
-        canvas.height = this.height;
-        context.drawImage(this.video, 0, 0, this.width, this.height);
-
-        const data = this.canvas.toDataURL('image/png');
-        this.photo.setAttribute('src', data);
-      } else {
-        this.clearphoto();
       }
     },
     sendOfferMessage: function(data) {
@@ -245,17 +164,19 @@ export default {
           .catch((err)=>console.error(err));
     },
     startStream: function(video, audio) {
-      if (!video && !audio) {
-        return;
-      }
       const self = this;
-      this.videoTrack = null;
-      this.audioTrack = null;
       return navigator.mediaDevices.getUserMedia(
           {video, audio},
       )
           .then(function(stream) {
-            self.stream = stream;
+            if (self.videoTrack) {
+              self.videoTrack.stop();
+              self.videoTrack = null;
+            }
+            if (self.audioTrack) {
+              self.audioTrack.stop();
+              self.audioTrack = null;
+            }
             if (video) {
               self.videoTrack = stream.getVideoTracks()[0];
             }
@@ -264,6 +185,7 @@ export default {
             }
             self.video.srcObject = stream;
             self.video.play();
+            self.stream = stream;
           })
           .catch(function(err) {
             console.log('An error occurred: ' + err);
@@ -271,26 +193,33 @@ export default {
             self.allowAudio = false;
           });
     },
-    setCanPlay: function(ev) {
-      const video = ev.srcElement;
-      if (!this.streaming) {
-        this.height = (
-          video.videoHeight /
-          (video.videoWidth/this.width)
-        );
-
-        // Firefox currently has a bug where the height can't be read from
-        // the video, so we will make assumptions if this happens.
-
-        if (isNaN(this.height)) {
-          this.height = this.width / (4/3);
-        }
-
-        video.setAttribute('width', this.width);
-        video.setAttribute('height', this.height);
-        this.canvas.setAttribute('width', this.width);
-        this.canvas.setAttribute('height', this.height);
-        this.streaming = true;
+    setTracks: function() {
+      if (!this.localConnection) {
+        return;
+      }
+      if (this.audioTrackSender) {
+        this.localConnection.removeTrack(this.audioTrackSender);
+        this.audioTrackSender = null;
+      }
+      if (this.videoTrackSender) {
+        this.localConnection.removeTrack(this.videoTrackSender);
+        this.videoTrackSender = null;
+      }
+      if (this.audioTrack) {
+        this.localConnection.addTrack(this.audioTrack, this.stream);
+        this.localConnection.getSenders().forEach((sender)=>{
+          if (sender.track == this.audioTrack) {
+            this.audioTrackSender = sender;
+          }
+        });
+      }
+      if (this.videoTrack) {
+        this.localConnection.addTrack(this.videoTrack, this.stream);
+        this.localConnection.getSenders().forEach((sender)=>{
+          if (sender.track == this.videoTrack) {
+            this.videoTrackSender = sender;
+          }
+        });
       }
     },
   },
@@ -298,8 +227,39 @@ export default {
 </script>
 
 <style scoped>
-#video{
+#parent{
+  position: relative;
+  width: 25vw;
+  height: calc(25vw * (3/4));
+  min-width: 300px;
+  min-height: calc(300px*(3/4));
   background-color: black;
 }
-
+#rtcvideo{
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+}
+#myvideo{
+  position: absolute;
+  bottom: 2%;
+  left: 2%;
+  width: 30%;
+  height: 30%;
+  z-index: 1;
+}
+#buttonrow{
+  position: absolute;
+  bottom: 2%;
+  right: 5%;
+  z-index: 1;
+}
+.md-light { color: rgb(136, 136, 136); }
+.material-icons.md-18 { font-size: 18px; }
+.material-icons.md-24 { font-size: 24px; }
+.material-icons.md-36 { font-size: 36px; }
+.material-icons.md-48 { font-size: 48px; }
 </style>

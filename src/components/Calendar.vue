@@ -1,6 +1,6 @@
 <template>
-<div class='container'>
-  <div class='container h-100 mt-0'>
+<div class='container-fluid'>
+  <div class='container-fluid h-100 mt-0'>
     <div class='row h-100'>
       <div class='col col-3 p-0'>
         <div>
