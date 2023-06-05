@@ -91,7 +91,7 @@ export default {
       this[NAME](profile.getName());
       this[PROFILE_PICTURE](profile.getImageUrl());
       this.$router.push(
-          {name: 'Profile', params: {userId: this[GET_PROFILE].id}},
+          {name: 'profile', params: {userId: this[GET_PROFILE].id}},
       );
     },
     ...mapActions('authentication', [
