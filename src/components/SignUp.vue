@@ -91,7 +91,10 @@ export default {
       this[NAME](profile.getName());
       this[PROFILE_PICTURE](profile.getImageUrl());
       this.$router.push(
-          {name: 'profile', params: {userId: this[GET_PROFILE].id}},
+          {
+            name: 'profile',
+            params: {userId: this[GET_PROFILE].id},
+          },
       );
     },
     ...mapActions('authentication', [
@@ -102,9 +105,6 @@ export default {
     ...mapActions('profile', [
       NAME,
       PROFILE_PICTURE,
-    ]),
-    ...mapGetters('profile', [
-      GET_PROFILE,
     ]),
   },
   computed: {
@@ -119,6 +119,9 @@ export default {
           },
       );
     },
+    ...mapGetters('profile', [
+      GET_PROFILE,
+    ]),
   },
   mounted: function() {
     if (this.$route.query.hasOwnProperty('code')) {
