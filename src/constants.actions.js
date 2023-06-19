@@ -10,6 +10,7 @@ const NAME = 'name';
 const TUTORED_STUDENTS = 'tutored_students';
 const DOCUMENTS = 'documents';
 const EDUCATION = 'education';
+const TUTOR_REVIEW = 'tutor-review';
 
 export {
   // ACTION for authentication
@@ -24,4 +25,5 @@ export {
   TUTORED_STUDENTS,
   DOCUMENTS,
   EDUCATION,
+  TUTOR_REVIEW,
 };

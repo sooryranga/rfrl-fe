@@ -7,6 +7,8 @@ import instantMessaging from '@/components/InstantMessaging';
 import VideoMessaging from '@/components/VideoMessaging.vue';
 import Education from '@/components/profile/Education.vue';
 import Documents from '@/components/profile/Documents.vue';
+import TutorDashboard from '@/components/profile/TutorDashboard.vue';
+import TutorReview from '@/components/profile/TutorReview.vue';
 
 Vue.component('request-tutor-modal', RequestTutorModal);
 Vue.component('calendar-extension', CalendarExtension);
@@ -15,6 +17,8 @@ Vue.component('instant-messaging', instantMessaging);
 Vue.component('video-messaging', VideoMessaging);
 Vue.component('education', Education);
 Vue.component('documents', Documents);
+Vue.component('tutor-dashboard', TutorDashboard);
+Vue.component('tutor-review', TutorReview);
 
 Vue.use(VueRouter);
 

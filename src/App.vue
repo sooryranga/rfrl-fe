@@ -18,8 +18,8 @@
                 <button
                 class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <img class="profilePicture" v-bind:src="getProfile.profileImage"/>
-                  {{getProfile.name}}
+                  <img class="profilePicture" v-bind:src="currentProfile.profileImage"/>
+                  {{currentProfile.name}}
                 </button>
                 <div class="dropdown-menu dropdown-menu-left" aria-labelledby="dropdownMenuButton">
                   <router-link
@@ -51,11 +51,11 @@ export default {
   name: 'tutor',
   computed: {
     ...mapGetters('authentication', ['loggedIn']),
-    ...mapGetters('profile', ['getProfile']),
+    ...mapGetters('profile', ['currentProfile']),
     profileLink: function() {
       return {
         name: 'profile',
-        params: {userId: this.getProfile.id},
+        params: {userId: this.currentProfile.id},
       };
     },
   },
