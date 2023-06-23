@@ -7,10 +7,12 @@ const LOGOUT = 'logout';
 // profile
 const PROFILE_PICTURE = 'profile_image';
 const NAME = 'name';
+const ABOUT = 'about';
 const TUTORED_STUDENTS = 'tutored_students';
 const DOCUMENTS = 'documents';
 const EDUCATION = 'education';
 const TUTOR_REVIEW = 'tutor-review';
+const ADD_DOCUMENT = 'add-document';
 
 export {
   // ACTION for authentication
@@ -26,4 +28,6 @@ export {
   DOCUMENTS,
   EDUCATION,
   TUTOR_REVIEW,
+  ADD_DOCUMENT,
+  ABOUT,
 };

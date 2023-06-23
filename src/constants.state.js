@@ -1,6 +1,8 @@
+import {v4 as uuidv4} from 'uuid';
+
 const profileState = () => {
   return {
-    id: null,
+    id: uuidv4(),
     name: null,
     birthDay: null,
     profileImage: null,
@@ -17,7 +19,7 @@ const profileState = () => {
 
 const documentState = () => {
   return {
-    id: null,
+    id: uuidv4(),
     type: null,
     src: null,
     description: null,
@@ -26,7 +28,7 @@ const documentState = () => {
 
 const educationState = () => {
   return {
-    id: null,
+    id: uuidv4(),
     institution: null,
     degree: null,
     fieldOfStudy: null,

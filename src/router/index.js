@@ -9,6 +9,7 @@ import Education from '@/components/profile/Education.vue';
 import Documents from '@/components/profile/Documents.vue';
 import TutorDashboard from '@/components/profile/TutorDashboard.vue';
 import TutorReview from '@/components/profile/TutorReview.vue';
+import ProfileAbout from '@/components/profile/About.vue';
 
 Vue.component('request-tutor-modal', RequestTutorModal);
 Vue.component('calendar-extension', CalendarExtension);
@@ -19,6 +20,7 @@ Vue.component('education', Education);
 Vue.component('documents', Documents);
 Vue.component('tutor-dashboard', TutorDashboard);
 Vue.component('tutor-review', TutorReview);
+Vue.component('profile-about', ProfileAbout);
 
 Vue.use(VueRouter);
 
