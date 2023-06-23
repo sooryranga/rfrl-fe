@@ -52,18 +52,9 @@ export default {
     ...mapGetters('profile', ['currentProfile']),
   },
   methods: {
-    'bookTutorRoute': function() {
-      return {
-        name: 'Calendar',
-        params: {userId: this.profile.id},
-      };
-    },
-    'bookTutorButton': function() {
-      return this.profile.isTutor &&
-      (this.profile.id === this.currentProfile.id);
-    },
     'save': function() {
       // Save file to bucket and update src
+      console.log(this.about, this.currentProfile.about);
       const state = {
         name: null,
         about: null,
@@ -74,12 +65,10 @@ export default {
       if (this.currentProfile.about != this.about) {
         state.about = this.about;
       }
-      if (state) {
-        this.$emit(
-            'saveEvent',
-            state,
-        );
-      }
+      this.$emit(
+          'saveEvent',
+          state,
+      );
     },
     'cancel': function() {
       this.$emit(
