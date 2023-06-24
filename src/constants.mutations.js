@@ -14,6 +14,7 @@ const SET_TUTOR_REVIEW = 'set_tutor_review';
 const SET_DOCUMENT = 'set_document';
 const SET_NEW_DOCUMENT = 'set_new_document';
 const SET_ABOUT = 'set_about';
+const SET_EDUCATIONS = 'set_educations';
 
 export {
   // Mutations for authentication
@@ -34,4 +35,5 @@ export {
   SET_DOCUMENT,
   SET_NEW_DOCUMENT,
   SET_ABOUT,
+  SET_EDUCATIONS,
 };

@@ -1,7 +1,7 @@
 <template>
   <div  id="localDocuments" class="shadow p-3 my-3 bg-white">
     <document-editor
-      :documentprop="this.editingDocument"
+      :documentprop="this.editingItem"
       v-if="editorOpen"
       v-on:saveEvent="saveEvent"
       v-on:cancelEvent="cancelEvent"
@@ -48,8 +48,8 @@ export default {
     return {
       'editorOpen': false,
       'localDocuments': [],
-      'documentIndex': null,
-      'editingDocument': documentState(),
+      'editingIndex': null,
+      'editingItem': documentState(),
     };
   },
   props: {
@@ -71,27 +71,27 @@ export default {
       this.editorDocument = documentState();
     },
     'add': function() {
-      this.editingDocument = documentState();
+      this.editingItem = documentState();
       this.editorOpen = true;
-      this.documentIndex = null;
+      this.editingIndex = null;
     },
     'edit': function(index) {
-      this.documentIndex = index;
-      this.editingDocument = this.localDocuments[index];
+      this.editingIndex = index;
+      this.editingItem = this.localDocuments[index];
       this.editorOpen = true;
     },
     'saveEvent': function(state) {
       this.editorOpen = false;
-      this.saveDocument(state);
+      this.saveItem(state);
     },
-    'saveDocument': function(state) {
+    'saveItem': function(state) {
       this[ADD_DOCUMENT]({
-        index: this.documentIndex,
+        index: this.editingIndex,
         newDocument: state,
       });
 
-      if (this.documentIndex != null) {
-        this.localDocuments[this.documentIndex] = state;
+      if (this.editingIndex != null) {
+        this.localDocuments[this.editingIndex] = state;
       } else {
         this.localDocuments.push(state);
       }
