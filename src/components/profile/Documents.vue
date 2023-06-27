@@ -104,7 +104,6 @@ export default {
       if (this.currentProfile.documents.length == 0) {
         this[DOCUMENTS]();
       }
-      console.log(this.currentProfile.documents);
       this.localDocuments.push(...this.currentProfile.documents);
     }
   },
