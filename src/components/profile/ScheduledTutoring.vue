@@ -6,26 +6,30 @@
       </div>
     </div>
     <div v-if="scheduledSessions.length">
-      <div class="mt-4" v-for="(dateSession,index) in dateScheduledSessions" v-bind:key="index">
-        <div class="dateSessionRow row">
-          <div class="col-1 my-auto" id="date">
-            <div class="btn btn-default btn-circle" v-bind:class="{'btn-primary':isToday(dateSession.date)}">
-              {{dateSession.date.getDate()}}
-            </div>
+      <div class="row mt-1 h-100" v-for="(dateSession,index) in dateScheduledSessions" v-bind:key="index">
+        <div class="col-1 my-1" id="date">
+          <div
+            class="btn btn-default btn-circle"
+            v-bind:class="[isToday(dateSession.date) ?'btn-primary': 'btn-light']">
+            {{dateSession.date.getDate()}}
           </div>
-          <div class="col-2 my-auto">
-            <div>{{dateSession.date.getMonth()}},{{toDayOfWeek(dateSession.date.getDay())}}</div>
-          </div>
-          <div class="col align-middle" id="sessions">
-            <div
-              class="row h-100"
-              v-for="session in dateSession.sessions"
-              v-bind:key="session.id">
-              <div class="col-4 my-auto">
-                <div>{{session.startTime.toLocaleTimeString()}}</div>
-              </div>
-              <div class="col">
-               Session with {{currentProfile.isTutor ? session.mentee.name : sessnion.mentor.name}}
+        </div>
+        <div class="col-2 my-1">
+          <div>{{dateSession.date.getMonth()}} {{toDay(dateSession.date.getDay())}}</div>
+        </div>
+        <div class="col align-middle" id="sessions">
+          <div
+            class="row mb-1"
+            v-for="session in dateSession.sessions"
+            v-bind:key="session.id">
+            <div class="btn btn-outline-dark w-100">
+              <div class="row">
+                <div class="col-6 my-auto">
+                  <div>{{session.startTime.toLocaleTimeString()}}</div>
+                </div>
+                <div class="col text-left my-auto">
+                 Session with {{currentProfile.isTutor ? session.mentee.name : sessnion.mentor.name}}
+                </div>
               </div>
             </div>
           </div>
@@ -85,31 +89,32 @@ export default {
   methods: {
     'isToday': function(checkingDate) {
       const today = new Date();
-      console.log(today);
       return (
         today.getFullYear() === checkingDate.getFullYear() &&
         today.getMonth() === checkingDate.getMonth() &&
         today.getDate() === checkingDate.getDate()
       );
     },
-    'setSessions': function() {
-      this.$set(
-          this.scheduledSessions,
-          0,
-          {
-            startTime: new Date(),
-            mentor: {name: 'Arun'},
-            mentee: {name: 'soory'},
-          },
-      );
-    },
-    'toDayOfWeek': function(day) {
+    'toDay': function(day) {
       return dayOfWeekMapping[day];
     },
   },
   mounted: function() {
-    this.setSessions();
-    console.log(this.scheduledSessions);
+    this.scheduledSessions.push({
+      startTime: new Date(),
+      mentor: {name: 'Arun'},
+      mentee: {name: 'Sathi'},
+    });
+    this.scheduledSessions.push({
+      startTime: new Date(),
+      mentor: {name: 'Arun'},
+      mentee: {name: 'Soory'},
+    });
+    this.scheduledSessions.push({
+      startTime: new Date('2020/11/26'),
+      mentor: {name: 'Arun'},
+      mentee: {name: 'TJ'},
+    });
   },
 };
 </script>
