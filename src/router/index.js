@@ -12,6 +12,7 @@ import TutorReview from '@/components/profile/TutorReview.vue';
 import ProfileAbout from '@/components/profile/About.vue';
 import ScheduledTutoring from '@/components/profile/ScheduledTutoring.vue';
 import AnsweredQuestions from '@/components/profile/AnsweredQuestions.vue';
+import AskedQuestions from '@/components/profile/AskedQuestions.vue';
 
 Vue.component('request-tutor-modal', RequestTutorModal);
 Vue.component('calendar-extension', CalendarExtension);
@@ -25,6 +26,7 @@ Vue.component('tutor-review', TutorReview);
 Vue.component('profile-about', ProfileAbout);
 Vue.component('scheduled-tutoring', ScheduledTutoring);
 Vue.component('answered-questions', AnsweredQuestions);
+Vue.component('asked-questions', AskedQuestions);
 
 Vue.use(VueRouter);
 
