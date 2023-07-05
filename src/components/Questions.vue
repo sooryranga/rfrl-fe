@@ -1,61 +1,64 @@
 <template>
-<div id="question-div" class="mt-3 w-75 mx-auto">
-  <questions-editor></questions-editor>
-  <questions-filter
-  v-on:addTag="addTag"
-  v-on:removeTag="removeTag"
-  v-on:updateDatePosted="updateDatePosted"
-  v-on:updateRemote="updateRemote"
-  ></questions-filter>
-  <div v-for="question of questions"  v-bind:key="question.title" class="row mt-5 card">
-    <img class="card-img-top" alt="Card image cap">
-    <div class="card-body">
-      <h5 class="card-title">{{question.poster}}</h5>
-      <p class="card-text">Some quick example text.</p>
-    </div>
-    <ul class="list-group list-group-flush">
-      <li class="list-group-item">Cras justo odio</li>
-      <li class="list-group-item">Dapibus ac facilisis in</li>
-      <li class="list-group-item">Vestibulum at eros</li>
-    </ul>
-    <div class="card-body">
-      <router-link class="card-link" v-bind:to="`/user/${question.id}/calendar`">Ask Question</router-link>
+  <div id="question-div" class="mt-3 w-75 mx-auto">
+    <questions-editor></questions-editor>
+    <questions-filter
+    class="mt-3"
+    v-on:updateTag="updateTag"
+    v-on:updateDatePosted="updateDatePosted"
+    v-on:updateRemote="updateRemote"
+    ></questions-filter>
+    <div class="row h-100 w-100 mt-4">
+      <div class="col-4">
+        <questions-selector
+          v-bind:questions="questions"
+        ></questions-selector>
+      </div>
+      <div class="col ml-4">
+        <questions-viewer
+          v-bind:questionId="questionId"
+        ></questions-viewer>
+      </div>
     </div>
   </div>
-</div>
 </template>
 
 <script>
 import {mapGetters} from 'vuex';
 import QuestionsFilter from '@/components/QuestionsFilter.vue';
+import QuestionsEditor from '@/components/QuestionsEditor.vue';
+import QuestionsSelector from '@/components/QuestionsSelector.vue';
+import QuestionsViewer from '@/components/QuestionsViewer.vue';
 
 export default {
   name: 'Questions',
-  components: {'questions-filter': QuestionsFilter},
-  computed: mapGetters(['questions']),
+  components: {
+    'questions-filter': QuestionsFilter,
+    'questions-selector': QuestionsSelector,
+    'questions-viewer': QuestionsViewer,
+    'questions-editor': QuestionsEditor,
+  },
+  computed: {...mapGetters('questions', ['questions'])},
   data: function() {
     return {
-      tags: [],
-      datePosted: 'any_time',
-      remote: false,
+      questionId: null,
     };
   },
   methods: {
-    removeTag: function(tag) {
-      const indx = tags.indexOf(tag);
-      if (indx > -1) {
-        this.tags.splice(index, 1);
-      }
-    },
-    addTag: function(tag) {
-      this.tags.push(tag);
+    updateTag: function(tags) {
+      console.log(tags);
     },
     updateRemote: function(isRemote) {
-      this.remote = isRemote;
+      console.log(isRemote);
     },
     updateDatePosted: function(datePosted) {
-      this.datePosted = datePosted;
+      console.log(datePosted);
     },
+  },
+  beforeMount: function() {
+    this.questionId = (
+      this.$route.params?.questionId ||
+      this.questions[0].id
+    );
   },
 };
 </script>

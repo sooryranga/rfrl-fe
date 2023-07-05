@@ -35,18 +35,30 @@ const dayOfWeekMapping = [
 ];
 
 const tags = [
-  {name: 'Math', value: 'math'},
-  {name: 'English', value: 'english'},
-  {name: 'Science', value: 'science'},
-  {name: 'Music', value: 'music'},
+  {name: 'Math', key: 'math'},
+  {name: 'English', key: 'english'},
+  {name: 'Science', key: 'science'},
+  {name: 'Music', key: 'music'},
 ];
 
+const tagKeyValue = {};
+
+for (const v of tags) {
+  tagKeyValue[v.key] = v;
+};
+
 const datePosted = [
-  {name: 'Past 24 hours', value: 'past_24_hours'},
-  {name: 'Past Week', value: 'past_week'},
-  {name: 'Past Month', value: 'past_month'},
-  {name: 'Any Time', value: 'any_time'},
+  {name: 'Past 24 hours', key: 'past_24_hours'},
+  {name: 'Past Week', key: 'past_week'},
+  {name: 'Past Month', key: 'past_month'},
+  {name: 'Any Time', key: 'any_time'},
 ];
+
+const datePostedKeyValue = {};
+
+for (const v of datePosted) {
+  datePostedKeyValue[v.key] = v;
+}
 
 
 export {
@@ -55,4 +67,6 @@ export {
   dayOfWeekMapping,
   tags,
   datePosted,
+  tagKeyValue,
+  datePostedKeyValue,
 };
