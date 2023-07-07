@@ -1,18 +1,18 @@
 <template>
   <div class="row justify-content-center">
-    <div class="col-1 my-auto">
+    <div class="col-2 my-auto">
       <h4 class="m-0">Filters:</h4>
     </div>
-    <div class="col-2">
+    <div class="col-3">
       <multiselect
       v-model="checkedDatePosted" :options="datePosted" :searchable="false"
-      :close-on-select="true" :show-labels="true"
+      :close-on-select="true" :show-labels="true" :deselect-label="''"
       @close="updateDatePosted"
       placeholder="Date Posted" label="name" track-by="name"
       :select-label="''">
       </multiselect>
     </div>
-    <div class="col-2">
+    <div class="col-3">
         <multiselect
         v-model="checkedTags" :options="tags" :multiple="true"
         :close-on-select="false" :clear-on-select="false"
