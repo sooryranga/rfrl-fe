@@ -16,7 +16,7 @@
               <router-link class="col p-2 text-dark" to="/">Home</router-link>
               <router-link class="col p-2 text-dark" to="/questions">Ask Question</router-link>
               <router-link class="col p-2 text-dark" to="/tutors">Find Tutor</router-link>
-              <router-link class="col p-2 text-dark mr-3" to="/about">About</router-link>
+              <router-link class="col p-2 text-dark" to="/chat">Messages</router-link>
               <div v-if="loggedIn" class="col">
                 <div class="dropdown">
                   <button
@@ -87,7 +87,7 @@ p {
   height: 65px;
 }
 #content{
-  height: calc(100vh - 70px);
+  height: calc(100vh - 65px);
 }
 html, body {
   height: 100%;

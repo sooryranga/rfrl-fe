@@ -1,9 +1,11 @@
 <template>
   <div class="container-fluid h-100">
     <div class="row h-100">
-      <div class='p-0'>
-        <video-messaging style="height: 30%;"></video-messaging>
-        <instant-messaging style="height: 70%; max-height: 65vh;"></instant-messaging>
+      <div class='col-auto p-0 h-100'>
+        <div class="h-100" style="width: 350px">
+          <video-messaging style="height: 30%;"></video-messaging>
+          <instant-messaging style="height: 70%; max-height: 65vh;"></instant-messaging>
+        </div>
       </div>
       <div class="col">
         <div class="row" style="height:6%">
