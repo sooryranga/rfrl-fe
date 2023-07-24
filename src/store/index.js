@@ -3,6 +3,7 @@ import Vue from 'vue';
 import authentication from './modules/authentication';
 import questions from './modules/questions';
 import profile from './modules/profile';
+import chatRooms from './modules/chatRooms';
 
 // Load Vuex
 Vue.use(Vuex);
@@ -13,5 +14,6 @@ export default new Vuex.Store({
     authentication,
     questions,
     profile,
+    chatRooms,
   },
 });

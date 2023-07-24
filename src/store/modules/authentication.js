@@ -21,16 +21,14 @@ const blankAuth = {
 };
 
 const state = {
-  auth: {
-    google: {token: null},
-    linkedin: {token: null},
-    default: {username: null, passwordHash: null},
-    loggedIn: false,
-  },
+  google: {token: null},
+  linkedin: {token: null},
+  default: {username: null, passwordHash: null},
+  loggedIn: false,
 };
 
 const getters = {
-  loggedIn: (state) => state.auth.loggedIn,
+  loggedIn: (state) => state.loggedIn,
 };
 
 const actions = {
@@ -58,16 +56,16 @@ const mutations = {
     }
   },
   [SET_GOOGLE_AUTH](state, token) {
-    state.auth.google.token = token;
+    state.google.token = token;
   },
   [SET_LINKED_IN_AUTH](state, token) {
-    state.auth.linkedin.token = token;
+    state.linkedin.token = token;
   },
   [SET_DEFAULT_AUTH](state, username, pass) {
-    state.auth.default= {username: username, passwordHash: pass};
+    state.default= {username: username, passwordHash: pass};
   },
   [SET_LOGGED_OUT](state) {
-    state.auth = {...blankAuth};
+    state = {...blankAuth};
   },
 };
 
