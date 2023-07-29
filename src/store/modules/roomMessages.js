@@ -1,10 +1,11 @@
+import Vue from 'vue';
 import {
   messagesRef,
 } from '@/firestore';
-
 import {
   SET_MESSAGES, SET_MESSAGE_LISTENER, SET_LAST_MESSAGE, SET_META,
 } from '@/constants.mutations.js';
+import {parseTimestamp} from '@/utils';
 
 const PER_PAGE = 20;
 
@@ -16,14 +17,18 @@ const state = {
 };
 
 const getters = {
-  getMessagesForRoom(roomId) {
-    return state.roomMessage[roomId] || [];
+  getMessagesForRoom(state) {
+    return (roomId) => {
+      return state.roomMessage[roomId] || [];
+    };
   },
-  latestMessage() {
+  latestMessage(state) {
     return state.roomMessage.latestMessage;
   },
-  getMetaForMessage(roomId) {
-    return state.meta.roomId;
+  getMetaForMessage(state) {
+    return (roomId) => {
+      return state.meta[roomId];
+    };
   },
 };
 
@@ -39,12 +44,12 @@ function formatMessage(room, message) {
   );
 
   const {sender_id, timestamp} = message; // eslint-disable-line
-
+  console.log(message);
   return {
     ...message,
     ...{
       sender_id,
-      id: message.id,
+      _id: message._id,
       seconds: timestamp.seconds,
       timestamp: parseTimestamp(timestamp, 'HH:mm'),
       date: parseTimestamp(timestamp, 'DD MMMM YYYY'),
@@ -64,7 +69,7 @@ async function snapshotMessagesAdded(commit, room, snapshot) {
   let lastMessage = null;
   snapshot.docChanges().forEach(function(change) {
     const message = change.doc.data();
-    message.id = change.id;
+    message._id = change.id;
     if (change.type !== 'added') {
       console.error('Expected only added messages');
       return;
@@ -74,32 +79,34 @@ async function snapshotMessagesAdded(commit, room, snapshot) {
     formattedMessages.unshift(formattedMessage);
   });
 
-  const messages = state.messages[room.id].concat([formattedMessage]);
-  commit(SET_MESSAGES, room.id, messages);
-  commit(SET_LAST_MESSAGE, room.id, lastMessage);
+  const messages = state.messages[room._id].concat([formattedMessage]);
+  commit(SET_MESSAGES, room._id, messages);
+  commit(SET_LAST_MESSAGE, room._id, lastMessage);
 }
 
 
 const actions = {
   async fetchAndSetMessages({commit, getters}, room, options = {}) {
-    const meta = getters.getMetaForMessage(room.id);
+    const meta = getters.getMetaForMessage(room._id);
     let start = meta?.start;
     let end = meta?.end;
     let started = meta?.started;
 
-    const formattedMessages = [...getters.getMessagesForRoom(room.id)];
+    const formattedMessages = [...getters.getMessagesForRoom(room._id)];
 
     if (end && !start) return formattedMessages;
 
-    const ref = messagesRef(room.id);
+    const ref = messagesRef(room._id);
     const query = ref.orderBy('timestamp', 'desc').limit(PER_PAGE);
 
     if (start) query = query.startAfter(start);
 
     const messages = await query.get();
 
-    messages.forEach((message) => {
-      const formattedMessage = this.formatMessage(room, message);
+    messages.forEach((rawMessage) => {
+      const message = rawMessage.data();
+      message._id = rawMessage.id;
+      const formattedMessage = formatMessage(room, message);
       formattedMessages.unshift(formattedMessage);
     });
 
@@ -107,23 +114,23 @@ const actions = {
     start = messages.docs[messages.docs.length - 1];
 
     if (started === false) {
-      const unsubscribe = await messagesRef(room.id)
+      const unsubscribe = await messagesRef(room._id)
           .orderBy('timestamp')
           .startAfter(start)
           .onSnapshot((snapshot) => {
             snapshotMessagesAdded(commit, room, snapshot);
           });
-      commit(SET_LISTENER, room.id, unsubscribe);
+      commit(SET_LISTENER, room._id, unsubscribe);
 
       if (!messages.empty) {
         const lastMessage = messages.docs[0];
-        commit(SET_LAST_MESSAGE, room.id, lastMessage);
+        commit(SET_LAST_MESSAGE, room._id, lastMessage);
       }
       started = true;
     }
 
-    commit(SET_MESSAGES, room.id, formattedMessages);
-    commit(SET_META, room.id, {start, end, started});
+    commit(SET_MESSAGES, room._id, formattedMessages);
+    commit(SET_META, room._id, {start, end, started});
 
     return formattedMessages;
   },
