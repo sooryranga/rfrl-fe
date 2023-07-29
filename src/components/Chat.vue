@@ -31,6 +31,7 @@
 </template>
 
 <script>
+import {mapActions, mapGetters} from 'vuex';
 import {firebase} from '@firebase/app';
 import {
   roomsRef,
@@ -66,7 +67,6 @@ export default {
       rooms: [],
       allUsers: [],
       loadingRooms: true,
-      loadingLastMessageByRoom: 0,
       selectedRoom: null,
       messages: [],
       messagesLoaded: false,
@@ -97,72 +97,70 @@ export default {
     this.updateUserOnlineStatus();
   },
 
+  computed: {
+    ...mapGetters('roomMessages', ['latestMessage']),
+  },
+
   destroyed() {
     this.resetRooms();
   },
 
+  watch: {
+    latestMessage(latestMessages) {
+      this.loadingRooms = true;
+      const rooms = {};
+      this.rooms.forEach((room) => {
+        rooms[room.id] = {...room};
+      });
+      const roomIds = Object.keys(fruits);
+      for (let i=0; i < roomIds.length; i++) {
+        const roomId = roomIds[i];
+        if (!rooms[roomId]) {
+          console.error(
+              'Room id from latest messages is not found within local state',
+          );
+          continue;
+        }
+        rooms[roomId] = formatLastMessage(latestMessages[roomId]);
+      }
+      this.rooms = Object.values(rooms);
+      this.loadingRooms = false;
+    },
+  },
+
   methods: {
+    ...mapGetters('chatRooms', ['users']),
+    ...mapActions('chatRooms', ['fetchAndSetRooms']),
+    ...mapActions('roomMessages', ['fetchAndSetMessages']),
+
     resetRooms() {
       this.loadingRooms = true;
-      this.loadingLastMessageByRoom = 0;
       this.rooms = [];
-      this.roomsListeners.forEach((listener) => listener());
       this.resetMessages();
     },
 
     resetMessages() {
       this.messages = [];
       this.messagesLoaded = false;
-      this.start = null;
-      this.end = null;
-      this.listeners.forEach((listener) => listener());
-      this.listeners = [];
     },
 
     async fetchRooms() {
       this.resetRooms();
+      console.log(this);
+      const roomIdtoRoom = await this.fetchAndSetRooms();
+      const userIdtoUser = this.users;
 
-      const query = roomsRef.where(
-          'users',
-          'array-contains',
-          this.currentUserId,
-      );
-
-      const rooms = await query.get();
-      // this.incrementDbCounter('Fetch Rooms', rooms.size)
-
-      const roomUserIds = [];
-      rooms.forEach((room) => {
-        room.data().users.forEach((userId) => {
-          const foundUser = this.allUsers.find((user) => user._id === userId);
-          if (!foundUser && roomUserIds.indexOf(userId) === -1) {
-            roomUserIds.push(userId);
-          }
-        });
-      });
-
-      // this.incrementDbCounter('Fetch Room Users', roomUserIds.length)
-      const rawUsers = [];
-      roomUserIds.forEach((userId) => {
-        const promise = usersRef
-            .doc(userId)
-            .get()
-            .then((user) => user.data());
-
-        rawUsers.push(promise);
-      });
-
-      this.allUsers = [...this.allUsers, ...(await Promise.all(rawUsers))];
+      this.allUsers = Object.values(userIdtoUser);
 
       const roomList = {};
-      rooms.forEach((room) => {
-        roomList[room.id] = {...room.data(), users: []};
-
-        room.data().users.forEach((userId) => {
-          const foundUser = this.allUsers.find((user) => user._id === userId);
-          if (foundUser) roomList[room.id].users.push(foundUser);
+      for (const roomId of Object.keys(roomIdtoRoom)) {
+        const room = roomIdtoRoom[roomId];
+        roomList[roomId] = {...room, users: []};
+        room.users.forEach((userId) => {
+          const foundUser = userIdtoUser[userId];
+          if (foundUser) roomList[roomId].users.push(foundUser);
         });
-      });
+      }
 
       const formattedRooms = [];
 
@@ -170,7 +168,7 @@ export default {
         const room = roomList[key];
 
         const roomContacts = room.users.filter(
-            (user) => user._id !== this.currentUserId,
+            (user) => user.id !== this.currentUserId,
         );
 
         room.roomName =
@@ -190,37 +188,12 @@ export default {
         });
       });
 
-      this.rooms = this.rooms.concat(formattedRooms);
-      this.rooms.map((room, index) => this.listenLastMessage(room, index));
+      this.rooms = formattedRooms;
+      this.loadingRooms = false;
 
-      if (!this.rooms.length) this.loadingRooms = false;
-
-      this.listenUsersOnlineStatus();
-      this.listenRoomsTypingUsers(query);
+      // this.listenUsersOnlineStatus();
+      // this.listenRoomsTypingUsers(query);
       // setTimeout(() => console.log('TOTAL', this.dbRequestCount), 2000)
-    },
-
-    listenLastMessage(room, index) {
-      const listener = messagesRef(room.roomId)
-          .orderBy('timestamp', 'desc')
-          .limit(1)
-          .onSnapshot((messages) => {
-            // eslint-disable-line
-            messages.forEach((message) => {
-              const lastMessage = this.formatLastMessage(message.data());
-              this.rooms[index].lastMessage = lastMessage;
-              this.rooms = [...this.rooms];
-            });
-            if (this.loadingLastMessageByRoom < this.rooms.length) {
-              this.loadingLastMessageByRoom++;
-
-              if (this.loadingLastMessageByRoom === this.rooms.length) {
-                this.loadingRooms = false;
-              }
-            }
-          });
-
-      this.roomsListeners.push(listener);
     },
 
     formatLastMessage(message) {
@@ -253,62 +226,11 @@ export default {
     fetchMessages({room, options = {}}) {
       if (options.reset) this.resetMessages();
 
-      if (this.end && !this.start) return (this.messagesLoaded = true);
-
-      const ref = messagesRef(room.roomId);
-
-      let query = ref.orderBy('timestamp', 'desc').limit(this.perPage);
-
-      if (this.start) query = query.startAfter(this.start);
-
-      this.selectedRoom = room.roomId;
-
-      query.get().then((messages) => {
-        // this.incrementDbCounter('Fetch Room Messages', messages.size)
-        if (this.selectedRoom !== room.roomId) return;
-
-        if (messages.empty) this.messagesLoaded = true;
-
-        if (this.start) this.end = this.start;
-        this.start = messages.docs[messages.docs.length - 1];
-
-        let listenerQuery = ref.orderBy('timestamp');
-
-        if (this.start) listenerQuery = listenerQuery.startAfter(this.start);
-        if (this.end) listenerQuery = listenerQuery.endAt(this.end);
-
-        if (options.reset) this.messages = [];
-
-        messages.forEach((message) => {
-          const formattedMessage = this.formatMessage(room, message);
-          this.messages.unshift(formattedMessage);
-        });
-
-        const listener = listenerQuery.onSnapshot((snapshots) => {
-          // this.incrementDbCounter('Listen Room Messages', snapshots.size)
-          this.listenMessages(snapshots, room);
-        });
-        this.listeners.push(listener);
-      });
+      const messages = this.fetchAndSetMessages(room);
+      this.messages = messages;
     },
 
-    listenMessages(messages, room) {
-      messages.forEach((message) => {
-        const formattedMessage = this.formatMessage(room, message);
-        const messageIndex = (
-          this.messages.findIndex((m) => m._id === message.id)
-        );
-
-        if (messageIndex === -1) {
-          this.messages = this.messages.concat([formattedMessage]);
-        } else {
-          this.$set(this.messages, messageIndex, formattedMessage);
-        }
-
-        this.markMessagesSeen(room, message);
-      });
-    },
-
+    // currently not supported
     markMessagesSeen(room, message) {
       if (
         message.data().sender_id !== this.currentUserId &&
@@ -320,26 +242,6 @@ export default {
               [`seen.${this.currentUserId}`]: new Date(),
             });
       }
-    },
-
-    formatMessage(room, message) {
-      const senderUser = room.users.find(
-          (user) => message.data().sender_id === user._id,
-      );
-
-      const {sender_id, timestamp} = message.data(); // eslint-disable-line
-
-      return {
-        ...message.data(),
-        ...{
-          sender_id,
-          _id: message.id,
-          seconds: timestamp.seconds,
-          timestamp: parseTimestamp(timestamp, 'HH:mm'),
-          date: parseTimestamp(timestamp, 'DD MMMM YYYY'),
-          username: senderUser ? senderUser.username : null,
-        },
-      };
     },
 
     async sendMessage({content, roomId, file, replyMessage}) {
@@ -446,6 +348,7 @@ export default {
       });
     },
 
+    // currently not supported
     async listenRoomsTypingUsers(query) {
       const listener = query.onSnapshot((rooms) => {
         // this.incrementDbCounter('Listen Rooms Typing Users', rooms.size)
@@ -487,6 +390,7 @@ export default {
           });
     },
 
+    // Currently not supported
     listenUsersOnlineStatus() {
       this.rooms.map((room) => {
         room.users.map((user) => {
