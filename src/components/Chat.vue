@@ -1,31 +1,33 @@
 <template>
   <div class="window-container h-100">
-    <div class="row" style="height: calc(100% - 30px)">
-      <chat-window
-        height="100%"
-        :theme="theme"
-        :styles="styles"
-        :currentUserId="currentUserId"
-        :rooms="loadingRooms ? [] : rooms"
-        :loadingRooms="loadingRooms"
-        :messages="messages"
-        :messagesLoaded="messagesLoaded"
-        :roomMessage="roomMessage"
-        :showAudio="showAudio"
-        :showAddRoom="showAddRoom"
-        :showReactionEmojis="showReactionEmojis"
-        :showEmojis="showEmojis"
-        :menuActions="menuActions"
-        :messageActions="messageActions"
-        @fetchMessages="fetchMessages"
-        @sendMessage="sendMessage"
-        @openFile="openFile"
-        @menuActionHandler="menuActionHandler"
-        @messageActionHandler="messageActionHandler"
-        @sendMessageReaction="sendMessageReaction"
-        @typingMessage="typingMessage"
-      >
-      </chat-window>
+    <div class="row h-100">
+      <div class="col h-100">
+        <chat-window
+          height="100%"
+          :theme="theme"
+          :styles="styles"
+          :currentUserId="currentUserId"
+          :rooms="loadingRooms ? [] : rooms"
+          :loadingRooms="loadingRooms"
+          :messages="messages"
+          :messagesLoaded="messagesLoaded"
+          :roomMessage="roomMessage"
+          :showAudio="showAudio"
+          :showAddRoom="showAddRoom"
+          :showReactionEmojis="showReactionEmojis"
+          :showEmojis="showEmojis"
+          :menuActions="menuActions"
+          :messageActions="messageActions"
+          @fetchMessages="fetchMessages"
+          @sendMessage="sendMessage"
+          @openFile="openFile"
+          @menuActionHandler="menuActionHandler"
+          @messageActionHandler="messageActionHandler"
+          @sendMessageReaction="sendMessageReaction"
+          @typingMessage="typingMessage"
+        >
+        </chat-window>
+      </div>
     </div>
   </div>
 </template>
@@ -80,6 +82,7 @@ export default {
       inviteRoomId: null,
       removeRoomId: null,
       removeUserId: '',
+      messageVersion: 0,
       removeUsers: [],
       styles: {container: {borderRadius: '2px'}},
       messageActions: [
@@ -98,7 +101,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters('roomMessages', ['latestMessage']),
+    ...mapGetters('roomMessages', ['latestMessage', 'getMessagesForRoom']),
   },
 
   destroyed() {
@@ -106,6 +109,18 @@ export default {
   },
 
   watch: {
+    getMessagesForRoom(getMessagesForRoomFun) {
+      console.log('getMessagesForRoom');
+      if (!this.roomId) return;
+      const payload = getMessagesForRoomFun(this.roomId);
+      console.log(payload);
+      if (this.messageVersion >= payload.messageVersion) {
+        return;
+      }
+      this.messagesLoaded = false;
+      // this.messages = [...payload.messages];
+      this.messagesLoaded = true;
+    },
     latestMessage(latestMessages) {
       this.loadingRooms = true;
       const rooms = {};
@@ -121,7 +136,7 @@ export default {
           );
           continue;
         }
-        rooms[roomId] = formatLastMessage(latestMessages[roomId]);
+        rooms[roomId].lastMessage = formatLastMessage(latestMessages[roomId]);
       }
       this.rooms = Object.values(rooms);
       this.loadingRooms = false;
@@ -146,7 +161,6 @@ export default {
 
     async fetchRooms() {
       this.resetRooms();
-      console.log(this);
       const roomIdtoRoom = await this.fetchAndSetRooms();
       const userIdtoUser = this.users;
 
@@ -225,8 +239,10 @@ export default {
 
     async fetchMessages({room, options = {}}) {
       if (options.reset) this.resetMessages();
-
+      this.messagesLoaded = false;
       const messages = await this.fetchAndSetMessages(room);
+      console.log(messages);
+      console.log(this.messages);
       this.messages = messages;
       this.messagesLoaded = true;
     },
@@ -274,7 +290,7 @@ export default {
       }
 
       const {id} = await messagesRef(roomId).add(message);
-
+      console.log(id, message, roomId);
       if (file) this.uploadFile({file, messageId: id, roomId});
     },
 

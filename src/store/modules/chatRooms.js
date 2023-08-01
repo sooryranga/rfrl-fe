@@ -57,7 +57,7 @@ async function snapshotRoomChanges(commit, getters, snapshot) {
   const rooms = Object.assign(getters.rooms);
   snapshot.docChanges().forEach(function(change) {
     const room = change.doc.data();
-    room._id = change.id;
+    room._id = change.doc.id;
     if (change.type === 'added') {
       rooms[room._id] = room;
     }
@@ -111,7 +111,8 @@ const actions = {
         'users',
         'array-contains',
         currentUserId,
-    );
+    ).orderBy('timestamp');
+
     const rooms = await query.get();
     const roomIdtoRoom = {};
     rooms.forEach((room) => {
@@ -120,12 +121,16 @@ const actions = {
       roomIdtoRoom[room.id] = roomData;
     });
 
-    query.onSnapshot(async (snapshot) => {
-      await snapshotRoomChanges(commit, getters, snapshot);
-    });
+    const listener = await query
+        .startAfter(rooms.docs[rooms.docs.length-1])
+        .onSnapshot(async (snapshot) => {
+          await snapshotRoomChanges(commit, getters, snapshot);
+        });
+
     commit(SET_ROOMS, roomIdtoRoom);
-    commit(SET_AUTOUPDATEROOMS);
     await updateUsers(commit, getters);
+    commit(SET_ROOM_LISTENER, listener);
+    commit(SET_AUTOUPDATEROOMS);
 
     return roomIdtoRoom;
   },

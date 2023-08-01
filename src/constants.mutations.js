@@ -23,7 +23,7 @@ const SET_ROOM_LISTENER = 'set_room_listener';
 
 const SET_MESSAGES = 'set_messages';
 const SET_MESSAGE_LISTENER = 'set_message_listener';
-const SET_LAST_MESSAGE = 'set_last_message';
+const SET_LATEST_MESSAGE = 'set_latest_message';
 const SET_META = 'set_meta';
 
 export {
@@ -56,6 +56,6 @@ export {
   // mutations for messages
   SET_MESSAGES,
   SET_MESSAGE_LISTENER,
-  SET_LAST_MESSAGE,
+  SET_LATEST_MESSAGE,
   SET_META,
 };
