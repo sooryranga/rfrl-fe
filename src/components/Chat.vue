@@ -101,7 +101,10 @@ export default {
   },
 
   computed: {
-    ...mapGetters('roomMessages', ['latestMessage', 'getMessagesForRoom']),
+    ...mapGetters(
+        'roomMessages',
+        ['latestMessage', 'messagesByRoomId'],
+    ),
   },
 
   destroyed() {
@@ -109,37 +112,47 @@ export default {
   },
 
   watch: {
-    getMessagesForRoom(getMessagesForRoomFun) {
-      console.log('getMessagesForRoom');
-      if (!this.roomId) return;
-      const payload = getMessagesForRoomFun(this.roomId);
-      console.log(payload);
-      if (this.messageVersion >= payload.messageVersion) {
-        return;
-      }
-      this.messagesLoaded = false;
-      // this.messages = [...payload.messages];
-      this.messagesLoaded = true;
-    },
-    latestMessage(latestMessages) {
-      this.loadingRooms = true;
-      const rooms = {};
-      this.rooms.forEach((room) => {
-        rooms[room.id] = {...room};
-      });
-      const roomIds = Object.keys(fruits);
-      for (let i=0; i < roomIds.length; i++) {
-        const roomId = roomIds[i];
-        if (!rooms[roomId]) {
-          console.error(
-              'Room id from latest messages is not found within local state',
-          );
-          continue;
+    messagesByRoomId: {
+      handler: function(messagePayload) {
+        if (!this.selectedRoom) return;
+        const messages = messagePayload.messages[this.selectedRoom];
+        const version = messagePayload.meta[this.selectedRoom].version;
+        if (this.messageVersion >= version) {
+          return;
         }
-        rooms[roomId].lastMessage = formatLastMessage(latestMessages[roomId]);
-      }
-      this.rooms = Object.values(rooms);
-      this.loadingRooms = false;
+        this.messagesLoaded = false;
+        this.messages = [...messages];
+        this.messageVersion = version;
+        this.messagesLoaded = true;
+      },
+      deep: true,
+    },
+    latestMessage: {
+      handler: function(latestMessages) {
+        this.loadingRooms = true;
+        const rooms = {};
+        this.rooms.forEach((room) => {
+          rooms[room._id] = {...room};
+        });
+        const roomIds = Object.keys(latestMessages);
+
+        for (let i=0; i < roomIds.length; i++) {
+          const roomId = roomIds[i];
+          if (!rooms[roomId]) {
+            console.error(
+                'Room id from latest messages is not found within local state',
+                roomId,
+            );
+            continue;
+          }
+          rooms[roomId].lastMessage = this.formatLastMessage(
+              latestMessages[roomId],
+          );
+        }
+        this.rooms = Object.values(rooms);
+        this.loadingRooms = false;
+      },
+      deep: true,
     },
   },
 
@@ -239,10 +252,10 @@ export default {
 
     async fetchMessages({room, options = {}}) {
       if (options.reset) this.resetMessages();
+      console.log('called');
       this.messagesLoaded = false;
+      this.selectedRoom = room.roomId;
       const messages = await this.fetchAndSetMessages(room);
-      console.log(messages);
-      console.log(this.messages);
       this.messages = messages;
       this.messagesLoaded = true;
     },
@@ -290,7 +303,6 @@ export default {
       }
 
       const {id} = await messagesRef(roomId).add(message);
-      console.log(id, message, roomId);
       if (file) this.uploadFile({file, messageId: id, roomId});
     },
 
