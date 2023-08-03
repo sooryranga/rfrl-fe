@@ -100,7 +100,7 @@ export default {
         }.bind(this), 2000);
       }
 
-      const roomId = this.createRoom([this.question.userId]);
+      const roomId = await this.createRoom([this.question.userId]);
 
       const message = {
         sender_id: this.currentProfile.id,
@@ -109,6 +109,7 @@ export default {
       };
 
       await messagesRef(roomId).add(message);
+
       this.$router.push(
           {
             name: 'schedule-session',

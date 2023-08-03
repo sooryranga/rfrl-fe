@@ -173,7 +173,7 @@ export default {
     async fetchRooms() {
       this.resetRooms();
       const roomIdtoRoom = await this.fetchAndSetRooms();
-      const userIdtoUser = this.users;
+      const userIdtoUser = {...this.users()};
 
       this.allUsers = Object.values(userIdtoUser);
 
@@ -192,8 +192,9 @@ export default {
       Object.keys(roomList).forEach((key) => {
         const room = roomList[key];
 
+        console.log(room._id, room.users, this.currentUserId);
         const roomContacts = room.users.filter(
-            (user) => user.id !== this.currentUserId,
+            (user) => user._id !== this.currentUserId,
         );
 
         room.roomName =
@@ -265,7 +266,7 @@ export default {
         (!message.data().seen || !message.data().seen[this.currentUserId])
       ) {
         messagesRef(room.roomId)
-            .doc(message.id)
+            .doc(message._id)
             .update({
               [`seen.${this.currentUserId}`]: new Date(),
             });
@@ -380,7 +381,7 @@ export default {
       const listener = query.onSnapshot((rooms) => {
         // this.incrementDbCounter('Listen Rooms Typing Users', rooms.size)
         rooms.forEach((room) => {
-          const foundRoom = this.rooms.find((r) => r.roomId === room.id);
+          const foundRoom = this.rooms.find((r) => r.roomId === room._id);
           if (foundRoom) foundRoom.typingUsers = room.data().typingUsers;
         });
       });
