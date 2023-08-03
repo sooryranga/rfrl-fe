@@ -74,7 +74,6 @@ export default {
       this.editorOpen = true;
     },
     'saveEvent': function(state) {
-      console.log(state);
       if (state.name) {
         this[NAME](state.name);
       }
