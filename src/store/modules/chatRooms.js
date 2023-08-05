@@ -143,8 +143,11 @@ const actions = {
 
     return roomIdtoRoom;
   },
-  async createRoom({getters, rootGetters}, otherUserIds) {
+  async createRoom({dispatch, getters, rootGetters}, otherUserIds) {
     const currentUserId = rootGetters['profile/currentProfile'].id;
+
+    await dispatch('fetchAndSetRooms');
+
     const existingRoom = getters.getRoomExistsWithUsers(
         [...otherUserIds, currentUserId],
     );
