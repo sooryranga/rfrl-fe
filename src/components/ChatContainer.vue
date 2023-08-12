@@ -7,12 +7,18 @@
       </div>
     </div>
     <div class="row" style="height:96%">
-      <div class="col h-100">
+      <div class="col-8 h-100">
         <chat
         :currentUserId="currentProfile.id"
         :theme="theme"
         :roomId="roomId"
         v-if="showChat"
+        @newroom="setNewRoom"
+        />
+      </div>
+      <div class="col h-100">
+        <tutoring-scheduler
+        :roomId="roomId"
         />
       </div>
     </div>
@@ -22,11 +28,13 @@
 <script>
 import {roomsRef, usersRef} from '@/firestore';
 import Chat from '@/components/Chat.vue';
+import TutoringScheduler from '@/components/TutoringScheduler.vue';
 import {mapGetters} from 'vuex';
 
 export default {
   components: {
     Chat,
+    TutoringScheduler,
   },
 
   computed: {
@@ -74,6 +82,9 @@ export default {
   },
 
   methods: {
+    setNewRoom(roomId) {
+      this.roomId = roomId;
+    },
     resetData() {
       roomsRef.get().then((val) => {
         val.forEach(async (val) => {
