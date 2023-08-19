@@ -1,5 +1,10 @@
 <template>
 <div class='mt-3 h-100'>
+  <transition name="fade">
+    <div v-if="showError" class="alert alert-danger fade-in fixed-top" role="alert">
+      {{error}}
+    </div>
+  </transition>
   <transition name="modal">
     <div v-if="showEventCreationDialog" class="modal-mask text-left">
       <div class="modal-dialog modal-dialog-centered" role="document">
@@ -50,8 +55,37 @@
   </transition>
   <div class='row h-100'>
     <div class='col-4 p-0'>
-      <div>
-
+      <div  id="eventList" class="shadow p-3 h-100 bg-white d-flex flex-column">
+        <div class="row">
+          <div class="col">
+            <h4 class="text-left ml-4 my-2"> {{title}} </h4>
+          </div>
+        </div>
+        <div class="ml-4 row flex-grow-1">
+          <div v-if="relatedEvents.length" class="col">
+            <div v-for="(event) in relatedEvents" v-bind:key="event.id" class="row my-2">
+              <div class="col text-left my-auto">
+                {{event.title}}
+              </div>
+              <div class="col-2 text-left my-auto">
+                <small class="text-secondary">{{dateToString(event.start)}}</small>
+              </div>
+              <div class="col-1 mr-4">
+                <button
+                type="button"
+                class="btn btn-default btn-dark btn-circle"
+                v-on:click="deleteEventAction(event)">
+                  <span class="material-icons float-left">
+                    delete
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="save">
+          <button class="btn btn-default btn-dark"> Save </button>
+        </div>
       </div>
     </div>
     <div class='col' id="calendar">
@@ -64,6 +98,7 @@
       :on-event-create="onEventCreate"
       :drag-to-create-event="true"
       @event-drag-create="createEvent"
+      @event-delete="deleteLocalyCreatedEvent"
       :drag-to-create-threshold="30"
       :disable-views="['years', 'year', 'month', 'day']">
       <template v-slot:title="{view }">
@@ -83,7 +118,7 @@ import {v4 as uuidv4} from 'uuid';
 
 const STATE = Object.freeze({
   user: 'user',
-  pickDates: 'pickDates',
+  createEvents: 'createEvents',
   chooseDate: 'chooseDate',
 });
 
@@ -112,17 +147,32 @@ export default {
       question: null,
       session: null,
       selectedEvent: null,
-      state: STATE.pickDates,
+      state: STATE.createEvents,
       sessionCount: 0,
       showEventCreationDialog: false,
       events: [],
       locallyCreated: [],
       unauthenticated: false,
+      showError: false,
     };
   },
   computed: {
     create: function() {
-      return this.state === STATE.pickDates || this.state === STATE.user;
+      return this.state === STATE.createEvents || this.state === STATE.user;
+    },
+    title: function() {
+      if (this.state === STATE.createEvents) {
+        return 'Picked Dates';
+      } else if (this.state === STATE.chooseDate) {
+        return 'Choose a Date from this List';
+      }
+      return 'Schedule';
+    },
+    relatedEvents: function() {
+      if (this.state === STATE.user) {
+        return this.events;
+      }
+      return this.locallyCreated;
     },
     newSessionName: function() {
       if (this.state === STATE.user) return 'Personnal Events';
@@ -138,6 +188,20 @@ export default {
     this.setUpUser();
   },
   methods: {
+    deleteEventAction(deletedEvent) {
+      this.events = this.events.filter(
+          (event) => event._eid != deletedEvent._eid,
+      );
+      this.deleteLocalyCreatedEvent(deletedEvent);
+    },
+    deleteLocalyCreatedEvent(deletedEvent) {
+      this.locallyCreated = this.locallyCreated.filter(
+          (event) => event._eid != deletedEvent._eid,
+      );
+    },
+    dateToString(date) {
+      return `${date.getDate()+1}/${date.getMonth()+1} `;
+    },
     createEvent() {
       console.log(this.validateNewEvent());
       if (!this.validateNewEvent()) {
@@ -151,6 +215,14 @@ export default {
         !this.checkOverlaps(this.selectedEvent) &&
         this.checkEventInFuture(this.selectedEvent)
       );
+    },
+    setError(error) {
+      this.error = error;
+      this.showError = true;
+      setTimeout(function() {
+        this.error = null;
+        this.showError = false;
+      }.bind(this), 2000);
     },
     setUpUser() {
       if (this.userId != this.currentProfile.id) {
@@ -192,21 +264,29 @@ export default {
     checkOverlaps(event) {
       const s = Date.parse(event.start);
       const e = Date.parse(event.end);
+      let overlaps = false;
       for (let i=0; i < this.events.length; i++) {
         const event2 = this.events[i];
         const s2 = Date.parse(event2.start);
         const e2 = Date.parse(event2.end);
         if (s < s2 && e > s2) {
-          return true;
+          overlaps = true;
         } else if (s < e2 && e > e2) {
-          return true;
+          overlaps = true;
         }
       }
-      return false;
+      if (overlaps) {
+        this.setError('The event overlaps with existing events');
+      }
+      return overlaps;
     },
     checkEventInFuture(event) {
       const s = Date.parse(event.start);
-      return s >= Date.now();
+      const future = s >= Date.now();
+      if (!future) {
+        this.setError('Cannot create an event in the past');
+      }
+      return future;
     },
     cancelEventCreation() {
       this.showEventCreationDialog = false;
@@ -216,7 +296,7 @@ export default {
     },
     saveEventCreation() {
       this.events.push(this.selectedEvent);
-      if (this.state === STATE.pickDates) {
+      if (this.state === STATE.createEvents) {
         this.locallyCreated.push({...this.selectedEvent});
       }
       console.log(this.saveEvent);
@@ -254,5 +334,23 @@ export default {
 .modal-wrapper {
   display: table-cell;
   vertical-align: middle;
+}
+.btn-circle {
+    width: 30px;
+    height: 30px;
+    padding: 0px 2px;
+    border-radius: 15px;
+    text-align: center;
+    font-size: 12px;
+    line-height: 1.42857;
+}
+
+.btn-circle.btn-xl {
+    width: 70px;
+    height: 70px;
+    padding: 10px 16px;
+    border-radius: 35px;
+    font-size: 24px;
+    line-height: 1.33;
 }
 </style>

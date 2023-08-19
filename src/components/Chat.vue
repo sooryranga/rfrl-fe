@@ -174,6 +174,7 @@ export default {
     resetMessages() {
       this.messages = [];
       this.messagesLoaded = false;
+      this.messageVersion = 0;
       if (this.selectedRoom) this.$emit('newroom', this.selectedRoom);
     },
 
