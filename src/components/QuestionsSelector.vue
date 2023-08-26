@@ -1,5 +1,5 @@
 <template>
-  <div class="text-left">
+  <div class="">
     <div class="row mb-2">
       <div class="col-auto mr-auto my-auto">
         <div>

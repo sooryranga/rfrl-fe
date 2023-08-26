@@ -2,7 +2,7 @@
   <div v-if="profile && profile.isTutor" id="questions" class="p-2 my-1 bg-white">
     <div class="row mb-0">
       <div class="col">
-        <h5 class="text-left my-2" >Answered Questions</h5>
+        <h5 class=" my-2" >Answered Questions</h5>
       </div>
     </div>
     <div class="row pl-3 mb-1" v-for="(question, index) in questions" v-bind:key="index">

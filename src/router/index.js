@@ -79,6 +79,12 @@ const routes = [
     component: () => import('@/components/Calendar.vue'),
   },
   {
+    path: '/session-info/:sessionId?',
+    name: 'session-info',
+    props: true,
+    component: () => import('@/components/SessionInfo/SessionInfo.vue'),
+  },
+  {
     path: '/conference/:conferenceId',
     name: 'tutoring-session',
     redirect: (to) => {
