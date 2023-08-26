@@ -13,25 +13,21 @@
         </span>
       </div>
     </div>
-    <div class="row">
-      <div class="col">
-        <div
-          class="row"
-          v-for="(question, index) in questions"
-          v-bind:key="index">
-          <div v-on:click="routeToQuestion(index)" class="col">
-            <div class="border"
-            v-bind:class="[index == questions.length ? 'border-top-0' : '']">
-              <p class="m-0 h6">{{shortenTitle(question.title)}}</p>
-              <p class="m-0">{{question.posterName}}</p>
-              <p class="m-0">
-              <small>{{timeAgoFormat(question.createdDate)}} · {{question.applicants}} Applicants</small>
-              </p>
-            </div>
+    <ul class="list-group list-group-flush border-top">
+      <li class="list-group-item p-0"
+        v-for="(question, index) in questions"
+        v-bind:key="index">
+        <div v-on:click="routeToQuestion(index)">
+          <div>
+            <p class="m-0 h6 px-0">{{shortenTitle(question.title)}}</p>
+            <p class="m-0">{{question.posterName}}</p>
+            <p class="m-0">
+            <small>{{timeAgoFormat(question.createdDate)}} · {{question.applicants}} Applicants</small>
+            </p>
           </div>
         </div>
-      </div>
-    </div>
+      </li>
+    </ul>
   </div>
 </template>
 
