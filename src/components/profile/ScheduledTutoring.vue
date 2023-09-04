@@ -1,3 +1,4 @@
+
 <template>
   <div id="scheduledTutoring">
     <div class="row">
@@ -25,14 +26,19 @@
             <button
             class="btn btn-outline-dark w-100"
             v-on:click="goToEvent(session)">
-              <div class="row">
+              <div v-if="showName" class="row">
                 <div class="col-6 my-auto">
                   <div><p class="m-0">{{session.startTime.toLocaleTimeString()}}</p></div>
                 </div>
-                <div class="col my-auto">
+                <div class="col-auto my-auto">
                   <p class="m-0">
                     With {{currentProfile.id === session.mentor.id ? session.mentee.name : session.mentor.name}}
                   </p>
+                </div>
+              </div>
+              <div v-else class="row">
+                <div class="col my-auto">
+                  <div><p class="m-0">{{session.startTime.toLocaleTimeString()}}</p></div>
                 </div>
               </div>
             </button>
@@ -63,6 +69,9 @@ export default {
     'roomId': {
       type: String,
       required: false,
+    },
+    'showName': {
+      type: Boolean,
     },
   },
   data: function() {
@@ -131,19 +140,22 @@ export default {
     } catch (error) {
       console.error(error);
       this.scheduledSessions.push({
-        startTime: new Date(),
+        startTime: new Date('2021-02-01T03:45:00.086Z'),
+        endTime: new Date('2021-02-01T04:15:00.086Z'),
         mentor: {id: this.currentProfile.id, name: 'Arun'},
         mentee: {name: 'Sathi'},
         id: '1',
       });
       this.scheduledSessions.push({
-        startTime: new Date('2021/2/26'),
+        startTime: new Date('2021-02-26T03:45:00.086Z'),
+        endTime: new Date('2021-02-26T04:15:00.086Z'),
         mentor: {id: this.currentProfile.id, name: 'Arun'},
         mentee: {name: 'Soory'},
         id: '2',
       });
       this.scheduledSessions.push({
-        startTime: new Date('2021/11/26'),
+        startTime: new Date('2021-11-26T03:45:00.086Z'),
+        endTime: new Date('2021-11-26T04:15:00.086Z'),
         mentor: {id: '622bccca-2449-4774-a926-dfb984dc530d', name: 'Arun'},
         mentee: {name: 'TJ'},
         id: '3',
