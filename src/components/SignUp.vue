@@ -86,9 +86,13 @@ export default {
       console.log('Image URL: ' + profile.getImageUrl());
       console.log('Email: ' + profile.getEmail());
       console.log('token: ' + idToken);
-      this[GOOGLE_LOGIN](idToken);
-      this[NAME](profile.getName());
-      this[PROFILE_PICTURE](profile.getImageUrl());
+
+      this[GOOGLE_LOGIN]({
+        token: idToken,
+        name: profile.getName(),
+        profilePicture: profile.getImageUrl(),
+      });
+
       this.$router.push(
           {
             name: 'profile',

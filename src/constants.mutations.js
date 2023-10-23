@@ -26,6 +26,13 @@ const SET_MESSAGE_LISTENER = 'set_message_listener';
 const SET_LATEST_MESSAGE = 'set_latest_message';
 const SET_META = 'set_meta';
 
+const SET_ADD_QUESTION = 'set_add_question';
+const SET_QUESTIONS = 'set_questions';
+const SET_MORE_QUESTIONS = 'set_more_questions';
+const SET_SELECT_QUESTION = 'set_select_question';
+const SET_QUESTION_ERROR = 'set_question_error';
+const SET_UPDATE_QUESTION = 'set_update_question';
+
 export {
   // Mutations for authentication
   SET_LOGGED_IN,
@@ -58,4 +65,12 @@ export {
   SET_MESSAGE_LISTENER,
   SET_LATEST_MESSAGE,
   SET_META,
+
+  // Mutations for questions
+  SET_ADD_QUESTION,
+  SET_QUESTIONS,
+  SET_MORE_QUESTIONS,
+  SET_SELECT_QUESTION,
+  SET_QUESTION_ERROR,
+  SET_UPDATE_QUESTION,
 };

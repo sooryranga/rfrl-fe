@@ -2,10 +2,16 @@ import Vue from 'vue';
 
 export const DocumentService = {
   async getForUser(profileId) {
-    return await Vue.axios.get(`documents/`, {profileId});
+    return await Vue.axios.get(`document-order/`, null, {params: {
+      ref_id: profileId,
+      ref_type: 'client',
+    }});
   },
   async getForSession(sessionId) {
-    return await Vue.axios.get(`documents/`, {sessionId});
+    return await Vue.axios.get(`document-order/`, null, {params: {
+      ref_id: sessionId,
+      ref_type: 'session',
+    }});
   },
   async _post(formData) {
     return await Vue.axios.post(

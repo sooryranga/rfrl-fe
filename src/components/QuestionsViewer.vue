@@ -1,5 +1,5 @@
 <template>
-  <div v-if="question" class="">
+  <div v-if="selectedQuestion" class="">
     <transition name="modal">
       <div v-if="showModal" class="modal-mask ">
         <transition name="fade">
@@ -39,15 +39,15 @@
         </div>
       </div>
     </transition>
-    <p id="title"> {{ question.title }} </p>
-    <p class="my-1"> Posted By : {{ question.posterName }} </p>
-    <p class="my-1"> Created At : {{ timeAgoFormat(question.createdDate) }} </p>
+    <p id="title"> {{ selectedQuestion.title }} </p>
+    <p class="my-1"> Posted By : {{ selectedQuestion.posterName }} </p>
+    <p class="my-1"> Created At : {{ timeAgoFormat(selectedQuestion.createdDate) }} </p>
     <button
     class="btn btn-outline-dark shadow-none my-3"
     v-on:click="toCalendar">
     <small>Schedule Session</small>
     </button>
-    <p class="text-large"> {{ question.description }}</p>
+    <p class="text-large"> {{ selectedQuestion.description }}</p>
   </div>
 </template>
 
@@ -62,16 +62,12 @@ const timeAgo = new TimeAgo('en-US');
 
 export default {
   name: 'questions-viewer',
-  props: {
-    questionId: Number,
-  },
   computed: {
-    ...mapGetters('questions', ['getQuestion']),
+    ...mapGetters('questions', ['selectedQuestion']),
     ...mapGetters('profile', ['currentProfile']),
   },
   data() {
     return {
-      question: null,
       introduction: null,
       showModal: false,
       showError: false,
@@ -103,7 +99,7 @@ export default {
         this.setError('You need to introduce your self to the mentee!');
       }
 
-      const roomId = await this.createRoom([this.question.userId]);
+      const roomId = await this.createRoom([this.selectedQuestion.userId]);
 
       const message = {
         sender_id: this.currentProfile.id,
@@ -122,9 +118,6 @@ export default {
           },
       );
     },
-  },
-  mounted() {
-    this.question = this.getQuestion(this.questionId);
   },
 };
 </script>

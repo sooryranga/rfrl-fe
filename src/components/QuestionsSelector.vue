@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div class="h-100" v-if="questions">
     <div class="row mb-2">
       <div class="col-auto mr-auto my-auto">
         <div>
@@ -29,9 +29,15 @@
       </li>
     </ul>
   </div>
+  <div v-else>
+    <div class="row">
+      <p> No questions found </p>
+    </div>
+  </div>
 </template>
 
 <script>
+import {mapActions} from 'vuex';
 import en from 'javascript-time-ago/locale/en';
 import TimeAgo from 'javascript-time-ago';
 
@@ -40,10 +46,13 @@ const timeAgo = new TimeAgo('en-US');
 
 export default {
   name: 'QuestionsSelector',
-  props: {
-    questions: Array,
+  data() {
+    return {
+      questions: [],
+    };
   },
   methods: {
+    ...mapActions('questions', ['getQuestions']),
     shortenTitle: function(title) {
       if (title.length > 120) {
         const t = title.splice(0, 115);
@@ -64,6 +73,9 @@ export default {
         query: this.$route.query,
       });
     },
+  },
+  async beforeMount() {
+    this.questions = await this.getQuestions();
   },
 };
 </script>
