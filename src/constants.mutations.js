@@ -32,6 +32,7 @@ const SET_MORE_QUESTIONS = 'set_more_questions';
 const SET_SELECT_QUESTION = 'set_select_question';
 const SET_QUESTION_ERROR = 'set_question_error';
 const SET_UPDATE_QUESTION = 'set_update_question';
+const SET_QUESTION_EDITOR = 'set_question_editor';
 
 export {
   // Mutations for authentication
@@ -73,4 +74,5 @@ export {
   SET_SELECT_QUESTION,
   SET_QUESTION_ERROR,
   SET_UPDATE_QUESTION,
+  SET_QUESTION_EDITOR,
 };

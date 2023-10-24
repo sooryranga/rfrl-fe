@@ -7,6 +7,7 @@ import {
   SET_SELECT_QUESTION,
   SET_QUESTION_ERROR,
   SET_UPDATE_QUESTION,
+  SET_QUESTION_EDITOR,
 } from '@/constants.mutations.js';
 
 const state = {
@@ -40,6 +41,7 @@ const getters = {
         (question) => question.id==state.editorQuestionID,
     );
   },
+  error: (state) => state.error,
 };
 
 const getErrorMessageFromRequest = (error) => {
@@ -146,6 +148,17 @@ const actions = {
       commit(SET_UPDATE_QUESTION, question);
     }
     return question;
+  },
+
+  async createQuestion({commit}, payload, options={}) {
+    try {
+      question = await QuestionService.createQuestion(payload);
+      commit(SET_ADD_QUESTION, question);
+    } catch (err) {
+      const errorString = getErrorMessageFromRequest(error);
+      commit(SET_QUESTION_ERROR, errorString);
+      return null;
+    }
   },
 };
 
