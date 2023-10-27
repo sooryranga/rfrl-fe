@@ -35,7 +35,7 @@
             </div>
             <div class="col-4 ">
               <p class="my-0 font-weight-bold">{{review.title}}</p>
-              <p class="my-0"><small>{{review.createdDate.toDateString()}}</small></p>
+              <p class="my-0"><small>{{review.createdAt.toDateString()}}</small></p>
               <p class="my-0">{{review.description}}</p>
             </div>
           </div>

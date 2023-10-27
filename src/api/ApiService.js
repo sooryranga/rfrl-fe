@@ -39,7 +39,6 @@ const ApiService = {
   },
 
   setHeader(token) {
-    console.log('trstsdfgsd', token);
     Vue.axios.defaults.headers.common[
         'Authorization'
     ] = `Bearer ${token}`;

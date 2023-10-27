@@ -1,36 +1,65 @@
 import Vue from 'vue';
 
+import {Profile} from '.';
+
+export const responseToQuestion = (questionResponse) => {
+  if (!questionResponse) return null;
+
+  const question = {...questionResponse};
+  if (question.createdAt) {
+    question.createdAt = new Date(question.createdAt);
+  }
+
+  if (question.updateAt) {
+    question.updateAt = new Date(question.updateAt);
+  }
+
+  if (question.profile) {
+    question.profile = Profile.responseToProfile(question.profile);
+  }
+
+  return question;
+};
+
 export const QuestionService = {
   async getQuestions() {
     const response = await Vue.axios.get(`questions/`);
-    return response.data;
+    const responseData = response.data;
+    const questions = responseData.map((questionR) => (
+      responseToQuestion(questionR)
+    ));
+    return questions;
   },
   async getQuestionsForUser(userID) {
     const response = await Vue.axios.get(`questions/${userID}/`);
-    return response.data;
+    const questionsResponse = response.data;
+
+    const questions = questionsResponse.map((questionR) => (
+      responseToQuestion(questionR)
+    ));
+    return questions;
   },
   async get(questionID) {
     const response = await Vue.axios.get(`question/${questionID}`);
-    return response.data;
+    return responseToQuestion(response.data);
   },
-  async create({title, body, images, tags}) {
-    payload = {
+  async create({title, body, tags}) {
+    const payload = {
       'title': title,
       'body': body,
-      'images': images,
       'tags': tags,
     };
     const response = await Vue.axios.post(`question/`, payload);
-    return response.data;
+    return responseToQuestion(response.data);
   },
-  async update(id, {title, body, images, tags}) {
+  async update(id, {title, body, tags}) {
     payload = {
       'title': title,
       'body': body,
-      'images': images,
       'tags': tags,
     };
-    return await Vue.axios.put(`question/${id}`, payload);
+    const response = await Vue.axios.put(`question/${id}`, payload);
+    return responseToQuestion(response.data);
   },
   async delete(id) {
     return await Vue.axios.delete(`question/${id}`);
@@ -39,3 +68,6 @@ export const QuestionService = {
     return await Vue.axios.post(`question/${id}/apply`);
   },
 };
+
+
+export default {responseToQuestion, QuestionService};

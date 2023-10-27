@@ -50,4 +50,4 @@ export const AuthService = {
   },
 };
 
-export default {getToken, saveToken, destroyToken};
+export default {getToken, saveToken, destroyToken, AuthService};

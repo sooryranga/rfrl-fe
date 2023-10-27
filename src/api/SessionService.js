@@ -38,3 +38,6 @@ export const SessionService = {
     return await Vue.axios.delete(`session/${id}`);
   },
 };
+
+
+export default {SessionService};

@@ -20,9 +20,9 @@
         <div v-on:click="routeToQuestion(index)">
           <div>
             <p class="m-0 h6 px-0">{{shortenTitle(question.title)}}</p>
-            <p class="m-0">{{question.posterName}}</p>
+            <p class="m-0">{{question.from.firstName}} + {{question.from.lastName}}</p>
             <p class="m-0">
-            <small>{{timeAgoFormat(question.createdDate)}} · {{question.applicants}} Applicants</small>
+            <small>{{timeAgoFormat(question.createdAt)}} · {{question.applicants}} Applicants</small>
             </p>
           </div>
         </div>
@@ -52,7 +52,10 @@ export default {
     };
   },
   methods: {
-    ...mapActions('questions', ['getQuestions', 'openEditor']),
+    ...mapActions(
+        'questions',
+        ['getQuestions', 'openEditor', 'selectQuestion'],
+    ),
     shortenTitle: function(title) {
       if (title.length > 120) {
         const t = title.splice(0, 115);
@@ -64,17 +67,16 @@ export default {
       return timeAgo.format(newDate);
     },
     routeToQuestion: function(index) {
-      const routeQuestionId = this.$route.params.questionId;
-      if (routeQuestionId?.toString() === this.questions[index].id.toString()) {
-        return;
-      }
-      this.$router.push({
-        params: {questionId: this.questions[index].id},
+      const questionId = this.questions[index].id;
+      this.selectQuestion(questionId);
+      console.log(questionId);
+      this.$router.replace({
+        params: {questionId: questionId},
         query: this.$route.query,
       });
     },
   },
-  async beforeMount() {
+  async mounted() {
     this.questions = await this.getQuestions();
   },
 };
