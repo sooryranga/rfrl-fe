@@ -1,9 +1,6 @@
 <template>
-  <div :v-if="currentProfile.isTutor" class="shadow p-3 my-1 bg-white">
+  <div :v-if="currentProfile.tutoredStudents" class="shadow p-3 my-1 bg-white">
     <h3 class=" ml-4 my-2"> Tutoring Dashboard </h3>
-    <div class="mt-4" id="tutorStatus">
-      <!-- Chart showing previous tutoring session -->
-    </div>
     <div id="previousStudentProfiles">
       <div id="studentPreview">
         <div v-for="student in currentProfile.tutoredStudents" v-bind:key="student.currentProfileId" class="row mb-2">

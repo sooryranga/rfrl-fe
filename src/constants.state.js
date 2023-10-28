@@ -2,15 +2,15 @@ import {v4 as uuidv4} from 'uuid';
 
 const profileState = () => {
   return {
-    id: '6R0MijpK6M4AIrwaaCY212312safdasd21e',
-    name: null,
-    birthDay: null,
-    profileImage: null,
+    id: null,
+    firstName: null,
+    lastName: null,
+    photo: null,
     about: null,
     education: [],
-    workExperience: {},
+    workExperience: [],
     documentation: {},
-    isTutor: true,
+    canBeTutor: true,
     tutoredStudents: [],
     documents: [],
     tutorReviews: [],

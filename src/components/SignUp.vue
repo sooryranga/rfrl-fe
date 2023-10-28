@@ -100,7 +100,7 @@ export default {
           },
       );
     },
-    ...mapActions('authentication', [
+    ...mapActions('profile', [
       GOOGLE_LOGIN,
       LINKED_IN_LOGIN,
       DEFAULT_LOGIN,

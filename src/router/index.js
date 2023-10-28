@@ -9,7 +9,7 @@ import TutorReview from '@/components/profile/TutorReview.vue';
 import ProfileAbout from '@/components/profile/About.vue';
 import ScheduledTutoring from '@/components/profile/ScheduledTutoring.vue';
 import AnsweredQuestions from '@/components/profile/AnsweredQuestions.vue';
-import AskedQuestions from '@/components/profile/AskedQuestions.vue';
+
 import VueCal from 'vue-cal';
 
 Vue.component('instant-messaging', instantMessaging);
@@ -21,7 +21,6 @@ Vue.component('tutor-review', TutorReview);
 Vue.component('profile-about', ProfileAbout);
 Vue.component('scheduled-tutoring', ScheduledTutoring);
 Vue.component('answered-questions', AnsweredQuestions);
-Vue.component('asked-questions', AskedQuestions);
 Vue.component('vue-cal', VueCal);
 Vue.use(VueRouter);
 

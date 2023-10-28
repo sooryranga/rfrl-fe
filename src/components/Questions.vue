@@ -47,7 +47,7 @@ export default {
     return {};
   },
   methods: {
-    ...mapActions('questions', ['getQuestions']),
+    ...mapActions('questions', ['getQuestions', 'selectQuestion']),
     updateTag: function(tags) {
       console.log(tags);
     },
@@ -59,6 +59,11 @@ export default {
     },
   },
   async beforeMount() {
+    const questionID = this.$route.params?.questionId;
+    if (questionID) {
+      this.selectQuestion(parseInt(questionID));
+    }
+
     await this.getQuestions();
   },
 };

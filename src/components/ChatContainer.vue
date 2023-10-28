@@ -20,7 +20,7 @@
         <div class="row">
           <div class="col">
             <tutoring-scheduler
-            :roomId="roomId"
+            :roomId="selectedRoom"
             />
           </div>
         </div>

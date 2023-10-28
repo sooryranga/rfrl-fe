@@ -1,6 +1,5 @@
 import Vuex from 'vuex';
 import Vue from 'vue';
-import authentication from './modules/authentication';
 import questions from './modules/questions';
 import profile from './modules/profile';
 import chatRooms from './modules/chatRooms';
@@ -11,7 +10,6 @@ Vue.use(Vuex);
 
 const store = new Vuex.Store({
   modules: {
-    authentication,
     questions,
     profile,
     chatRooms,
