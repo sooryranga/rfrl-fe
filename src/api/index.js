@@ -3,6 +3,8 @@ import Document from './DocumentService';
 import Profile from './ProfileService';
 import Question from './QuestionService';
 import Session from './SessionService';
+import Client from './ClientService';
+import Company from './CompanyService';
 
 export {
   Auth,
@@ -10,4 +12,6 @@ export {
   Profile,
   Question,
   Session,
+  Client,
+  Company,
 };

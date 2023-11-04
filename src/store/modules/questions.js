@@ -1,4 +1,5 @@
-import {QuestionService} from '@/api/QuestionService';
+import {Question} from '@/api';
+import {getErrorMessageFromRequest} from '@/utils';
 
 import {
   SET_ADD_QUESTION,
@@ -44,19 +45,6 @@ const getters = {
   error: (state) => state.error,
 };
 
-const getErrorMessageFromRequest = (error) => {
-  if (error.response) {
-    // Request made and server responded
-    return error.response.data['message'];
-  } else if (error.request) {
-    // The request was made but no response was received
-    return 'Something went wrong trying to call' + String(error.request);
-  } else {
-    // Something happened in setting up the request that triggered an Error
-    return error.message;
-  }
-};
-
 const actions = {
   openEditor(
       {commit},
@@ -81,7 +69,7 @@ const actions = {
       return question;
     }
     try {
-      question = await QuestionService.get(questionID);
+      question = await Question.QuestionService.get(questionID);
       commit(SET_ADD_QUESTION, question);
       return question;
     } catch (error) {
@@ -99,7 +87,7 @@ const actions = {
     }
 
     try {
-      questions = await QuestionService.getQuestions();
+      questions = await Question.QuestionService.getQuestions();
       commit(SET_QUESTIONS, questions);
     } catch (error) {
       console.error(error);
@@ -136,7 +124,7 @@ const actions = {
 
   async applyToQuestion({commit, getters}, questionID) {
     try {
-      question.QuestionService.apply(questionID);
+      Question.QuestionService.apply(questionID);
     } catch (err) {
       console.error(err);
       const errorString = getErrorMessageFromRequest(error);
@@ -160,7 +148,7 @@ const actions = {
     }
 
     try {
-      question = await QuestionService.update(id, payload);
+      question = await Question.QuestionService.update(id, payload);
     } catch (err) {
       console.error(err);
       const errorString = getErrorMessageFromRequest(error);
@@ -175,7 +163,7 @@ const actions = {
 
   async createQuestion({commit}, payload, options={}) {
     try {
-      const question = await QuestionService.create(payload);
+      const question = await Question.QuestionService.create(payload);
       commit(SET_ADD_QUESTION, question);
       commit(SET_SELECT_QUESTION, question.id);
       return true;
