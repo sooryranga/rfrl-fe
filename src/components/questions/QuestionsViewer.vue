@@ -100,7 +100,7 @@ export default {
       }.bind(this), 2000);
     },
     async save() {
-      if (this.introduction == null) {
+      if (this.introduction === null) {
         this.setError('You need to introduce your self to the mentee!');
       }
 

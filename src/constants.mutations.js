@@ -36,7 +36,7 @@ const SET_UPDATE_QUESTION = 'set_update_question';
 const SET_QUESTION_EDITOR = 'set_question_editor';
 
 const SET_ADD_TUTORS = 'set_add_tutors';
-const SET_TUTORS_ERROR = 'set_add_tutors';
+const SET_TUTORS_ERROR = 'set_add_tutor_error';
 
 const SET_COMPANIES = 'set_companies';
 const SET_COMPANIES_ERROR = 'set_companies_error';

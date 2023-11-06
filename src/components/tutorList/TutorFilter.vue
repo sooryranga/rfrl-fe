@@ -111,7 +111,7 @@ export default {
     }
 
     const isRemote = this.$route.query?.isRemote;
-    if (isRemote == 'true') {
+    if (isRemote === 'true') {
       this.isRemote = true;
     }
   },
