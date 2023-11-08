@@ -23,20 +23,58 @@
           </button>
         </div>
         <hr class="mt-4 mb-4"/>
-        <form class="">
+        <form>
           <div class="form-group">
             <label for="exampleInputEmail1">Email address</label>
-            <input
-              type="email" class="form-control" id="exampleInputEmail1"
-              aria-describedby="emailHelp" placeholder="Enter email">
+            <div class="form-row">
+              <div class="col">
+                <input
+                  class="form-control" id="exampleInputEmail1"
+                  :class="{ 'is-invalid': $v.email.$error }"
+                  v-model.trim="$v.email.$model"
+                  placeholder="Enter email"/>
+              </div>
+            </div>
+            <div class="error row" v-if="$v.email.$error && !$v.email.required">
+              <div class="col text-danger">
+                <small>Email is required</small>
+              </div>
+            </div>
+            <div class="error row" v-if="$v.email.$error && !$v.email.email">
+              <div class="col text-danger">
+                <small>Not a valid email.</small>
+              </div>
+            </div>
             <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
           </div>
           <div class="form-group">
             <label for="exampleInputPassword1">Password</label>
-            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+            <div class="form-row">
+              <div class="col">
+                <input
+                  type="password" class="form-control" id="exampleInputPassword1" placeholder="Password"
+                  :class="{ 'is-invalid': $v.password.$error }"
+                  v-model.trim="$v.password.$model"/>
+              </div>
+            </div>
+            <div class="error row" v-if="$v.password.$error && !$v.password.required">
+              <div class="col text-danger">
+                <small>Password is required</small>
+              </div>
+            </div>
+            <div class="error row" v-if="$v.password.$error && !$v.password.minLength">
+              <div class="col text-danger">
+                <small>Password must have at least {{$v.password.$params.minLength.min}} characters.</small>
+              </div>
+            </div>
           </div>
-          <button type="submit" class="btn btn-primary mt-3" v-on:click="loginToEmail">Register</button>
-          </form>
+          <div class="row">
+            <button type="button" class="col btn btn-primary mt-3" v-on:click="registerWithEmail">Register</button>
+          </div>
+          <div class="row">
+            <button type="button" class="col btn btn-primary mt-3" v-on:click="loginToEmail">Login</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
@@ -47,14 +85,28 @@
 import {mapActions, mapGetters} from 'vuex';
 import queryString from 'query-string';
 
+import {required, minLength, email} from 'vuelidate/lib/validators';
+
 
 export default {
   name: 'SignUp',
+  validations: {
+    email: {
+      email,
+      required,
+    },
+    password: {
+      required,
+      minLength: minLength(6),
+    },
+  },
   data: function() {
     return {
       publicPath: process.env.BASE_URL,
       user: null,
       googleOauth: null,
+      password: '',
+      email: '',
     };
   },
   methods: {
@@ -62,15 +114,46 @@ export default {
       'googleLogin',
       'linkedinLogin',
       'emailLogin',
+      'emailRegister',
     ]),
     loginToLinkedIn: function() {
-      window.location.replace(this.linkedinOauthUrl);
+      const url = 'https://www.linkedin.com/oauth/v2/authorization?' +
+      queryString.stringify(
+          {
+            response_type: 'code',
+            client_id: '780irx50xypror',
+            redirect_uri: 'http://localhost:8080/signup/',
+            scope: ['r_liteprofile', 'r_emailaddress'],
+          },
+      );
+      window.location.replace(url);
     },
     loginToGoogle: function() {
       this.googleOauth.signIn();
     },
+    async registerWithEmail() {
+      this.$v.$touch();
+      if (this.$v.$invalid) return;
+
+      await this.emailRegister({
+        email: this.email,
+        password: this.password,
+      });
+
+      this.$router.push(
+          {
+            name: 'profile',
+            params: {userId: this.currentProfile.id},
+          },
+      );
+    },
     async loginToEmail() {
-      await this.emailLogin();
+      this.$v.$touch();
+      if (this.$v.$invalid) return;
+      await this.emailLogin({
+        email: this.email,
+        password: this.password,
+      });
 
       this.$router.push(
           {
@@ -108,22 +191,11 @@ export default {
     },
   },
   computed: {
-    linkedinOauthUrl: function() {
-      return 'https://www.linkedin.com/oauth/v2/authorization?' +
-      queryString.stringify(
-          {
-            response_type: 'code',
-            client_id: '780irx50xypror',
-            redirect_uri: 'http://localhost:8080/signup/',
-            scope: ['r_liteprofile', 'r_emailaddress'],
-          },
-      );
-    },
     ...mapGetters('profile', [
       'currentProfile',
     ]),
   },
-  mounted: function() {
+  mounted() {
     if (this.$route.query.hasOwnProperty('code')) {
       console.log('linkedin login');
       console.log(this.$route.query.code);

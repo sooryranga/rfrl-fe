@@ -71,7 +71,10 @@ export const AuthService = {
     return Profile.responseToProfile(client);
   },
   async signupPassword({email, password}) {
-    const response = await Vue.axios.post('signup/', {email, password});
+    const response = await Vue.axios.post(
+        'signup/',
+        {type: 'email', email, password},
+    );
     saveToken(response.data?.token);
     const client = response.data?.client;
     return Profile.responseToProfile(client);
