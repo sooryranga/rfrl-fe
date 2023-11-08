@@ -5,7 +5,7 @@ import {BootstrapVue, IconsPlugin} from 'bootstrap-vue';
 import VueCroppie from 'vue-croppie';
 import 'croppie/croppie.css'; // import the croppie css manually
 import 'vue-cal/dist/vuecal.css';
-import {getToken} from '@/api/Auth';
+import {Auth} from '@/api';
 import ApiService from '@/api/ApiService';
 import Vuelidate from 'vuelidate';
 
@@ -24,7 +24,7 @@ Vue.use(Vuelidate);
 
 ApiService.init();
 
-const token = getToken();
+const token = Auth.getToken();
 
 if (token) {
   ApiService.setHeader(token);
