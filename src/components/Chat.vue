@@ -175,7 +175,6 @@ export default {
       this.messages = [];
       this.messagesLoaded = false;
       this.messageVersion = 0;
-      console.log('newRoom');
       if (this.selectedRoom) this.$emit('newRoom', this.selectedRoom);
     },
 
@@ -267,7 +266,6 @@ export default {
         this.messagesLoaded = loaded;
       }
       this.messages = messages;
-      console.log(loaded);
     },
 
     // currently not supported
