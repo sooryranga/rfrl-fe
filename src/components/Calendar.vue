@@ -6,7 +6,7 @@
     </div>
   </transition>
   <transition name="modal">
-    <div v-if="showEventCreationDialog" class="modal-mask ">
+    <div v-if="showEventCreationDialog" class="modal-mask">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -54,59 +54,7 @@
     </div>
   </transition>
   <div class='row h-100'>
-    <div class='col-4 p-0'>
-      <div  id="eventList" class="shadow p-3 h-100 bg-white d-flex flex-column">
-        <div class="row">
-          <div class="col">
-            <h4 class=" ml-4 my-2"> {{title}} </h4>
-          </div>
-        </div>
-        <div class="ml-4 row flex-grow-1">
-          <div v-if="relatedEvents.length" class="col">
-            <div
-              v-for="(event) in relatedEvents"
-              v-on:click="setCurrentCalendarDate(new Date(event.start))"
-              v-bind:key="event.id" class="row my-2">
-              <div class="col  my-auto">
-                {{event.title}}
-              </div>
-              <div class="col-2  my-auto">
-                <small class="text-secondary">{{dateToString(event.start)}}</small>
-              </div>
-              <div v-if="canSelect(event)" class="col-2 mr-4">
-                <input
-                v-on:click="selectEventFromOptions(event)"
-                type="checkbox">
-              </div>
-              <div v-if="canDelete(event)" class="col-2 mr-4">
-                <button
-                type="button"
-                class="btn btn-default btn-dark btn-circle"
-                v-on:click="deleteEventAction(event)">
-                  <span class="material-icons float-left">
-                    delete
-                  </span>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div id="save" class="my-3 py-3">
-          <button
-            v-if="canSave"
-            v-on:click="saveSession"
-            class="btn btn-default btn-dark mr-4">
-            Save Events
-          </button>
-          <button
-            class="btn btn-default btn-dark"
-            v-on:click="$router.go(-1)">
-            Quit
-          </button>
-        </div>
-      </div>
-    </div>
-    <div class='col' id="calendar">
+    <div class='col h-100'>
       <vue-cal
       :events="events"
       active-view="week"
@@ -119,6 +67,8 @@
       :selected-date="selectedDate"
       :drag-to-create-threshold="30"
       :disable-views="['years', 'year', 'month', 'day']"
+      @view-change="updateEventsShown($event)"
+      @ready="updateEventsShown($event)"
       @event-drag-create="createEvent"
       @event-delete="deleteLocalyCreatedEvent">
         <template v-slot:title="{view}">
@@ -144,7 +94,7 @@
 <script>
 import {mapGetters} from 'vuex';
 import {v4 as uuidv4} from 'uuid';
-import {SessionService} from '@/api/SessionService';
+import {Session, Client} from '@/api';
 
 const STATE = Object.freeze({
   user: 'user',
@@ -158,7 +108,7 @@ export default {
   name: 'calendar',
   props: {
     sessionId: {
-      type: String,
+      type: Number,
       required: false,
     },
     userId: {
@@ -218,14 +168,33 @@ export default {
     },
     ...mapGetters('profile', ['currentProfile']),
   },
-  mounted() {
+  async mounted() {
     if (this.sessionId) {
-      this.setUpSession();
+      await this.setUpSession();
       return;
     }
     this.setUpUser();
   },
   methods: {
+    async updateEventsShown(event) {
+      if (this.sessionId) {
+        this.events = await Session.SessionService.getRelatedEvents({
+          id: this.sessionId,
+          startTime: event.startDate.toISOString(),
+          endTime: event.endDate.toISOString(),
+          state: Session.SessionState.SCHEDULED,
+        });
+      } else if (this.userId) {
+        this.events = await Client.ClientService.getEvents({
+          id: this.userId,
+          startTime: event.startDate.toISOString(),
+          endTime: event.endDate.toISOString(),
+          state: Session.SessionState.SCHEDULED,
+        });
+      } else {
+        throw Error('Cannot get events with session or client id');
+      }
+    },
     async saveSession() {
       if (this.state === STATE.selectMultiple) {
         return await this.selectMultipleEventsFromOptions();
@@ -299,55 +268,27 @@ export default {
       }
       this.events = this.getEventsForUser(this.currentProfile.id);
     },
-    setUpSession() {
+    async setUpSession() {
       try {
-        this.session = SessionService.getSession(this.sessionId);
+        this.session = Session.SessionService.get(this.sessionId);
       } catch (error) {
-        this.session = this.localSession;
-        this.session.selectedEvents = new Set();
-        this.session.scheduledDates = [
-          {
-            'start': new Date('2021-01-21T18:00:00.000Z'),
-            'end': new Date('2021-01-21T22:15:00.000Z'),
-            'title': 'Session 0',
-            'id': 'c88a8aa5-f009-45a8-ac6b-01964fdccfc0',
-            'createdAt': '2021-01-19T03:07:12.397Z',
-          },
-          {
-            'start': new Date('2021-01-23T13:15:00.000Z'),
-            'end': new Date('2021-01-23T19:00:00.000Z'),
-            'title': 'Session 0',
-            'id': 'e6c154be-4d2a-4f44-96c7-8a303b92d66b',
-            'createdAt': '2021-01-21T03:35:30.482Z',
-          },
-          {
-            'start': new Date('2021-01-22T11:15:00.000Z'),
-            'end': new Date('2021-01-22T15:00:00.000Z'),
-            'title': 'Session 1',
-            'id': 'f57b00a2-c919-4f21-9edf-e3cb8cee8f43',
-            'createdAt': '2021-01-21T03:35:32.396Z',
-          },
-          {
-            'start': new Date('2021-01-22T06:00:00.000Z'),
-            'end': new Date('2021-01-22T09:45:00.000Z'),
-            'title': 'Session 2',
-            'id': '9a9796ca-ec0a-4965-b790-8b62940bbc0b',
-            'createdAt': '2021-01-21T03:35:34.326Z',
-          },
-        ];
+        throw error;
       }
-      // this.state = this.session.state;
 
-      // const userIds = this.session.users.map((user) => user.id);
-      // userEvents = this.getEventsForSession(this.sessionId);
-
-      this.events = [...this.session.scheduledDates];
-      this.locallyCreated = [...this.session.scheduledDates];
-      this.state = STATE.selectMultiple;
+      if (this.session.eventId == null) {
+        this.state = STATE.createEvents;
+      } else {
+        const event = Session.SessionService.getSessionEvent({
+          SessionId: this.session.id,
+          id: this.session.eventId,
+        });
+        this.events.push(event);
+        this.state = STATE.selectOne;
+      }
     },
     async selectMultipleEventsFromOptions() {
       try {
-        await SessionService.selectSessionDates(
+        await Session.SessionService.selectSessionDates(
             this.session.selectedEvents,
             true,
         );
@@ -359,7 +300,10 @@ export default {
     async selectEventFromOptions(event) {
       if (this.state === STATE.selectOne) {
         try {
-          await SessionService.selectSessionDates(this.sessionId, [event.id]);
+          await Session.SessionService.selectSessionDates(
+              this.sessionId,
+              [event.id],
+          );
         } catch (error) {
           console.error(error);
         }
@@ -412,7 +356,6 @@ export default {
     cancelEventCreation() {
       this.showEventCreationDialog = false;
       this.selectedEvent = null;
-      this.deleteEvent = null;
       this.deleteEventFunction();
     },
     saveEventCreation() {
@@ -423,7 +366,6 @@ export default {
       }
       this.showEventCreationDialog = false;
       this.selectedEvent = null;
-      this.deleteEvent = null;
     },
   },
 };
