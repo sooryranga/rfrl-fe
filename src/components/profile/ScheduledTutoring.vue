@@ -28,7 +28,7 @@
             v-on:click="goToEvent(session)">
               <div v-if="showName" class="row">
                 <div class="col-6 my-auto">
-                  <div><p class="m-0">{{session.startTime.toLocaleTimeString()}}</p></div>
+                  <div><p class="m-0">{{session.start.toLocaleTimeString()}}</p></div>
                 </div>
                 <div class="col-auto my-auto">
                   <p class="m-0">
@@ -38,7 +38,7 @@
               </div>
               <div v-else class="row">
                 <div class="col my-auto">
-                  <div><p class="m-0">{{session.startTime.toLocaleTimeString()}}</p></div>
+                  <div><p class="m-0">{{session.start.toLocaleTimeString()}}</p></div>
                 </div>
               </div>
             </button>
@@ -87,13 +87,13 @@ export default {
         return [];
       }
 
-      let _date = this.scheduledSessions[0].startTime;
+      let _date = this.scheduledSessions[0].start;
       _date.setHours(0, 0, 0, 0);
       const cache = [{date: _date, sessions: []}];
 
       for (let i = 0; i < this.scheduledSessions.length; i++) {
         const session = this.scheduledSessions[i];
-        const _compDate = session.startTime;
+        const _compDate = session.start;
         _compDate.setHours(0, 0, 0, 0);
 
         if (_compDate > _date) {
@@ -139,22 +139,22 @@ export default {
     } catch (error) {
       console.error(error);
       this.scheduledSessions.push({
-        startTime: new Date('2021-02-01T03:45:00.086Z'),
-        endTime: new Date('2021-02-01T04:15:00.086Z'),
+        start: new Date('2021-02-01T03:45:00.086Z'),
+        end: new Date('2021-02-01T04:15:00.086Z'),
         mentor: {id: this.currentProfile.id, name: 'Arun'},
         mentee: {name: 'Sathi'},
         id: '1',
       });
       this.scheduledSessions.push({
-        startTime: new Date('2021-02-26T03:45:00.086Z'),
-        endTime: new Date('2021-02-26T04:15:00.086Z'),
+        start: new Date('2021-02-26T03:45:00.086Z'),
+        end: new Date('2021-02-26T04:15:00.086Z'),
         mentor: {id: this.currentProfile.id, name: 'Arun'},
         mentee: {name: 'Soory'},
         id: '2',
       });
       this.scheduledSessions.push({
-        startTime: new Date('2021-11-26T03:45:00.086Z'),
-        endTime: new Date('2021-11-26T04:15:00.086Z'),
+        start: new Date('2021-11-26T03:45:00.086Z'),
+        end: new Date('2021-11-26T04:15:00.086Z'),
         mentor: {id: '622bccca-2449-4774-a926-dfb984dc530d', name: 'Arun'},
         mentee: {name: 'TJ'},
         id: '3',

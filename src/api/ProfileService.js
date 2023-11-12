@@ -8,8 +8,8 @@ export const responseToProfile = (profileResponse) => {
     profile.createdAt = new Date(profile.createdAt);
   }
 
-  if (profile.updateAt) {
-    profile.updateAt = new Date(profile.updateAt);
+  if (profile.updatedAt) {
+    profile.updatedAt = new Date(profile.updatedAt);
   }
 
   return profile;
