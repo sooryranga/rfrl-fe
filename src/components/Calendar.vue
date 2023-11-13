@@ -53,6 +53,53 @@
       </div>
     </div>
   </transition>
+  <transition name="acceptModal">
+    <div v-if="showEventAcceptDialog" class="modal-mask">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Proposed Tutoring Session</h5>
+            <button
+            v-on:click="cancelEventAcceptation"
+            type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-2">
+                <p>Session</p>
+              </div>
+              <div class="col">
+                <p>{{selectedEvent.title}}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-2">
+                <p>Start</p>
+              </div>
+              <div class="col">
+                <p>{{selectedEvent.start.toLocaleString()}}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-2">
+                <p>End</p>
+              </div>
+              <div class="col">
+                <p>{{selectedEvent.end.toLocaleString()}}</p>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" v-on:click="cannotAttend" class="btn btn-secondary">Cannot Attend</button>
+            <button type="button" v-on:click="canAttend" class="btn btn-primary">Attend</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </transition>
+
   <div class='row h-100'>
     <div class='col h-100'>
       <vue-cal
@@ -69,6 +116,7 @@
       :disable-views="['years', 'year', 'month', 'day']"
       @view-change="updateEventsShown($event)"
       @ready="updateEventsShown($event)"
+      :on-event-click="onEventClick"
       @event-drag-create="createEvent">
         <template v-slot:title="{view}">
           <span v-if="view.id === 'week'">
@@ -98,7 +146,6 @@ import {Session, Client} from '@/api';
 const STATE = Object.freeze({
   user: 'user',
   createEvents: 'createEvents',
-  chooseDate: 'chooseDate',
   selectOne: 'selectOne',
 });
 
@@ -123,6 +170,7 @@ export default {
       sessionCount: 0,
       showEventCreationDialog: false,
       events: [],
+      showEventAcceptDialog: false,
       unauthenticated: false,
       selectedDate: new Date(),
       showError: false,
@@ -131,14 +179,6 @@ export default {
   computed: {
     create: function() {
       return this.state === STATE.createEvents || this.state === STATE.user;
-    },
-    title: function() {
-      if (this.state === STATE.createEvents) {
-        return 'Picked Dates';
-      } else if (this.state === STATE.selectOne) {
-        return 'Choose a Date from this List';
-      }
-      return 'Schedule';
     },
     newSessionName: function() {
       if (this.state === STATE.user) return 'Personnal Events';
@@ -154,6 +194,30 @@ export default {
     this.setUpUser();
   },
   methods: {
+    onEventClick(event, e) {
+      if (
+        event.id !== this.selectedEvent.id ||
+        this.state !== STATE.selectOne
+      ) return;
+      this.showEventAcceptDialog = true;
+    },
+    cancelEventAcceptation() {
+      this.showEventAcceptDialog = false;
+    },
+    async cannotAttend() {
+      await Session.SessionService.bookSession({
+        sessionId: this.sessionId,
+        canAttend: false,
+      });
+      return this.$router.go(-1);
+    },
+    async canAttend() {
+      await Session.SessionService.bookSession({
+        sessionId: this.sessionId,
+        canAttend: true,
+      });
+      return this.$router.go(-1);
+    },
     async updateEventsShown(event) {
       if (this.sessionId) {
         this.events = await Session.SessionService.getRelatedEvents({
@@ -171,6 +235,9 @@ export default {
         });
       } else {
         throw Error('Cannot get events with session or client id');
+      }
+      if (this.selectedEvent) {
+        this.events.push(this.selectedEvent);
       }
     },
     async saveSession() {
@@ -232,10 +299,11 @@ export default {
           SessionId: this.session.id,
           id: this.session.eventId,
         });
-        console.log(this.events);
         this.events.push(event);
         this.state = STATE.selectOne;
         this.setCurrentCalendarDate(event.start);
+        this.selectedEvent = event;
+        this.showEventAcceptDialog = true;
       }
     },
     onEventCreate(event, deleteEventFunction) {
