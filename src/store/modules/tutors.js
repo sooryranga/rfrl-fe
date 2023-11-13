@@ -25,7 +25,6 @@ const actions = {
       const tutors = await Client.ClientService.getList(true);
       commit(SET_ADD_TUTORS, tutors);
     } catch (err) {
-      console.log(err);
       commit(SET_TUTORS_ERROR, getErrorMessageFromRequest(err));
     }
   },

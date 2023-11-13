@@ -134,7 +134,6 @@ export default {
         const otherUserId = Object.keys(this.users).filter(
             (userID) => userID != this.currentProfile.id,
         )[0];
-        console.log(otherUserId);
         return await this.create(otherUserId);
       }
 
@@ -173,7 +172,6 @@ export default {
         this.showDropDown = false;
       }
 
-      console.log(this.users);
       const clientIds = Object.keys(this.users);
 
       const session = {
