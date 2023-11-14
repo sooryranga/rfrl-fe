@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import instantMessaging from '@/components/InstantMessaging';
 import VideoMessaging from '@/components/VideoMessaging.vue';
 import Education from '@/components/profile/Education.vue';
 import Documents from '@/components/Documents.vue';
@@ -12,7 +11,6 @@ import AnsweredQuestions from '@/components/profile/AnsweredQuestions.vue';
 
 import VueCal from 'vue-cal';
 
-Vue.component('instant-messaging', instantMessaging);
 Vue.component('video-messaging', VideoMessaging);
 Vue.component('education', Education);
 Vue.component('documents', Documents);
@@ -78,18 +76,19 @@ const routes = [
     component: () => import('@/components/Calendar.vue'),
   },
   {
-    path: '/session-info/:sessionId?',
+    path: '/session/:sessionId/info',
     name: 'session-info',
     props: true,
     component: () => import('@/components/SessionInfo/SessionInfo.vue'),
   },
   {
-    path: '/conference/:conferenceId',
-    name: 'tutoring-session',
+    path: '/session/:sessionId/conference',
+    name: 'session-conference',
+    props: true,
     redirect: (to) => {
-      return '/conference/' + to.params.conferenceId +'/code';
+      return '/session/' + to.params.sessionId +'/conference/code';
     },
-    component: () => import('@/components/TutoringSession.vue'),
+    component: () => import('@/components/SessionConference.vue'),
     children: [
       {
         path: 'code',

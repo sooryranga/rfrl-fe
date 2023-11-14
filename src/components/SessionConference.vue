@@ -4,7 +4,12 @@
       <div class='col-auto p-0 h-100'>
         <div class="h-100" style="width: 350px">
           <video-messaging style="height: 30%;"></video-messaging>
-          <instant-messaging style="height: 70%; max-height: 65vh;"></instant-messaging>
+          <chat
+            :isSingleRoom="true"
+            :roomId="session.roomId"
+            :currentUserId="currentProfile.id"
+            style="height: 70%; max-height: 65vh;">
+          </chat>
         </div>
       </div>
       <div class="col">
@@ -27,13 +32,6 @@
                       Text Editor
                     </router-link>
                   </li>
-                  <li class="nav-item">
-                    <router-link
-                      class="nav-link"
-                      :to="{ name: 'code', params: {userId: $route.params.userId }}">
-                      Code
-                    </router-link>
-                  </li>
                 </ul>
               </div>
             </nav>
@@ -50,12 +48,34 @@
 </template>
 
 <script>
+import Chat from '@/components/Chat';
+import {mapGetters} from 'vuex';
+import {Session} from '@/api';
+
 export default {
-  data: function() {
-    return {};
+  components: {
+    'chat': Chat,
   },
-  mounted: function() {
-    console.log(this.$route.fullPath);
+  data: function() {
+    return {
+      session: null,
+    };
+  },
+  props: {
+    sessionId: {
+      type: Number,
+      required: true,
+    },
+  },
+  computed: {
+    ...mapGetters('profile', ['currentProfile']),
+  },
+  async mounted() {
+    try {
+      this.session = await Session.SessionService.get(this.sessionId);
+    } catch (error) {
+      throw error;
+    }
   },
 };
 </script>
