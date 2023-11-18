@@ -48,6 +48,10 @@ export const responseToSession = (response) => {
 };
 
 export const SessionService = {
+  async getConferenceId({sessionId}) {
+    const response = await Vue.axios.get(`session/${sessionId}/conference/`);
+    return response.data?.conferenceID;
+  },
   async getSessionForProfile() {
     const response = await Vue.axios.get(
         `sessions/`,
