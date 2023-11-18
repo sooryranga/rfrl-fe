@@ -46,7 +46,7 @@
       </div>
     </div>
     <div id="content" class="w-100">
-      <router-view :key="$route.fullPath"/>
+      <router-view :key="routerViewKey"/>
     </div>
   </div>
 </template>
@@ -63,6 +63,9 @@ export default {
         name: 'profile',
         params: {userId: this.currentProfile.id},
       };
+    },
+    routerViewKey() {
+      return this.$route.fullPath.split('/').slice(0, 2).join('/');
     },
   },
   methods: {

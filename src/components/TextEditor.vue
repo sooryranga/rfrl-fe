@@ -15,18 +15,24 @@ import QuillCursors from 'quill-cursors';
 Quill.register('modules/cursors', QuillCursors);
 
 export default {
+  props: {
+    doc: {
+      type: Y.Doc,
+      required: true,
+    },
+    provider: {
+      type: WebrtcProvider,
+      required: true,
+    },
+  },
   data: function() {
     return {
-      doc: null,
-      provider: null,
       type: null,
       quillEditor: null,
       binding: null,
     };
   },
   mounted: function() {
-    this.doc = new Y.Doc();
-    this.provider = new WebrtcProvider('codemirror-demo-room2', this.doc);
     this.type = this.doc.getText('quill');
 
     this.quillEditor = new Quill(this.$refs.editor, {
@@ -44,14 +50,12 @@ export default {
       placeholder: 'Start collaborating...',
       theme: 'snow', // or 'bubble'
     });
-
+    console.log(this.quillEditor);
     this.binding = new QuillBinding(
         this.type,
-        this.$refs.editor,
+        this.quillEditor,
         this.provider.awareness,
     );
-
-    this.provider.connect();
   },
 };
 </script>
