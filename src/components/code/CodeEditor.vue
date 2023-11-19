@@ -12,6 +12,7 @@ import {MonacoBinding} from 'y-monaco';
 import * as monaco from 'monaco-editor';
 
 export default {
+  name: 'code-edutor',
   props: {
     doc: {
       type: Y.Doc,
