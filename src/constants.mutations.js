@@ -42,6 +42,12 @@ const SET_TUTORS_ERROR = 'set_add_tutor_error';
 const SET_COMPANIES = 'set_companies';
 const SET_COMPANIES_ERROR = 'set_companies_error';
 
+const SET_CODE_IS_RUNNING = 'set_code_is_running';
+const SET_CODE = 'set_code';
+const SET_CODE_RESULT_LISTENER = 'set_code_result_listener';
+const SET_CODE_RESULT = 'set_code_result';
+const SET_RESET_CONFERENCE = 'set_reset_conference';
+
 export {
   // Mutations for authentication
   SET_LOGGED_IN,
@@ -93,4 +99,11 @@ export {
   // Mutations for companies
   SET_COMPANIES,
   SET_COMPANIES_ERROR,
+
+  // Mutations for conference
+  SET_CODE_IS_RUNNING,
+  SET_CODE,
+  SET_CODE_RESULT,
+  SET_CODE_RESULT_LISTENER,
+  SET_RESET_CONFERENCE,
 };
