@@ -20,8 +20,12 @@ export const ProfileService = {
     const response = await Vue.axios.get(`client/${id}/`);
     return responseToProfile(response.data);
   },
-  async update(id, profile) {
-    const response = await Vue.axios.put(`client/${id}/`, profile);
+  async update(id, {firstName, lastName, photo, about, isTutor}) {
+    console.log({firstName, lastName, photo, about, isTutor});
+    const response = await Vue.axios.put(
+        `client/${id}/`,
+        {firstName, lastName, photo, about, isTutor},
+    );
     return responseToProfile(response.data);
   },
   async create(profile) {

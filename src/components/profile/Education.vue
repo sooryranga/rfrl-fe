@@ -42,7 +42,6 @@
 
 <script>
 import {mapGetters, mapActions} from 'vuex';
-import {EDUCATION, ADD_EDUCATION} from '@/constants.actions.js';
 import EducationEditor from '@/components/profile/EducationEditor.vue';
 import {educationState} from '@/constants.state.js';
 
@@ -74,7 +73,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions('profile', [EDUCATION, ADD_EDUCATION]),
+    ...mapActions('profile', ['getEducation', 'addEducation']),
     'clearEditorState': function() {
       this.editorDocument = educationState();
     },
@@ -97,7 +96,7 @@ export default {
       this.saveItem(state);
     },
     'saveItem': function(state) {
-      this[ADD_EDUCATION]({
+      this.addEducation({
         index: this.editingIndex,
         newEducation: state,
       });
@@ -114,7 +113,7 @@ export default {
   mounted: function() {
     if (this.isLoggedInUser) {
       if (this.currentProfile?.education?.length === 0) {
-        this[EDUCATION]();
+        this.getEducation();
       }
       this.localEducation.push(...this.currentProfile.education);
     }
