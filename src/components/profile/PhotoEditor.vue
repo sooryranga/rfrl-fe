@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import {storageRef} from '@/firestore';
+import {profilePhotoRef} from '@/firestore';
 import {mapGetters, mapActions} from 'vuex';
 
 export default {
@@ -93,8 +93,8 @@ export default {
       const metadata = {
         contentType: 'image/png',
       };
-      const snapshot = await storageRef
-          .child(`profilePhotos/${this.currentProfile.id}.png`)
+      const snapshot = await profilePhotoRef
+          .child(`${this.currentProfile.id}.png`)
           .put(blob, metadata);
 
       const photo = await snapshot.ref.getDownloadURL();

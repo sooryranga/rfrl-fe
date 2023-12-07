@@ -2,7 +2,6 @@
 <template>
   <div id="education" class="shadow p-3 my-3 bg-white">
     <education-editor
-      :educationprop="this.editingItem"
       v-if="editorOpen"
       v-on:saveEvent="saveEvent"
       v-on:cancelEvent="cancelEvent"
@@ -16,24 +15,21 @@
           v-if="isLoggedInUser"
           v-on:click="add"
           class="material-icons md-24 md-dark btn-outline-light btn"
-        >add</span>
+        >create</span>
       </div>
     </div>
-    <div class="mt-4"  v-for="(education, index) in profile.education" v-bind:key="education.id">
+    <div class="mt-4"  v-if="profile">
       <div class="educationRow row">
         <div class="col-3 my-auto">
-          <img class="institutionLogo" v-bind:src="education.institutionLogo"/>
+          <img class="institutionLogo" src="https://tinyurl.com/54ze666n"/>
         </div>
         <div class="col my-auto ">
-          <h5>{{education.institution}}</h5>
-          <h6>{{education.degree}}</h6>
-          <p class="m-0">{{education.fieldOfStudy}}</p>
-          <p class="m-0"><small>{{education.start.getFullYear()}}-{{education.end.getFullYear()}}</small></p>
-          <hr class="my-1"/>
-        </div>
-        <div class="col-1 hover-to-show mr-4" v-if="isLoggedInUser">
-          <span v-on:click="edit(index)" class="material-icons md-dark btn-outline-light btn">create</span>
-          <span class="material-icons md-dark btn-outline-light btn">drag_handle</span>
+          <h5>{{profile.institution}}</h5>
+          <h6>{{profile.degree}}</h6>
+          <p class="m-0">{{profile.fieldOfStudy}}</p>
+          <p class="m-0">
+            <small>{{profile.startYear}}-{{profile.endYear}}</small>
+          </p>
         </div>
       </div>
     </div>
@@ -43,79 +39,57 @@
 <script>
 import {mapGetters, mapActions} from 'vuex';
 import EducationEditor from '@/components/profile/EducationEditor.vue';
-import {educationState} from '@/constants.state.js';
+import {Profile} from '@/api';
 
 export default {
   name: 'education',
   props: {
-    'profileId': String,
+    profileId: String,
   },
   data: function() {
     return {
-      'editorOpen': false,
-      'localEducation': [],
-      'editingIndex': null,
-      'editingItem': educationState(),
+      editorOpen: false,
+      fetchedProfile: null,
     };
   },
   components: {'education-editor': EducationEditor},
   computed: {
     ...mapGetters('profile', ['currentProfile']),
-    'isLoggedInUser': function() {
+    isLoggedInUser() {
       return this.currentProfile.id === this.profileId;
     },
-    'profile': function() {
-      if (this.profileId === this.currentProfile.id) {
+    profile() {
+      if (this.isLoggedInUser) {
         return this.currentProfile;
       } else {
-        return this.currentProfile;
+        return this.fetchedProfile;
       }
     },
   },
   methods: {
-    ...mapActions('profile', ['getEducation', 'addEducation']),
-    'clearEditorState': function() {
-      this.editorDocument = educationState();
-    },
-    'cancelEvent': function() {
-      this.clearEditorState();
+    ...mapActions('profile', ['setEducation']),
+    cancelEvent() {
       this.editorOpen = false;
     },
-    'add': function() {
-      this.editingItem = educationState();
+    add() {
       this.editorOpen = true;
       this.editingIndex = null;
     },
-    'edit': function(index) {
-      this.editingIndex = index;
-      this.editingItem = this.localEducation[index];
-      this.editorOpen = true;
-    },
-    'saveEvent': function(state) {
+    saveEvent(state) {
       this.editorOpen = false;
       this.saveItem(state);
     },
-    'saveItem': function(state) {
-      this.addEducation({
-        index: this.editingIndex,
-        newEducation: state,
-      });
-
-      if (this.editingIndex != null) {
-        this.localEducation[this.editingIndex] = state;
-      } else {
-        this.localEducation.push(state);
-      }
-
-      this.clearEditorState();
+    saveItem({institution, degree, fieldOfStudy, startYear, endYear}) {
+      this.setEducation(
+          {institution, degree, fieldOfStudy, startYear, endYear},
+      );
     },
   },
-  mounted: function() {
-    if (this.isLoggedInUser) {
-      if (this.currentProfile?.education?.length === 0) {
-        this.getEducation();
-      }
-      this.localEducation.push(...this.currentProfile.education);
+  async mounted() {
+    if (!this.isLoggedInUser) {
+      this.fetchedProfile = await Profile.ProfileService.get({
+        id: this.profileId,
+      });
     }
   },
 };
