@@ -9,7 +9,6 @@ const profileState = () => {
     workExperience: [],
     canBeTutor: true,
     tutoredStudents: [],
-    tutorReviews: [],
     institution: null,
     degree: null,
     fieldOfStudy: null,

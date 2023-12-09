@@ -5,7 +5,8 @@ import Question from './QuestionService';
 import Session from './SessionService';
 import Client from './ClientService';
 import Company from './CompanyService';
-import Conference from './Conference.js';
+import Conference from './ConferenceService.js';
+import TutorReview from './tutorReviewService';
 
 export {
   Auth,
@@ -16,4 +17,5 @@ export {
   Client,
   Company,
   Conference,
+  TutorReview,
 };
