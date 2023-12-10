@@ -17,6 +17,8 @@ const getters = {
     return state.pendingTutorReview;
   },
   firstPendingTutorReview: (state) => {
+    if (state.pendingTutorReview === null) return null;
+    if (state.pendingTutorReview.length === 0 ) return null;
     return state.pendingTutorReview[0];
   },
 };
