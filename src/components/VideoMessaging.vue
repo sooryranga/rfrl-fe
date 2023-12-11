@@ -33,7 +33,7 @@ export default {
       allowVideo: false,
       allowAudio: false,
       video: null,
-      video2: null,
+      videortc: null,
       audioTrack: null,
       videoTrack: null,
       audioTrackSender: null,
@@ -76,7 +76,7 @@ export default {
   },
   mounted: function() {
     this.video = this.$refs.video;
-    this.video2 = this.$refs.videortc;
+    this.videortc = this.$refs.videortc;
 
     this.connectPeers();
   },
@@ -148,10 +148,10 @@ export default {
     },
     setMediaTrack: function(e) {
       if (
-        this.video2.srcObject !== e.streams[0]
+        this.videortc.srcObject !== e.streams[0]
       ) {
-        this.video2.srcObject = e.streams[0];
-        this.video2.play();
+        this.videortc.srcObject = e.streams[0];
+        this.videortc.play();
         console.log('pc1: received remote stream');
       }
     },
