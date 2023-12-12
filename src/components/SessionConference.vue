@@ -3,7 +3,7 @@
     <div class="row h-100">
       <div class='col-auto p-0 h-100'>
         <div class="h-100" style="width: 350px">
-          <video-messaging style="height: 30%;"></video-messaging>
+          <video-messaging style="height: 30%;" v-bind:conferenceId="conferenceId"/>
           <chat
             :isSingleRoom="true"
             :roomId="session.roomId"
@@ -48,6 +48,7 @@
 </template>
 
 <script>
+import VideoMessaging from '@/components/VideoMessaging.vue';
 import {WS_URL} from '@/conf';
 import * as Y from 'yjs';
 import {WebrtcProvider} from 'y-webrtc';
@@ -59,6 +60,7 @@ export default {
   name: 'session-conference',
   components: {
     'chat': Chat,
+    'video-messaging': VideoMessaging,
   },
   data: function() {
     return {
@@ -91,9 +93,10 @@ export default {
         this.conferenceId,
         this.doc,
         {
-          signaling: [`${WS_URL}/${this.conferenceId}/`],
+          signaling: [`${WS_URL}/${this.conferenceId}/yjs/`],
         },
     );
+    console.log(this.provider);
   },
   beforeDestroy() {
     this.provider.disconnect();
