@@ -24,66 +24,6 @@
 </template>
 
 <script>
-import {WS_URL} from '@/conf';
-import {v4 as uuidv4} from 'uuid';
-import Peer from 'simple-peer';
-
-const webrtcConn = () => {
-  return {
-    remotePeerId: null,
-    closed: null,
-    connected: null,
-    peer: null,
-    init({
-      initiator,
-      peerId,
-      remotePeerId,
-      publishSignalingMessage,
-      announceSignalingInfo,
-      onPeerStream,
-      deleteWebRTCConn,
-    }) {
-      this.remotePeerId = remotePeerId;
-      this.closed = false;
-      this.connected = false;
-      this.synced = false;
-      /**
-       * @type {any}
-       */
-      this.peer = new Peer({initiator});
-      this.peer.on('signal', (signal) => {
-        publishSignalingMessage(
-            {to: remotePeerId, from: peerId, type: 'signal', signal},
-        );
-      });
-      this.peer.on('connect', () => {
-        console.log('connected to ', remotePeerId);
-        this.connected = true;
-      });
-      this.peer.on('close', () => {
-        this.connected = false;
-        this.closed = true;
-        deleteWebRTCConn(this.remotePeerId);
-        this.peer.destroy();
-        console.log('closed connection to ', remotePeerId);
-        announceSignalingInfo();
-      });
-      this.peer.on('error', (err) => {
-        console.log(
-            'Error in connection to ', remotePeerId, ': ', err,
-        );
-        announceSignalingInfo();
-      });
-
-      this.peer.on('stream', onPeerStream);
-    },
-    destroy() {
-      this.peer.destroy();
-    },
-  };
-};
-
-
 export default {
   name: 'video-messaging',
   data: function() {
@@ -101,13 +41,18 @@ export default {
       peer: null,
       webrtcConns: {},
       maxConns: 20,
-      peerId: uuidv4(),
     };
   },
   props: {
     conferenceId: String,
+    videoStream: MediaStream,
   },
   watch: {
+    videoStream(val, _) {
+      this.videortc.srcObject = val;
+      this.videortc.muted = true;
+      this.videortc.play();
+    },
     allowVideo(val, _) {
       if (this.videoTrack != null && val === false) {
         if (this.peer) {
@@ -145,119 +90,8 @@ export default {
     }
   },
   methods: {
-
-    announceSignalingInfo() {
-      if (this.conn.connected) {
-        this.conn.send(
-            JSON.stringify({type: 'subscribe', topics: [this.conferenceId]}),
-        );
-        publishSignalingMessage({type: 'announce', from: this.peerId});
-      }
-    },
-
-    publishSignalingMessage(data) {
-      this.conn.send(
-          JSON.stringify({type: 'publish', topic: this.conferenceId, data}),
-      );
-    },
-
-    deleteWebRTCConn(peerId) {
-      if (peerId in this.webrtcConns) {
-        delete this.webrtcConns[peerId];
-      }
-    },
-
-    createWebRTCclient({initiator, remotePeerId}) {
-      const rtc = webrtcConn();
-      rtc.init({
-        initiator,
-        remotePeerId,
-        peerId: this.peerId,
-        publishSignalingMessage: this.publishSignalingMessage,
-        announceSignalingInfo: this.announceSignalingInfo,
-        onPeerStream: this.onPeerStream,
-        deleteWebRTCConn: this.deleteWebRTCConn,
-      });
-      return rtc;
-    },
-
-    onDisconnect() {
-      console.log(`disconnect (${this.url})`);
-    },
-
-    onConnect() {
-      this.conn.send(
-          JSON.stringify({type: 'subscribe', topics: [this.conferenceId]}),
-      );
-      this.publishSignalingMessage({type: 'announce', from: this.peerId});
-    },
-
-    onPeerStream(stream) {
-      this.setMediaTrack(stream);
-    },
-
-    onMessage(m) {
-      const message = JSON.parse(m.data);
-      switch (message.type) {
-        case 'publish': {
-          const data = message.data;
-          const peerId = this.peerId;
-          if (
-            data == null ||
-            data.from === peerId ||
-            (data.to !== undefined && data.to !== peerId)
-          ) {
-            // ignore messages that are not addressed to this conn
-            return;
-          }
-          switch (data.type) {
-            case 'announce':
-              if (Object.keys(this.webrtcConns).length < this.maxConns) {
-                if (!(data.from in this.webrtcConns)) {
-                  this.webrtcConns[data.from] = this.createWebRTCclient({
-                    initiator: true,
-                    remotePeerId: data.from,
-                  });
-                }
-              }
-              break;
-            case 'signal':
-              if (data.to === peerId) {
-                if (!(data.from in this.webrtcConns)) {
-                  this.webrtcConns[data.from] = this.createWebRTCclient({
-                    initiator: true,
-                    remotePeerId: data.from,
-                  });
-                }
-                this.webrtcConns[data.from].peer.signal(data.signal);
-              }
-              break;
-          }
-        }
-      }
-    },
-
-    onError(error) {
-      console.log(error);
-    },
-
     async connectPeers() {
     // Create the local connection and its event listeners
-      this.url = `${WS_URL}/${this.conferenceId}/simple-peer/`;
-      this.conn = new WebSocket(this.url);
-      this.conn.onmessage = this.onMessage;
-      this.conn.onopen = this.onConnect;
-      this.conn.onclose = this.onDisconnect;
-      this.conn.onerror = this.onError;
-    },
-    setMediaTrack(stream) {
-      if (
-        this.videortc.srcObject !== stream
-      ) {
-        this.videortc.srcObject = stream;
-        this.videortc.muted = true;
-        this.videortc.play();
-      }
     },
     startStream(video, audio) {
       const self = this;
@@ -290,14 +124,12 @@ export default {
           });
     },
     setTracks() {
-      Object.values(this.webrtcConns).forEach((webrtc) =>{
-        if (this.audioTrack) {
-          webrtc.peer.addTrack(this.audioTrack, this.stream);
-        }
-        if (this.videoTrack) {
-          webrtc.peer.addTrack(this.videoTrack, this.stream);
-        }
-      });
+      if (this.audioTrack) {
+        this.$emit('setTrack', {track: this.audioTrack, stream: this.stream});
+      }
+      if (this.videoTrack) {
+        this.$emit('setTrack', {track: this.videoTrack, stream: this.stream});
+      }
     },
   },
 };
