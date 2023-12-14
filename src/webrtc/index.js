@@ -1,5 +1,8 @@
 import Peer from 'simple-peer';
 
+export const SCREEN_STREAM_TYPE = 'screen';
+export const WEBCAM_STREAM_TYPE = 'webcam';
+
 /**
   * This class manages simple peer webRTC clients
   */
@@ -23,7 +26,7 @@ export class WebrtcConn {
     /**
      * @type {any}
      */
-    this.peer = new Peer({initiator, peerOpts});
+    this.peer = new Peer({initiator, ...peerOpts});
     this.peer.on('signal', (signal) => {
       this.webrtcManager.publishSignalingMessage(
           {to: remotePeerId, from: peerId, type: 'signal', signal},
@@ -32,12 +35,20 @@ export class WebrtcConn {
     this.peer.on('connect', () => {
       this.connected = true;
     });
+
     this.peer.on('close', () => {
+      console.log('closed');
       this.connected = false;
       this.closed = true;
       this.webrtcManager.deleteRemotePeer(this.remotePeerId);
       this.peer.destroy();
       this.webrtcManager.announceSignalingInfo();
+    });
+
+    this.peer.on('data', (data) => {
+      const parsedData = new TextDecoder().decode(data);
+      const jsonData = JSON.parse(parsedData);
+      this.webrtcManager.announceData(jsonData);
     });
 
     this.peer.on('error', (err) => {
@@ -68,19 +79,27 @@ export class WebrtcManager {
   /**
   * Constructor
   */
-  constructor({peerId, conferenceId, url, setMediaTrack, maxConns=10}) {
+  constructor({
+    peerId,
+    conferenceId,
+    url,
+    setMediaTrack,
+    announceData,
+    maxConns=10,
+  }) {
     this.webrtcConns = {};
     this.peerId = peerId;
     this.conferenceId = conferenceId;
     this.url = url;
     this.setMediaTrack = setMediaTrack;
+    this.announceData = announceData;
     this.maxConns = maxConns;
 
     this.conn = new WebSocket(this.url);
     this.conn.addEventListener('message', (m) => this.onMessage(m));
     this.conn.addEventListener('open', () => this.onConnect());
-    this.conn.addEventListener('open', () => this.onDisconnect);
-    this.conn.addEventListener('open', (err) => this.onError(err));
+    this.conn.addEventListener('close', () => this.onDisconnect);
+    this.conn.addEventListener('error', (err) => this.onError(err));
   }
 
   /**
@@ -103,6 +122,28 @@ export class WebrtcManager {
   addTrack({track, stream}) {
     Object.values(this.webrtcConns).forEach((webrtc) =>{
       webrtc.peer.addTrack(track, stream);
+    });
+  }
+
+  /**
+   *
+   * @param {object} data
+   */
+  sendData(data) {
+    const stringifiedData = JSON.stringify(data);
+    Object.values(this.webrtcConns).forEach((webrtc) =>{
+      webrtc.peer.send(stringifiedData);
+    });
+  }
+
+  /**
+   * removeTrack
+   * @param {obj} track
+   * @param {obj} stream
+   */
+  removeTrack({track, stream}) {
+    Object.values(this.webrtcConns).forEach((webrtc) =>{
+      webrtc.peer.removeTrack(track, stream);
     });
   }
 
@@ -210,7 +251,7 @@ export class WebrtcManager {
             if (data.to === peerId) {
               if (!(data.from in this.webrtcConns)) {
                 this.webrtcConns[data.from] = this.createWebRTCClient({
-                  initiator: true,
+                  initiator: false,
                   remotePeerId: data.from,
                 });
               }

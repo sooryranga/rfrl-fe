@@ -106,6 +106,12 @@ const routes = [
             props: true,
             component: () => import('@/components/TextEditor.vue'),
           },
+          {
+            path: 'screen-share',
+            name: 'screen-share',
+            props: true,
+            component: () => import('@/components/ScreenShare.vue'),
+          },
         ],
       },
     ],
