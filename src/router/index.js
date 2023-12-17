@@ -7,7 +7,6 @@ import TutorReview from '@/components/profile/TutorReview.vue';
 import ProfileAbout from '@/components/profile/About.vue';
 import ScheduledTutoring from '@/components/ScheduledTutoring.vue';
 import AnsweredQuestions from '@/components/profile/AnsweredQuestions.vue';
-import CodeTerminalLoading from '@/components/code/CodeTerminalLoading.vue';
 
 import VueCal from 'vue-cal';
 
@@ -19,7 +18,6 @@ Vue.component('profile-about', ProfileAbout);
 Vue.component('scheduled-tutoring', ScheduledTutoring);
 Vue.component('answered-questions', AnsweredQuestions);
 Vue.component('vue-cal', VueCal);
-Vue.component(CodeTerminalLoading);
 Vue.use(VueRouter);
 
 const routes = [
