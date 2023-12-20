@@ -12,7 +12,7 @@ const SET_NAME = 'set_name';
 const SET_TUTORED_STUDENTS = 'set_tutored_students';
 const SET_EDUCATION = 'set_education';
 const SET_ABOUT = 'set_about';
-const SET_COMPANY = 'set_company';
+const SET_EMAIL_VERIFICATION = 'set_email_verification';
 
 const SET_ROOMS = 'set_rooms';
 const SET_USERS = 'set_users';
@@ -66,7 +66,7 @@ export {
   SET_EDUCATION,
   SET_ABOUT,
   SET_UPDATE_PROFILE,
-  SET_COMPANY,
+  SET_EMAIL_VERIFICATION,
 
   // Mutations for chatRooms
   SET_ROOMS,

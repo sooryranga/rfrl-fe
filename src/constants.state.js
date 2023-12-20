@@ -14,6 +14,12 @@ const profileState = () => {
     fieldOfStudy: null,
     startYear: null,
     endYear: null,
+
+    workEmail: null,
+    verifiedWorkEmail: null,
+    companyName: null,
+    email: null,
+    verifiedEmail: null,
   };
 };
 

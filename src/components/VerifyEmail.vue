@@ -4,7 +4,7 @@
     </div>
     <div class="col h-100">
       <div>
-        <pre>
+        <pre v-if = "isWorkEmailVerification">
           You wanna tutor and recruit some good co-workers
           then you gotta tell them where you work!
           Referal bonus is on the line :P
@@ -14,10 +14,14 @@
 
           Don't worry, your email is encrypted.
         </pre>
+        <pre v-else>
+          We verify emails before allowing users to schedule meetings
+          This is done for security reasons.
+        </pre>
       </div>
       <form v-if="!askForPasscode">
         <div class="form-group">
-            <label for="exampleInputEmail1">Company Email address</label>
+            <label for="exampleInputEmail1">Email address</label>
             <div class="form-row">
               <div class="col">
                 <input
@@ -44,7 +48,7 @@
               type="button"
               class="col btn btn-primary mt-3"
               v-on:click="skipCompanyVerification">
-            Skip Verification
+            Go back
             </button>
           </div>
           <div class="row">
@@ -86,7 +90,7 @@
           Verify
           </button>
         </div>
-        <div class="row">
+        <div v-if="isWorkEmailVerification" class="row">
           <button
             type="button"
             class="col btn btn-primary mt-3"
@@ -99,7 +103,7 @@
             type="button"
             class="col btn btn-primary mt-3"
             v-on:click="skipCompanyVerification">
-          Skip
+          Go Back
           </button>
         </div>
       </form>
@@ -109,16 +113,21 @@
 
 <script>
 import {mapGetters, mapActions} from 'vuex';
-import {flowToNextStep, companyEmail} from './RegisterFlow';
 import {required, email} from 'vuelidate/lib/validators';
 import {Profile} from '@/api';
 
 export default {
-  name: 'SignUp',
+  name: 'verify-email',
   validations: {
     email: {
       email,
       required,
+    },
+  },
+  props: {
+    emailType: {
+      type: String,
+      default: Profile.USER_EMAIL,
     },
   },
   data: function() {
@@ -129,6 +138,8 @@ export default {
       invalidPasscode: false,
       loading: false,
       error: null,
+
+      isWorkEmailVerification: false,
     };
   },
   computed: {
@@ -149,26 +160,21 @@ export default {
       });
       this.askForPasscode = true;
     },
-    async goNext() {
-      await flowToNextStep({
-        currentStep: companyEmail,
-        isTutor: this.currentProfile.isTutor,
-        router: this.$router,
-        params: {profileId: this.currentProfile.id},
-      });
+    goBack() {
+      this.$router.go(-1);
     },
     resetInvalidPasscode() {
       this.invalidPasscode = false;
     },
     async skipCompanyVerification() {
-      await this.goNext();
+      await this.goBack();
     },
     async setCompanyVerification() {
       this.$v.$touch();
       if (this.$v.$invalid) return;
       await Profile.ProfileService.addEmail({
         profileId: this.currentProfile.id,
-        type: Profile.WORK_EMAIL,
+        type: this.emailType,
         email: this.email,
       });
       this.askForPasscode = true;
@@ -188,7 +194,7 @@ export default {
       try {
         const profile = await Profile.ProfileService.verifyEmailPasscode({
           profileId: this.currentProfile.id,
-          type: Profile.WORK_EMAIL,
+          type: this.emailType,
           email: this.email,
           passcode: this.passcode,
         });
@@ -197,11 +203,16 @@ export default {
         this.invalidPasscode = true;
         throw err;
       }
-      await this.goNext();
+      await this.goBack();
     },
   },
   async mounted() {
-    if (this.loggedIn) {
+    this.isWorkEmailVerification = this.emailType === Profile.WORK_EMAIL;
+
+    if (this.emailType === Profile.USER_EMAIL) {
+      this.email = this.currentProfile.email;
+      await this.setCompanyVerification();
+    } else if (this.emailType === Profile.WORK_EMAIL) {
       await this.getVerificationEmail();
     }
   },

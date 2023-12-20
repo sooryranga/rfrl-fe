@@ -45,6 +45,7 @@
         </div>
       </div>
     </div>
+    <verify-email-banner v-if="emailBannerReqiured" :email-type="emailBannerType"></verify-email-banner>
     <div id="content" class="w-100">
       <router-view :key="routerViewKey"/>
     </div>
@@ -53,11 +54,14 @@
 
 <script>
 import {mapGetters, mapActions} from 'vuex';
+import VerifyEmailBanner from './VerifyEmailBanner.vue';
+import {Profile} from '@/api';
 
 export default {
+  components: {VerifyEmailBanner},
   name: 'tutor',
   computed: {
-    ...mapGetters('profile', ['currentProfile', 'loggedIn']),
+    ...mapGetters('profile', ['currentProfile', 'loggedIn', 'logInType']),
     profileLink: function() {
       return {
         name: 'profile',
@@ -66,6 +70,25 @@ export default {
     },
     routerViewKey() {
       return this.$route.fullPath.split('/').slice(0, 2).join('/');
+    },
+    emailBannerReqiured() {
+      return (
+        (
+          !this.currentProfile.verifiedEmail &&
+          this.currentProfile?.email
+        ) ||
+        (
+          !this.currentProfile.verifiedWorkEmail &&
+          this.currentProfile.isTutor
+        )
+      ) && this.$route.name !== 'verify-email';
+    },
+    emailBannerType() {
+      if (!this.emailBannerReqiured) return '';
+      if (!this.currentProfile?.verifiedEmail && this.currentProfile?.email) {
+        return Profile.USER_EMAIL;
+      }
+      return Profile.WORK_EMAIL;
     },
   },
   methods: {
