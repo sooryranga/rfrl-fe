@@ -87,9 +87,7 @@ export default {
   },
   async mounted() {
     if (!this.isLoggedInUser) {
-      this.fetchedProfile = await Profile.ProfileService.get({
-        id: this.profileId,
-      });
+      this.fetchedProfile = await Profile.ProfileService.get(this.profileId);
     }
   },
 };

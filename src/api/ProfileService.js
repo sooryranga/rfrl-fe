@@ -15,6 +15,10 @@ export const responseToProfile = (profileResponse) => {
   return profile;
 };
 
+
+const USER_EMAIL = 'user';
+const WORK_EMAIL = 'work';
+
 export const ProfileService = {
   async get(id) {
     const response = await Vue.axios.get(`client/${id}/`);
@@ -41,7 +45,35 @@ export const ProfileService = {
     );
     return responseToProfile(response.data);
   },
+
+  // Email Service
+  async getVerificationEmail({profileId, type}) {
+    const response = await Vue.axios.get(
+        `client/${profileId}/verify-email/`,
+        {params: {type}},
+    );
+    return response.data.email;
+  },
+  async addEmail({profileId, type, email}) {
+    await Vue.axios.post(
+        `client/${profileId}/verify-email/`,
+        {type, email},
+    );
+  },
+  async verifyEmailPasscode({profileId, type, email, passcode}) {
+    const response = await Vue.axios.put(
+        `client/${profileId}/verify-email/`,
+        {type, email, passcode},
+    );
+    return responseToProfile(response.data);
+  },
+  async deleteEmailRelation({profileId, type}) {
+    await Vue.axios.delete(
+        `client/${profileId}/verify-email/`,
+        {params: {type}},
+    );
+  },
 };
 
 
-export default {responseToProfile, ProfileService};
+export default {responseToProfile, ProfileService, USER_EMAIL, WORK_EMAIL};

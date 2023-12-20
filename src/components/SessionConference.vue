@@ -16,7 +16,7 @@
           <chat
             :isSingleRoom="true"
             :roomId="session.roomId"
-            :currentUserId="currentProfile.id"
+            :currentUserId="currentProfileId"
             style="height: 70%; max-height: 65vh;">
           </chat>
         </div>
@@ -112,7 +112,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters('profile', ['currentProfile']),
+    ...mapGetters('profile', ['currentProfileId']),
   },
   methods: {
     setTrackOnPeers({stream, track, type}) {
