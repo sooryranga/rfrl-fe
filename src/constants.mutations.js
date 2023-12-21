@@ -47,6 +47,8 @@ const SET_RESET_CONFERENCE = 'set_reset_conference';
 
 const SET_REQUIRED_REVIEW = 'set_required_review';
 
+const SET_PENDING_REPORT_CLIENT = 'set_pending_report_client';
+
 const SET_GLOBAL_MODAL = 'set_global_modal';
 
 export {
@@ -107,6 +109,9 @@ export {
 
   // Mutations for global modal
   SET_GLOBAL_MODAL,
+
+  // Mutations for report client
+  SET_PENDING_REPORT_CLIENT,
 
   // Mutations for tutor review
   SET_REQUIRED_REVIEW,
