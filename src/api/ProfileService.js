@@ -73,6 +73,23 @@ export const ProfileService = {
         {params: {type}},
     );
   },
+  async updateWantingCompanyReferral(
+      {profileId, isLookingForReferral, companyIds},
+  ) {
+    await Vue.axios.put(
+        `client/${profileId}/wanting-company-referral/`,
+        {isLookingForReferral, companyIds},
+    );
+  },
+  async getWantingCompanyReferral(
+      {profileId},
+  ) {
+    const res = await Vue.axios.get(
+        `client/${profileId}/wanting-company-referral/`,
+    );
+
+    return res.data;
+  },
 };
 
 

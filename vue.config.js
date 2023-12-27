@@ -1,7 +1,5 @@
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
-console.error('test');
-
 module.exports = {
   configureWebpack: {
     module: {
