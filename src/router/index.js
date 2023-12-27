@@ -47,7 +47,7 @@ const routes = [
       {
         path: 'tutors',
         name: 'Tutors',
-        component: () => import('@/components/tutorList//Tutors.vue'),
+        component: () => import('@/components/tutorList/FindTutors.vue'),
       },
       {
         path: 'home',

@@ -54,18 +54,6 @@ const datePosted = [
   {name: 'Any Time', key: 'any_time'},
 ];
 
-const tutorPrice = [
-  {name: '$', key: 'low'},
-  {name: '$$', key: 'medium'},
-  {name: '$$$', key: 'high'},
-  {name: '$$$$', key: 'very_high'},
-];
-
-const tutorPriceKeyValue = tutorPrice.reduce(function(map, obj) {
-  map[obj.key] = obj;
-  return map;
-}, {});
-
 const datePostedKeyValue = datePosted.reduce(function(map, obj) {
   map[obj.key] = obj;
   return map;
@@ -131,8 +119,6 @@ export {
   dayOfWeekMapping,
   tags,
   datePosted,
-  tutorPrice,
   tagKeyValue,
   datePostedKeyValue,
-  tutorPriceKeyValue,
 };
