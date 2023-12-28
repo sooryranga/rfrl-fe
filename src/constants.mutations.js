@@ -33,7 +33,13 @@ const SET_UPDATE_QUESTION = 'set_update_question';
 const SET_QUESTION_EDITOR = 'set_question_editor';
 
 const SET_ADD_TUTORS = 'set_add_tutors';
+const SET_TUTORS = 'set_tutors';
 const SET_TUTORS_ERROR = 'set_add_tutor_error';
+
+const SET_ADD_CLIENTS = 'set_add_clients';
+const SET_CLIENTS = 'set_clients';
+const SET_CLIENTS_ERROR = 'set_add_clients_error';
+
 
 const SET_COMPANIES = 'set_companies';
 const SET_COMPANIES_ERROR = 'set_companies_error';
@@ -93,7 +99,13 @@ export {
 
   // Multations for tutors
   SET_ADD_TUTORS,
+  SET_TUTORS,
   SET_TUTORS_ERROR,
+
+  // Mutations for clients
+  SET_ADD_CLIENTS,
+  SET_CLIENTS,
+  SET_CLIENTS_ERROR,
 
   // Mutations for companies
   SET_COMPANIES,

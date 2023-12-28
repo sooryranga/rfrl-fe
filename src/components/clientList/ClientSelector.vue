@@ -2,27 +2,19 @@
 <div class="h-100">
   <div class="row">
     <div class="col">
-      <h4 class="ml-4 my-2"> Tutors </h4>
+      <h4 class="ml-4 my-2"> Clients </h4>
     </div>
   </div>
-  <div v-if="tutors.length" class="row tutorCardsMain mb-2">
+  <div v-if="clients.length" class="row clientCardsMain mb-2">
     <div class="col mt-4 card-columns mx-3">
-      <div v-for="(tutor) in tutors" v-bind:key="tutor.id" class="card">
-        <router-link class="stretched-link text-decoration-none tutorProfile" :to="routeToTutor(tutor.id)">
-          <img v-bind:src="tutor.photo"  class="card-img-top tutorPhoto">
+      <div v-for="(client) in clients" v-bind:key="client.id" class="card">
+        <router-link class="stretched-link text-decoration-none clientProfile" :to="routeToClient(client.id)">
+          <img v-bind:src="client.photo"  class="card-img-top clientPhoto">
           <div class="card-body  py-1 documentBody">
-            <h6 class="card-title">{{name(tutor.firstName, tutor.lastName)}}</h6>
+            <h6 class="card-title">{{name(client.firstName, client.lastName)}}</h6>
             <div class="card-text">
-              <div v-if="tutor.about" class="row">
-                <p class="col">{{shortAbout(tutor.about)}}</p>
-              </div>
-              <div class="row">
-                <span class="material-icons col">
-                    block
-                </span>
-                <div class="col">
-                  <p> Work Verification </p>
-                </div>
+              <div v-if="client.about" class="row">
+                <p class="col">{{shortAbout(client.about)}}</p>
               </div>
             </div>
           </div>
@@ -30,8 +22,8 @@
       </div>
     </div>
   </div>
-  <div v-else>
-    <p> No tutors to show </p>
+  <div v-else class="h-100 w-100 mx-auto my-auto">
+    <p> No Clients to show </p>
   </div>
 </div>
 </template>
@@ -40,9 +32,9 @@
 import {mapGetters} from 'vuex';
 
 export default {
-  name: 'Tutors',
+  name: 'ClientSelector',
   computed: {
-    ...mapGetters('tutors', ['tutors']),
+    ...mapGetters('clients', ['clients']),
   },
   methods: {
     name(firstName, lastName) {
@@ -66,7 +58,7 @@ export default {
         return about;
       }
     },
-    routeToTutor(id) {
+    routeToClient(id) {
       return {
         name: 'profile',
         params: {
@@ -80,15 +72,15 @@ export default {
 
 
 <style scoped>
-.tutorPhoto{
+.clientPhoto{
   height:10vh;
   padding:5px;
   width:100%;
 }
-.tutorProfile{
+.clientProfile{
   min-height: 20vh;
 }
-.tutorCardsMain{
+.clientCardsMain{
   overflow-y: scroll;
   max-height: 100%;
 }
