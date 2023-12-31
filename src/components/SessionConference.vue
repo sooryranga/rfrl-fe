@@ -162,7 +162,6 @@ export default {
       });
     },
     announceData(data) {
-      console.log(data);
       const {type, streamId} = data;
       this.idToType[streamId] = type;
 

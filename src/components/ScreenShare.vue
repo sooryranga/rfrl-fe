@@ -5,8 +5,8 @@
           RTC Video stream not available.
         </video>
       </div>
-      <div id="buttonrow" class="row">
-        <div class="col">
+      <div id="buttonrow" class="row" v-if="!othersSharing">
+        <div class="col" >
           <i
             class="material-icons md-36 md-light"
             v-on:click="allowScreenShare=!allowScreenShare"
@@ -30,6 +30,7 @@ export default {
       videortc: null,
       videoTrack: null,
       stream: null,
+      othersSharing: false,
     };
   },
   props: {
@@ -38,6 +39,17 @@ export default {
   },
   watch: {
     videoStream(val, _) {
+      this.othersSharing = true;
+      const tracks = val.getVideoTracks();
+      const webrtcTrack = tracks.length > 0? tracks[0]: null;
+
+      if (webrtcTrack) {
+        webrtcTrack.onmute = () => {
+          webrtcTrack.stop();
+          this.othersSharing = false;
+        };
+      }
+
       this.videortc.srcObject = val;
       this.videortc.muted = true;
       this.videortc.play();
