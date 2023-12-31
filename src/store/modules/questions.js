@@ -97,7 +97,6 @@ const actions = {
       commit(SET_MORE_QUESTIONS, questions);
 
       if (getters.selectedQuestion == null && questions) {
-        console.log(questions);
         commit(SET_SELECT_QUESTION, questions[0].id);
       }
       return questions;

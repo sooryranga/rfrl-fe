@@ -1,26 +1,29 @@
 <template>
   <div class="shadow p-3 my-4 pt-5 pb-4 bg-white">
-    <about-editor
-      v-if="aboutEditorOpen"
-      v-on:closeEditor="closeAboutEditor"
-    />
-    <photo-editor
-      v-if="photoEditorOpen"
-      v-on:closeEditor="closePhotoEditor"
-    />
-    <div class="row">
-      <div class="col-3">
-        <img class="profilePicture" v-bind:src="profile.photo" v-on:click="updateImage"/>
-        <div v-if="bookTutorButton">
-          <router-link class="btn btn-dark p-2 mr-2"  :to="bookTutorRoute">Book Tutor</router-link>
+    <loading :active.sync="isLoading"/>
+    <div v-if="!isLoading">
+      <about-editor
+        v-if="aboutEditorOpen"
+        v-on:closeEditor="closeAboutEditor"
+      />
+      <photo-editor
+        v-if="photoEditorOpen"
+        v-on:closeEditor="closePhotoEditor"
+      />
+      <div class="row">
+        <div class="col-3">
+          <img class="profilePicture" v-bind:src="profile.photo" v-on:click="updateImage"/>
+          <div v-if="bookTutorButton">
+            <router-link class="btn btn-dark p-2 mr-2"  :to="bookTutorRoute">Book Tutor</router-link>
+          </div>
         </div>
-      </div>
-      <div class="col">
-        <h4 class="">{{profile.firstName}} {{profile.lastName}}</h4>
-        <p class="">{{profile.about}}</p>
-      </div>
-      <div class="col-2" v-if="isLoggedInUser">
-        <span v-on:click="edit" class="material-icons md-dark btn-outline-light btn">create</span>
+        <div class="col">
+          <h4 class="">{{profile.firstName}} {{profile.lastName}}</h4>
+          <p class="">{{profile.about}}</p>
+        </div>
+        <div class="col-2" v-if="isLoggedInUser">
+          <span v-on:click="edit" class="material-icons md-dark btn-outline-light btn">create</span>
+        </div>
       </div>
     </div>
   </div>
@@ -28,6 +31,7 @@
 
 <script>
 import {mapGetters} from 'vuex';
+import {Client} from '@/api';
 import AboutEditor from '@/components/profile/AboutEditor.vue';
 import PhotoEditor from '@/components/profile/PhotoEditor.vue';
 import {profileState} from '@/constants.state.js';
@@ -47,10 +51,10 @@ export default {
   },
   props: {
     profileId: String,
+    fetchedProfile: Object,
   },
   computed: {
     ...mapGetters('profile', ['currentProfile']),
-    ...mapGetters('tutors', ['getTutor']),
     isLoggedInUser() {
       return this.currentProfile.id === this.profileId;
     },
@@ -60,6 +64,9 @@ export default {
         params: {userId: this.profile.id},
       };
     },
+    isLoading() {
+      return this.profile === null;
+    },
     profile() {
       if (this.isLoggedInUser) {
         return this.currentProfile;
@@ -68,9 +75,13 @@ export default {
       }
     },
   },
-  beforeMount: function() {
+  async mounted() {
     if (!this.isLoggedInUser) {
-      this.otherProfile = this.getTutor(this.profileId);
+      if (this.fetchedProfile) {
+        this.otherProfile = this.fetchedProfile;
+      } else {
+        this.otherProfile = await Client.ClientService.get(this.profileId);
+      }
     }
   },
   methods: {
@@ -88,7 +99,6 @@ export default {
       this.photoEditorOpen = true;
     },
     closePhotoEditor() {
-      console.log('close photo editor');
       this.photoEditorOpen = false;
     },
   },

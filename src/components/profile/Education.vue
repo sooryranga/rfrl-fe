@@ -1,35 +1,38 @@
 
 <template>
   <div id="education" class="shadow p-3 my-3 bg-white">
-    <education-editor
-      v-if="editorOpen"
-      v-on:saveEvent="saveEvent"
-      v-on:cancelEvent="cancelEvent"
-    ></education-editor>
-    <div class="row">
-      <div class="col">
-        <h4 class=" ml-4 my-2"> Education </h4>
-      </div>
-      <div class="col-2 my-auto addHover">
-        <span
-          v-if="isLoggedInUser"
-          v-on:click="add"
-          class="material-icons md-24 md-dark btn-outline-light btn"
-        >create</span>
-      </div>
-    </div>
-    <div class="mt-4"  v-if="profile">
-      <div class="educationRow row">
-        <div class="col-3 my-auto">
-          <img class="institutionLogo" src="https://tinyurl.com/54ze666n"/>
+    <loading :active.sync="isLoading"/>
+    <div v-if="!isLoading">
+      <education-editor
+        v-if="editorOpen"
+        v-on:saveEvent="saveEvent"
+        v-on:cancelEvent="cancelEvent"
+      ></education-editor>
+      <div class="row">
+        <div class="col">
+          <h4 class=" ml-4 my-2"> Education </h4>
         </div>
-        <div class="col my-auto ">
-          <h5>{{profile.institution}}</h5>
-          <h6>{{profile.degree}}</h6>
-          <p class="m-0">{{profile.fieldOfStudy}}</p>
-          <p class="m-0">
-            <small>{{profile.startYear}}-{{profile.endYear}}</small>
-          </p>
+        <div class="col-2 my-auto addHover">
+          <span
+            v-if="isLoggedInUser"
+            v-on:click="add"
+            class="material-icons md-24 md-dark btn-outline-light btn"
+          >create</span>
+        </div>
+      </div>
+      <div class="mt-4"  v-if="profile">
+        <div class="educationRow row">
+          <div class="col-3 my-auto">
+            <img class="institutionLogo" src="https://tinyurl.com/54ze666n"/>
+          </div>
+          <div class="col my-auto ">
+            <h5>{{profile.institution}}</h5>
+            <h6>{{profile.degree}}</h6>
+            <p class="m-0">{{profile.fieldOfStudy}}</p>
+            <p class="m-0">
+              <small>{{profile.startYear}}-{{profile.endYear}}</small>
+            </p>
+          </div>
         </div>
       </div>
     </div>
@@ -45,11 +48,12 @@ export default {
   name: 'education',
   props: {
     profileId: String,
+    fetchedProfile: Object,
   },
   data: function() {
     return {
       editorOpen: false,
-      fetchedProfile: null,
+      otherProfile: null,
     };
   },
   components: {'education-editor': EducationEditor},
@@ -58,11 +62,14 @@ export default {
     isLoggedInUser() {
       return this.currentProfile.id === this.profileId;
     },
+    isLoading() {
+      return this.profile === null;
+    },
     profile() {
       if (this.isLoggedInUser) {
         return this.currentProfile;
       } else {
-        return this.fetchedProfile;
+        return this.otherProfile;
       }
     },
   },
@@ -87,7 +94,11 @@ export default {
   },
   async mounted() {
     if (!this.isLoggedInUser) {
-      this.fetchedProfile = await Profile.ProfileService.get(this.profileId);
+      if (this.fetchedProfile) {
+        this.otherProfile = this.fetchedProfile;
+      } else {
+        this.otherProfile = await Profile.ProfileService.get(this.profileId);
+      }
     }
   },
 };

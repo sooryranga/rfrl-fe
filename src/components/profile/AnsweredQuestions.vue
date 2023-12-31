@@ -31,21 +31,15 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex';
-
 export default {
   name: 'answered-questions',
   props: {
-    'profileId': String,
+    profileId: String,
   },
   data: function() {
     return {
-      'questions': [],
-      'profile': null,
+      questions: [],
     };
-  },
-  computed: {
-    ...mapGetters('profile', ['currentProfile']),
   },
   methods: {
     shorten: function(text, length) {
@@ -66,12 +60,6 @@ export default {
       text: "What does the graph look like in a square pde? and does it have to confine to a periodical nature, can it have asymptotes? Can you solve second order square pde without a computer simulation?", // eslint-disable-line
       tags: [{name: 'Math'}, {name: 'Calculus'}],
     });
-
-    if (this.profileId === this.currentProfile.id) {
-      this.profile = this.currentProfile;
-    } else {
-      this.profile = this.currentProfile;
-    }
   },
 };
 </script>
