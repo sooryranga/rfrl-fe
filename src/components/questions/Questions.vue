@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import {mapActions, mapGetters} from 'vuex';
+import {mapGetters} from 'vuex';
 import QuestionsEditor from '@/components/questions/QuestionsEditor.vue';
 import QuestionsSelector from '@/components/questions/QuestionsSelector.vue';
 import QuestionsViewer from '@/components/questions/QuestionsViewer.vue';
@@ -39,7 +39,6 @@ export default {
     return {};
   },
   methods: {
-    ...mapActions('questions', ['getQuestions', 'selectQuestion']),
     updateTag: function(tags) {
       console.log(tags);
     },

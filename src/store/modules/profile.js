@@ -180,7 +180,7 @@ const actions = {
       await auth2.signOut();
       auth2.disconnect();
     }
-
+    await Auth.AuthService.signOut();
     commit(SET_LOGGED_OUT);
     Auth.destroyToken();
   },

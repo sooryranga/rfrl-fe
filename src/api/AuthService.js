@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import ApiService from '@/api/ApiService';
 import {Profile} from '@/api/';
+import firebase from 'firebase';
 
 const ID_TOKEN_KEY = 'id_token';
 
@@ -17,20 +18,24 @@ export const destroyToken = () => {
   window.localStorage.removeItem(ID_TOKEN_KEY);
 };
 
-const formatLoginResponse = (response) => {
+const processLoginResponse = async (response) => {
   const auth = response.data?.auth;
   const client = response.data?.client;
   const profile = Profile.responseToProfile(client);
+
+  await firebase.auth().signInWithCustomToken(auth.firebaseToken);
   return {
     profile,
     auth,
   };
 };
 
-const formatSignUpResponse = (response) => {
+const processSignUpResponse = async (response) => {
   const auth = response.data?.auth;
   const client = response.data?.client;
   const profile = Profile.responseToProfile(client);
+
+  await firebase.auth().signInWithCustomToken(auth.firebaseToken);
   return {
     profile,
     auth,
@@ -42,13 +47,13 @@ export const AuthService = {
     const response = await Vue.axios.post('login/', {type: 'google', token});
     saveToken(response.data?.token);
 
-    return formatLoginResponse(response);
+    return processLoginResponse(response);
   },
   async linkedLogin(token) {
     const response = await Vue.axios.post('login/', {type: 'linkedin', token});
     saveToken(response.data?.token);
 
-    return formatLoginResponse(response);
+    return processLoginResponse(response);
   },
   async loginEmail({email, password}) {
     const response = await Vue.axios.post(
@@ -57,7 +62,7 @@ export const AuthService = {
     );
     saveToken(response.data?.token);
 
-    return formatLoginResponse(response);
+    return processLoginResponse(response);
   },
   async loginAuthorized() {
     if (!getToken()) {
@@ -72,7 +77,7 @@ export const AuthService = {
           'login-authorized/',
       );
       saveToken(response.data?.token);
-      return formatLoginResponse(response);
+      return processLoginResponse(response);
     } catch (err) {
       destroyToken();
       throw err;
@@ -84,13 +89,13 @@ export const AuthService = {
         {type: 'google', token, name, photoURL: imageUrl},
     );
     saveToken(response.data?.token);
-    return formatSignUpResponse(response);
+    return processSignUpResponse(response);
   },
   async signupLinkedIn({token}) {
     const response = await Vue.axios.post('signup/', {type: 'linkedin', token});
     saveToken(response.data?.token);
 
-    return formatSignUpResponse(response);
+    return processSignUpResponse(response);
   },
   async signupPassword({email, password}) {
     const response = await Vue.axios.post(
@@ -99,13 +104,16 @@ export const AuthService = {
     );
     saveToken(response.data?.token);
 
-    return formatSignUpResponse(response);
+    return processSignUpResponse(response);
   },
   async updateSignUpFlow({stage}) {
     await Vue.axios.put(
         'sign-up-flow/',
         {stage},
     );
+  },
+  async signOut() {
+    await firebase.auth().signOut();
   },
 };
 
