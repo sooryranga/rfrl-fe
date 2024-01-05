@@ -32,7 +32,6 @@ const SET_QUESTION_ERROR = 'set_question_error';
 const SET_UPDATE_QUESTION = 'set_update_question';
 const SET_QUESTION_EDITOR = 'set_question_editor';
 
-const SET_ADD_TUTORS = 'set_add_tutors';
 const SET_TUTORS = 'set_tutors';
 const SET_TUTORS_ERROR = 'set_add_tutor_error';
 const SET_TUTOR_PARAMS = 'set_tutor_params';
@@ -99,7 +98,6 @@ export {
   SET_QUESTION_EDITOR,
 
   // Multations for tutors
-  SET_ADD_TUTORS,
   SET_TUTORS,
   SET_TUTORS_ERROR,
   SET_TUTOR_PARAMS,
