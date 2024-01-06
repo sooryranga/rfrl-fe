@@ -62,7 +62,10 @@ const actions = {
   },
   async updateProfile(
       {commit, getters},
-      {firstName, lastName, photo, about, isTutor},
+      {
+        firstName, lastName, photo, about, isTutor,
+        linkedInProfile, githubProfile, yearsOfExperience, workTitle,
+      },
   ) {
     if (!getters.loggedIn || !getters.currentProfile) {
       throw Error('User is not logged in');
@@ -70,7 +73,10 @@ const actions = {
 
     const updatedProfile = await Profile.ProfileService.update(
         getters.currentProfile.id,
-        {firstName, lastName, photo, about, isTutor},
+        {
+          firstName, lastName, photo, about, isTutor,
+          linkedInProfile, githubProfile, yearsOfExperience, workTitle,
+        },
     );
 
     commit(SET_UPDATE_PROFILE, updatedProfile);

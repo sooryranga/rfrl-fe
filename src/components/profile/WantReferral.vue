@@ -15,7 +15,7 @@
     <div v-if="isLookingForReferral" class="row w-100">
       <div class="col w-100">
         <multiselect
-        v-model="checkedCompanies" :options="companies" :multiple="true"
+        v-model="checkedCompanies" :options="companyList" :multiple="true"
         :close-on-select="false" :clear-on-select="false"
         :preserve-search="false" placeholder="Search for tags"
         :select-label="''" :taggable="false" :deselect-label="''"
@@ -34,7 +34,7 @@ import Multiselect from 'vue-multiselect';
 
 export default {
   computed: {
-    ...mapGetters('companies', ['companies']),
+    ...mapGetters('companies', ['companies', 'companyList']),
     ...mapGetters('profile', ['currentProfile']),
     companyIds() {
       return this.checkedCompanies.map((c) => c.id);

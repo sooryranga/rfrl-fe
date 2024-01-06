@@ -20,6 +20,9 @@
         <div class="col">
           <h4 class="">{{profile.firstName}} {{profile.lastName}}</h4>
           <p class="">{{profile.about}}</p>
+          <p>{{profile.workTitle}} - {{profile.yearsOfExperience}}</p>
+          <p><i class="fab fa-linkedin"></i> {{profile.linkedInProfile}}</p>
+          <p><i class="fab fa-github"></i> {{profile.githubProfile}}</p>
         </div>
         <div class="col-2" v-if="isLoggedInUser">
           <span v-on:click="edit" class="material-icons md-dark btn-outline-light btn">create</span>
@@ -74,6 +77,10 @@ export default {
         return this.otherProfile;
       }
     },
+    bookTutorButton() {
+      return this.profile.canBeTutor &&
+      (this.profile.id != this.currentProfile.id);
+    },
   },
   async mounted() {
     if (!this.isLoggedInUser) {
@@ -85,10 +92,6 @@ export default {
     }
   },
   methods: {
-    bookTutorButton() {
-      return this.profile.canBeTutor &&
-      (this.profile.id === this.currentProfile.id);
-    },
     closeAboutEditor() {
       this.aboutEditorOpen = false;
     },

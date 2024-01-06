@@ -67,7 +67,7 @@ export default {
     await this.getCompanies();
 
     const id = this.currentProfile.companyId;
-    if (id in companies) {
+    if (id in this.companies) {
       this.companyName = this.companies[id].name;
     }
   },

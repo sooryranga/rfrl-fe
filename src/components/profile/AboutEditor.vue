@@ -1,6 +1,6 @@
 <template>
   <transition name="modal">
-    <div class="modal-mask ">
+    <div class="modal-mask">
       <div class="modal-dialog modal-dialog-centered" role="about">
         <div class="modal-content">
           <div class="modal-header">
@@ -34,6 +34,38 @@
                 <textarea class="h-100 w-100" v-model="about" placeholder="add about"/>
               </div>
             </div>
+            <div class="row">
+              <div class="col-2">
+                <p>Current Work Title</p>
+              </div>
+              <div class="col">
+                <input type="text" class="w-100" v-model="workTitle" placeholder="add work title"/>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-2">
+                <p>Years of Experience</p>
+              </div>
+              <div class="col">
+                <input type="number" v-model="yearsOfExperience"/>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-2">
+                <p>LinkedIn Profile</p>
+              </div>
+              <div class="col">
+                <input type="text" class="w-100" v-model="linkedInProfile" placeholder="in/reidhoffman/"/>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-2">
+                <p>Github Profile</p>
+              </div>
+              <div class="col">
+                <input type="text" class="w-100" v-model="githubProfile" placeholder="github.com/nat"/>
+              </div>
+            </div>
           </div>
           <div class="modal-footer">
             <button type="button" v-on:click="cancel" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -55,6 +87,10 @@ export default {
       firstName: null,
       lastName: null,
       about: null,
+      linkedInProfile: null,
+      githubProfile: null,
+      yearsOfExperience: null,
+      workTitle: null,
     };
   },
   computed: {
@@ -68,16 +104,16 @@ export default {
         firstName: null,
         lastName: null,
         about: null,
+        linkedInProfile: null,
+        githubProfile: null,
+        yearsOfExperience: null,
+        workTitle: null,
       };
-      if (this.currentProfile.firstName != this.firstName) {
-        state.firstName = this.firstName;
-      }
-      if (this.currentProfile.lastName != this.lastName) {
-        state.lastName = this.lastName;
-      }
-      if (this.currentProfile.about != this.about) {
-        state.about = this.about;
-      }
+      Object.keys(state).forEach((key) => {
+        if (this.currentProfile[key] != this[key]) {
+          state[key] = this[key];
+        }
+      });
 
       await this.updateProfile(state);
 
@@ -96,6 +132,10 @@ export default {
     this.firstName = this.currentProfile.firstName;
     this.lastName = this.currentProfile.lastName;
     this.about = this.currentProfile.about;
+    this.linkedInProfile = this.currentProfile.linkedInProfile;
+    this.githubProfile = this.currentProfile.githubProfile;
+    this.yearsOfExperience = this.currentProfile.yearsOfExperience;
+    this.workTitle = this.currentProfile.workTitle;
   },
 };
 </script>

@@ -8,7 +8,7 @@
     <div class="row">
       <div class="col mx-3">
         <multiselect
-        v-model="checkedCompanies" :options="companies" :multiple="true"
+        v-model="checkedCompanies" :options="companyList" :multiple="true"
         :close-on-select="false" :clear-on-select="false"
         :preserve-search="false" placeholder="Search for Companies"
         :select-label="''" :taggable="false" :deselect-label="''"
@@ -90,7 +90,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('companies', ['companies']),
+    ...mapGetters('companies', ['companies', 'companyList']),
     ...mapGetters('profile', ['currentProfile']),
     companyIds() {
       return this.checkedCompanies.map((c) => c.id);
