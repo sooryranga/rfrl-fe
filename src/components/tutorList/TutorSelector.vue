@@ -5,8 +5,8 @@
     <div class="wrapper-grid">
       <div v-for="(tutor) in tutors" v-bind:key="tutor.id">
         <profile-card
-          :img="getTutorPhoto(tutor)"
-          :routeTo="routeToTutor(tutor.id)"
+          :img="getPhoto(tutor)"
+          :routeTo="routeToProfile(tutor.id)"
         >
           <p class="name">{{cardName(tutor.firstName, tutor.lastName)}}</p>
           <div class="current-work">
@@ -88,7 +88,7 @@ export default {
     toGithub(shortenedGithub) {
       return 'https://' + shortenedGithub;
     },
-    getTutorPhoto(client) {
+    getPhoto(client) {
       return client.photo || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQB8oKGDdE1XOkEAYG_Xmo3HObzakQbY4oHnQ&usqp=CAU'; //eslint-disable-line
     },
     cardName(firstName, lastName) {
@@ -105,7 +105,7 @@ export default {
         return about;
       }
     },
-    routeToTutor(id) {
+    routeToProfile(id) {
       return {
         name: 'profile',
         params: {
@@ -122,7 +122,6 @@ export default {
 
 
 <style scoped>
-
 .scrollable {
   overflow-y: auto;
   overflow-x: hidden;
