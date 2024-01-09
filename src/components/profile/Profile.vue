@@ -65,6 +65,31 @@ export default {
 </script>
 
 <style>
+#edit-education{
+  color: var(--clr-primary-lighter)
+}
+#edit-education:hover{
+  color: var(--clr-primary-darkest)
+}
+
+.section-button-container{
+  display: flex;
+  align-items: center;
+}
+
+.section-button{
+  font-size:1rem;
+  line-height: 1rem;
+}
+
+.section-button-span{
+  color: var(--clr-primary-lighter)
+}
+
+.section-button-span:hover{
+  color: var(--clr-primary-darkest)
+}
+
 .studentPicture{
   background-size: cover;
   background-position: top center;
