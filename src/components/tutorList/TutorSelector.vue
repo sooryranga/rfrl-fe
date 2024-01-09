@@ -149,6 +149,7 @@ export default {
 .name {
   font-weight: bold;
   font-size: 1.5rem;
+  color: var(--clr-gray-2)
 }
 
 p {

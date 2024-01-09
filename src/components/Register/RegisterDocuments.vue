@@ -33,6 +33,22 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+.section-button-container{
+  display: flex;
+  align-items: center;
+}
 
+.section-button{
+  font-size:1rem;
+  line-height: 1rem;
+}
+
+.section-button-span{
+  color: var(--clr-primary-lighter)
+}
+
+.section-button-span:hover{
+  color: var(--clr-primary-darkest)
+}
 </style>
