@@ -7,26 +7,27 @@
           height="100%"
           :theme="theme"
           :styles="styles"
-          :currentUserId="currentUserId"
+          :current-user-id="currentUserId"
+          :rooms-loaded="!loadingRooms"
           :rooms="loadingRooms ? [] : rooms"
-          :loadingRooms="loadingRooms"
+          :loading-rooms="loadingRooms"
           :messages="messages"
-          :messagesLoaded="messagesLoaded"
-          :roomMessage="roomMessage"
+          :messages-loaded="messagesLoaded"
+          :room-message="roomMessage"
           :showAudio="showAudio"
           :showAddRoom="showAddRoom"
           :showReactionEmojis="showReactionEmojis"
           :showEmojis="showEmojis"
           :menuActions="menuActions"
           :messageActions="messageActions"
-          :roomId="roomId"
+          :room-id="roomId"
           :single-room="isSingleRoom"
-          @fetchMessages="fetchMessages"
-          @sendMessage="sendMessage"
-          @openFile="openFile"
-          @menuActionHandler="menuActionHandler"
-          @messageActionHandler="messageActionHandler"
-          @sendMessageReaction="sendMessageReaction"
+          @fetch-messages="fetchMessages"
+          @send-message="sendMessage"
+          @open-file="openFile"
+          @menu-action-handler="menuActionHandler"
+          @message-action-handler="messageActionHandler"
+          @send-message-reaction="sendMessageReaction"
         >
         </chat-window>
       </div>
@@ -274,9 +275,9 @@ export default {
           content,
           timestamp,
           date: message.timestamp.seconds,
-          seen: message.sender_id === this.currentUserId ? message.seen : null,
+          seen: message.senderId === this.currentUserId ? message.seen : null,
           new:
-            message.sender_id !== this.currentUserId &&
+            message.senderId !== this.currentUserId &&
             (!message.seen || !message.seen[this.currentUserId]),
         },
       };
@@ -295,7 +296,7 @@ export default {
     // currently not supported
     markMessagesSeen(room, message) {
       if (
-        message.data().sender_id !== this.currentUserId &&
+        message.data().senderId !== this.currentUserId &&
         (!message.data().seen || !message.data().seen[this.currentUserId])
       ) {
         messagesRef(room.roomId)
@@ -307,8 +308,9 @@ export default {
     },
 
     async sendMessage({content, roomId, file, replyMessage}) {
+      console.log(this.currentUserId);
       const message = {
-        sender_id: this.currentUserId,
+        senderId: this.currentUserId,
         content,
         timestamp: new Date(),
       };
@@ -326,7 +328,7 @@ export default {
         message.replyMessage = {
           _id: replyMessage._id,
           content: replyMessage.content,
-          sender_id: replyMessage.sender_id,
+          senderId: replyMessage.senderId,
         };
 
         if (replyMessage.file) {
