@@ -1,37 +1,38 @@
 
 <template>
   <div id="education" class="shadow p-3 my-3 bg-white">
-    <loading :active.sync="isLoading"/>
-    <div v-if="!isLoading">
-      <education-editor
-        v-if="editorOpen"
-        v-on:saveEvent="saveEvent"
-        v-on:cancelEvent="cancelEvent"
-      ></education-editor>
-      <div class="row">
-        <div class="col">
-          <h4 class=" ml-4 my-2"> Education </h4>
-        </div>
-        <div class="col-2 my-auto addHover">
-          <span
-            v-if="isLoggedInUser"
-            v-on:click="add"
-            class="material-icons md-24 md-dark btn-outline-light btn"
-          >create</span>
-        </div>
-      </div>
-      <div class="mt-4"  v-if="profile">
-        <div class="educationRow row">
-          <div class="col-3 my-auto">
-            <img class="institutionLogo" src="https://tinyurl.com/54ze666n"/>
+    <div class="mx-4">
+      <loading :active.sync="isLoading"/>
+      <div v-if="!isLoading">
+        <education-editor
+          v-if="editorOpen"
+          v-on:saveEvent="saveEvent"
+          v-on:cancelEvent="cancelEvent"
+        ></education-editor>
+        <div class="row">
+          <div class="col">
+            <h4 class="my-2 primary-color"> Education </h4>
           </div>
-          <div class="col my-auto ">
-            <h5>{{profile.institution}}</h5>
-            <h6>{{profile.degree}}</h6>
-            <p class="m-0">{{profile.fieldOfStudy}}</p>
-            <p class="m-0">
-              <small>{{profile.startYear}}-{{profile.endYear}}</small>
-            </p>
+          <div class="col-2" style="display: flex;align-items: center;">
+            <button id="edit-button" class="no-styling-button"><span
+              v-if="isLoggedInUser"
+              v-on:click="add"
+              id="edit-education"
+              class="material-icons"
+            >create</span></button>
+          </div>
+        </div>
+        <div class="mt-1"  v-if="profile">
+          <div class="educationRow row">
+            <div class="col-3 my-auto">
+              <img class="institutionLogo" src="https://tinyurl.com/54ze666n"/>
+            </div>
+            <div class="col my-auto">
+              <p id="institution-name">{{profile.institution}}</p>
+              <p id="degree">{{profile.degree}}</p>
+              <p id="field-of-study">{{profile.fieldOfStudy}}</p>
+              <p id="start-and-end-year">{{profile.startYear}}-{{profile.endYear}}</p>
+            </div>
           </div>
         </div>
       </div>
@@ -105,13 +106,34 @@ export default {
 </script>
 
 <style scoped>
+#edit-education{
+  color: var(--clr-primary-lighter)
+}
+#edit-education:hover{
+  color: var(--clr-primary-darkest)
+}
+#institution-name{
+  font-size: 1.3rem;
+  margin-bottom: 0;
+}
+#degree{
+  font-size: 0.9rem;
+  margin-bottom: 0;
+}
+#field-of-study{
+  font-size: 0.9rem;
+  margin-bottom: 0;
+}
+#start-and-end-year{
+  font-size: 0.6rem;
+  letter-spacing: 2px;
+}
+
 .institutionLogo{
-  background-size: cover;
-  background-position: top center;
-  border-radius:50%;
-  background-color: #fff;
-  height: 5vh;
-  width: 5vh;
+  height: 5rem;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 .hover-to-show{
   visibility:hidden;
