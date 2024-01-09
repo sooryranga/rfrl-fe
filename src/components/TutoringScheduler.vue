@@ -7,10 +7,10 @@
     </transition>
     <div class="row">
       <div class="col">
-        <h6 class="my-2">Schedule Tutoring</h6>
+        <h5 class="my-2" id="component-name">Schedule</h5>
       </div>
     </div>
-    <div class="row justify-content-between">
+    <div class="row mt-2 justify-content-between">
       <div class="col my-auto">
         <div v-for="(session) in pendingSessions" v-bind:key="session.id">
           <div class="row h-100" v-if="isWaitingForResponseFromOthers(session)">
@@ -232,6 +232,10 @@ export default {
 </script>
 
 <style>
+#component-name{
+  color: var(--clr-gray-2)
+}
+
 .btn-circle {
   width: 30px;
   height: 30px;
