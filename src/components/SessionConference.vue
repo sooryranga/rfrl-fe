@@ -13,13 +13,14 @@
             v-on:setTrack="setTrackOnPeers"
             v-on:removeTrack="removeTrackFromPeers"
             ref="videoMessaging"/>
-          <chat
-            ref="chat"
-            :isSingleRoom="true"
-            :roomId="session.roomId"
-            :currentUserId="currentProfileId"
-            style="height: 70%; max-height: 65vh;">
-          </chat>
+          <div class="w-100" style="height:70%">
+            <chat
+              ref="chat"
+              :isSingleRoom="true"
+              :roomId="session.roomId"
+              :currentUserId="currentProfileId">
+            </chat>
+          </div>
         </div>
       </div>
       <div class="col">
@@ -50,7 +51,7 @@
                     </router-link>
                   </li>
                 </ul>
-                <ul class="navbar-nav ml-auto">
+                <ul class="navbar-nav ms-auto">
                   <li class="nav-item">
                     <button v-on:click="report" class="btn btn-sm btn-light" type="button" aria-label="report">
                       <span class="material-icons-outlined" style="vertical-align: middle;">
