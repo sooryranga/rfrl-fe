@@ -1,6 +1,6 @@
 <template>
   <div :v-if="currentProfile.tutoredStudents" class="shadow p-3 my-1 bg-white">
-    <h3 class=" ml-4 my-2"> Tutoring Dashboard </h3>
+    <h3 class=" ms-4 my-2"> Tutoring Dashboard </h3>
     <div id="previousStudentProfiles">
       <div id="studentPreview">
         <div v-for="student in currentProfile.tutoredStudents" v-bind:key="student.from.id" class="row mb-2">

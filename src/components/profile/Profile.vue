@@ -9,7 +9,7 @@
         <documents :profile-id="userId"></documents>
         <tutor-review :profile-id="userId"></tutor-review>
       </div>
-      <div class="col overflowContainer mt-4">
+      <div class="col-4 overflowContainer mt-4">
         <scheduled-tutoring
           showName
           v-if="isLoggedInUser"

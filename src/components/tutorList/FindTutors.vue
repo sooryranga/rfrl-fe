@@ -1,5 +1,5 @@
 <template>
-  <div class="h-100 mt-3 mx-auto">
+  <div class="container-xl mt-3 mx-auto">
     <transition name="fade">
       <div v-if="tutorError" class="alert alert-danger fade-in" role="alert">
         {{tutorError}}
