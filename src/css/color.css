@@ -11,14 +11,18 @@
   --clr-gray-9:#fcfcfc;
 
 
-  --clr-primary-darkest: #3400A3;
-  --clr-primary-darker:#4100CC;
-  --clr-primary-dark:#4E00F5;
-  --clr-primary: #651fff;
-  --clr-primary-light: #7C3FFF;
-  --clr-primary-lighter: #915FFF;
-  --clr-primary-lightest: #A77FFF;
-  --clr-primary-bg-color:#f9f7ff;
+  --clr-primary-darkest: hsl(28,80%,15.1%);
+  --clr-primary-darker:hsl(28,80%,25.1%);
+  --clr-primary-dark:hsl(28,80%,35.1%);
+  --clr-primary: hsl(28,80%,44%);
+  --clr-primary-light: hsl(28,80%,54.1%);
+  --clr-primary-lighter: hsl(28,80%,64.1%);
+  --clr-primary-lightest: hsl(28,80%,74.1%);
+
+  --clr-accent: #606C38;
+
+  --clr-background-dark: hsl(52,93.8%,98.5%, 1);
+  --clr-background: hsl(52,93.8%,99.7%, 1);
 
   --clr-success-darkest: #00723B;
   --clr-success-darker: #008E49;

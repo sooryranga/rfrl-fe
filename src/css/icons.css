@@ -1,0 +1,16 @@
+#icon{
+  transition: all 0.1s ease-in 0s;
+}
+
+#icon:hover {
+  width: 1.2em;
+  height: 1.2em;
+}
+
+.active {
+  color: var(--secondary-clr)
+}
+
+.icon-stroke{
+  stroke-width: 10;
+}

@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <router-view />
+    <router-view/>
     <global-modal/>
   </div>
 </template>
@@ -48,7 +48,7 @@ export default {
 }
 
 body {
-  background-color: var(--clr-gray-9);
+  background-color: var(--clr-background-light);
 }
 
 p {
