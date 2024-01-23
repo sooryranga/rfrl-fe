@@ -1,12 +1,8 @@
 <template>
   <div id="parent">
-    <div class="mx-auto my-auto text-center">
-      <h1>Got questions? Get Answers.</h1>
-      <h1><small class="text-muted">Your next favourite tutor is one message away!</small></h1>
-      <div class="form-group">
-        <router-link class="btn btn-outline-dark mr-lg-5" to="/questions">Ask Question</router-link>
-        <router-link class="btn btn-outline-dark" to="/tutors">Find Tutor</router-link>
-      </div>
+    <div class="m-5">
+      <h1 id="logo">rfrl</h1>
+      <h2 id="secondary"> Lets get started </h2>
     </div>
   </div>
 </template>
@@ -22,5 +18,14 @@ export default {
   display: grid;
   height: 100%;
   width: 100%;
+}
+#logo{
+  font-size: 6rem;
+  font-weight: 400;
+  color: var(--clr-primary);
+}
+#secondary{
+  color: var(--clr-gray-4);
+  font-weight: 300;
 }
 </style>

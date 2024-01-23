@@ -1,8 +1,8 @@
 <template>
   <div class="container-xl h-100">
     <loading :active.sync="isLoading"/>
-    <div v-if="!isLoading" class="row">
-      <div class="col-7 overflowContainer">
+    <div v-if="!isLoading" class="row h-100">
+      <div class="col-7 h-100 overflowContainer">
         <profile-about :profile-id="userId" :fetched-profile="profile"></profile-about>
         <want-referral v-if="isLoggedInUser"></want-referral>
         <education :profile-id="userId" :fetched-profile="profile"></education>
@@ -94,7 +94,6 @@ export default {
   width: 5vh;
 }
 .overflowContainer{
-  max-height:93vh;
   overflow-y:scroll;
 }
 /* Rules for sizing the icon. */
