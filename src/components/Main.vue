@@ -1,7 +1,9 @@
 <template>
   <div id="main">
     <main-nav-bar></main-nav-bar>
-    <div id="seperator"></div>
+    <transition name="slide-fade">
+      <div id="seperator" v-if="showSeperator"/>
+    </transition>
     <div class="flex-item-grow">
       <verify-email-banner
         v-if="emailBannerReqiured"
@@ -22,6 +24,12 @@ import VerifyEmailBanner from './VerifyEmailBanner.vue';
 import {Profile} from '@/api';
 import MainNavBar from './MainNavBar.vue';
 
+const WITH_SEPARATOR_MODAL_ROUTES = new Set([
+  'home',
+  'clients',
+  'questions',
+]);
+
 export default {
   components: {VerifyEmailBanner, MainNavBar},
   name: 'tutor',
@@ -32,7 +40,10 @@ export default {
   },
   computed: {
     ...mapGetters('profile', ['currentProfile', 'loggedIn', 'logInType']),
-    profileLink: function() {
+    showSeperator() {
+      return WITH_SEPARATOR_MODAL_ROUTES.has(this.$route.name);
+    },
+    profileLink() {
       return {
         name: 'profile',
         params: {userId: this.currentProfile.id},
@@ -109,6 +120,20 @@ export default {
 
 .fade-enter-from,
 .fade-leave-to {
+  opacity: 0;
+}
+
+/* Enter and leave animations can use different */
+/* durations and timing functions.              */
+.slide-fade-enter-active {
+  transition: all .3s linear;
+}
+.slide-fade-leave-active {
+  transition: all .8s linear;
+}
+.slide-fade-enter, .slide-fade-leave-to
+/* .slide-fade-leave-active below version 2.1.8 */ {
+  transform: translateX(-10px);
   opacity: 0;
 }
 </style>

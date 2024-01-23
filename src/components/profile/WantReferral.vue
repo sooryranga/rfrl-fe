@@ -124,45 +124,5 @@ export default {
 }
 </style>
 
-<style scoped>
-
-/** Switch
- -------------------------------------*/
-
-.switch input {
-  position: absolute;
-  opacity: 0;
-}
-
-/**
- * 1. Adjust this to size
- */
-
-.switch {
-  display: inline-block;
-  height: 1.13rem;
-  width: 2.2rem;
-  background: white;
-  border-radius: 1rem;
-  border: 1px solid var(--clr-gray-4);
-}
-
-.switch div {
-  height: 1rem;
-  width: 1rem;
-  border-radius: 1rem;
-  background: #FFF;
-  box-shadow: 0 0.1rem 0.3rem rgba(0,0,0,0.3);
-  -webkit-transition: all 300ms;
-     -moz-transition: all 300ms;
-          transition: all 300ms;
-}
-
-.switch input:checked + div {
-  -webkit-transform: translate3d(100%, 0, 0);
-     -moz-transform: translate3d(100%, 0, 0);
-          transform: translate3d(100%, 0, 0);
-          background-color: var(--clr-primary);
-}
-
+<style scoped src="@/css/switch-input.css">
 </style>
