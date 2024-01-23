@@ -1,17 +1,30 @@
 <template>
   <div class="card">
-    <img class="profile-img" v-bind:src="img"/>
+    <div class="profile-img-container">
+      <img class="profile-img" v-bind:src="img"/>
+    </div>
     <div class="card-body">
       <slot></slot>
     </div>
-    <router-link class="text-decoration-none" :to="routeTo">
-      <button class="card-button">Profile</button>
-    </router-link>
+    <div class="card-buttons">
+      <router-link class="text-decoration-none" :to="routeTo">
+        <profile-icon class="card-button"/>
+      </router-link>
+      <router-link class="text-decoration-none" :to="routeTo">
+        <chat-icon class="card-button"/>
+      </router-link>
+    </div>
   </div>
 </template>
 
 <script>
+import {ProfileIcon, ChatIcon} from '@/components/icons/';
+
 export default {
+  components: {
+    ProfileIcon,
+    ChatIcon,
+  },
   props: {
     img: {
       requied: true,
@@ -27,45 +40,60 @@ export default {
 
 <style scoped>
 .card {
-  --card-bg-clr: var(--clr-gray-9);
+  --card-bg-clr: white;
   --card-shdw-clr: var(--clr-gray-7);
   --card-button-clr: var(--clr-gray-9);
   --card-button-bg-clr: var(--clr-primary-light);
-  --card-button-bg-hover-clr: var(--clr-primary-dark);
+  --card-button-bg-hover-clr: var(--clr-accent);
 
   box-shadow: 0px 2px 8px 0px var(--card-shdw-clr);
   background-color: var(--card-bg-clr);
-  border-radius: 1rem;
-  position: relative;
-  margin: 0.5rem;
-  margin-top: 3.5rem;
+  border-radius: 1.1rem;
+  flex-direction: row;
+  display:flex;
+  height: 9rem;
+  margin-bottom: 1rem;
+  flex-wrap: nowrap;
 }
 
 .profile-img {
-  width: 8rem;
-  clip-path: circle(60px at center);
-  margin-top: -3rem;
-  margin-left: 1rem;
+  width: 5rem;
+  height: 5rem;
+  background-size: cover;
+  background-position: top center;
+  border-radius: 50%;
+  border: 3px solid white;
+}
+
+.profile-img-container {
+  width: 7.5rem;
+  background-color: var(--clr-primary);
+  border-bottom-left-radius: 1rem;
+  border-top-left-radius: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card-buttons{
+  flex-direction: column;
+  display:flex;
+  height:100%;
+  width:5rem;
+  flex-wrap: nowrap;
+  justify-content:space-around;
+  align-items: center;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  font-size:2.5rem;
 }
 
 .card-body {
   font-size: 0.9rem;
-  margin-left: 1rem;
+  flex: 1 1;
 }
 
-.card-button {
-  width: 100%;
-  border: none;
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--card-button-clr);
-  padding: 1rem;
-  background-color: var(--card-button-bg-clr);
-  border-bottom-left-radius: 1rem;
-  border-bottom-right-radius: 1rem;
-}
-
-.card-button:hover {
-  background-color: var(--card-button-bg-hover-clr);
+.card-button{
+  height:100%;
 }
 </style>

@@ -16,11 +16,9 @@
     >{{ iconName }} icon</title>
     <g>
       <rect width="256" height="256" fill="none"/>
-      <circle :stroke="iconColor" fill="none" cx="128" cy="128" r="96" opacity="0.2"/>
-      <circle class="icon-stroke" :stroke="iconColor" cx="128" cy="128" r="96" fill="none" stroke-miterlimit="10"/>
-      <circle class="icon-fill" :fill="iconColor" cx="176" cy="128" r="12"/>
-      <circle class="icon-fill" :fill="iconColor" cx="128" cy="128" r="12"/>
-      <circle class="icon-fill" :fill="iconColor" cx="80" cy="128" r="12"/>
+      <circle class="icon-stroke" :stroke="iconColor" cx="128" cy="128" r="96" fill="none"  stroke-miterlimit="10" />
+      <circle class="icon-stroke" :stroke="iconColor" cx="128" cy="120" r="40" fill="none" stroke-miterlimit="10"/>
+      <path class="icon-stroke" :stroke="iconColor" d="M63.79905,199.37405a72.02812,72.02812,0,0,1,128.40177-.00026" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
     </g>
   </svg>
   <!-- eslint-enable -->
@@ -29,10 +27,10 @@
 <script>
 import IconBaseMixinVue from './IconBaseMixin.vue';
 export default {
-  name: 'settings-icon',
+  name: 'profile-icon',
   data() {
     return {
-      iconName: 'settings-icon',
+      iconName: 'profile-icon',
     };
   },
   mixins: [IconBaseMixinVue],

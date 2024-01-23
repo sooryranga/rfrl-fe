@@ -8,6 +8,7 @@
     role="presentation"
     id="icon"
     ref="icon"
+    :class="iconClass"
   >
     <title
       :id="iconName"

@@ -2,7 +2,7 @@
   transition: all 0.1s ease-in 0s;
 }
 
-#icon:hover {
+.icon-hover:hover {
   width: 1.2em;
   height: 1.2em;
 }

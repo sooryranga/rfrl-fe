@@ -35,7 +35,7 @@
               Not Verified
             </p>
           </div>
-          <div class="external-profiles">
+          <div class="profile-items">
             <p><a v-if="profile.linkedInProfile" :href="toLinkedIn(profile.linkedInProfile)">
               <i class="fab fa-linkedin"></i> {{profile.linkedInProfile}}
             </a></p>
@@ -175,7 +175,7 @@ p {
   margin-bottom: 0;
 }
 
-.external-profiles{
+.profile-items{
   margin-top: 0.5rem;
   font-size: 0.8rem;
   line-height: 1.6;
