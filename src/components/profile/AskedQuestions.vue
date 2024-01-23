@@ -11,7 +11,7 @@
           <button type="button" class="btn btn-link pl-0 h6 m-0">Q: {{shorten(question.title, 60)}}</button>
         </div>
         <div class="row">
-          <p class="my-1 text-wrap text-justify">{{ shorten(question.text, 150) }} </p>
+          <p class="my-1 text-wrap text-justify">{{ shorten(question.body, 150) }} </p>
         </div>
         <div class="row my-0 py-0" id="questionTags">
           <div

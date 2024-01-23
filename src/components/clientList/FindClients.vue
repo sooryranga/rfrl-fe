@@ -1,5 +1,5 @@
 <template>
-  <div class="container-xl h-100 mt-3">
+  <div id="container" class="w-100 h-100">
     <transition name="fade">
       <div v-if="clientError" class="alert alert-danger fade-in" role="alert">
         {{clientError}}
@@ -10,10 +10,10 @@
     </transition>
     <div v-if="currentProfile.verifiedWorkEmail" class="flex-container">
       <div class="flex-item-shrink">
-        <h4 class="ms-3 my-2 primary-color"> Clients </h4>
+        <h1 id="title"> Clients </h1>
       </div>
       <div class="flex-item-shrink">
-        <p class="ms-3 my-2">You are shown clients who wants referral for {{companyName}}</p>
+        <h2 id="description">You are shown clients who wants referral for {{companyName}}</h2>
       </div>
       <div class="flex-item-grow">
         <client-selector/>
@@ -76,6 +76,24 @@ export default {
 
 
 <style scoped>
+#container{
+  padding-right:2rem;
+  padding-top:2.5rem;
+  padding-left:2rem;
+}
+
+#title{
+  font-size: 3rem;
+  font-weight: 400;
+  color:var(--clr-primary);
+}
+
+#description{
+  font-size: 1.2rem;
+  font-weight: 300;
+  color:var(--clr-gray-4);
+}
+
 .tutorPhoto{
   height:12vh;
   padding:5px;

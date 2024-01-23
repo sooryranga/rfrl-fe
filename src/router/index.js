@@ -49,12 +49,12 @@ const routes = [
       },
       {
         path: 'tutors',
-        name: 'Tutors',
+        name: 'tutors',
         component: () => import('@/components/tutorList/FindTutors.vue'),
       },
       {
         path: 'clients',
-        name: 'Clients',
+        name: 'clients',
         component: () => import('@/components/clientList/FindClients.vue'),
       },
       {

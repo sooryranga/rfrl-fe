@@ -109,7 +109,8 @@ export default {
 <style scoped>
 .wrapper-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, 20rem);
+  grid-template-columns: repeat(auto-fit, 30rem);
+  justify-content: space-between;
 }
 
 .external-profiles{

@@ -2,7 +2,7 @@
   <div id="main">
     <main-nav-bar></main-nav-bar>
     <transition name="slide-fade">
-      <div id="seperator" v-if="showSeperator"/>
+      <div id="seperator" :style="{backgroundColor:seperatorColor($route.name)}"/>
     </transition>
     <div class="flex-item-grow">
       <verify-email-banner
@@ -40,9 +40,6 @@ export default {
   },
   computed: {
     ...mapGetters('profile', ['currentProfile', 'loggedIn', 'logInType']),
-    showSeperator() {
-      return WITH_SEPARATOR_MODAL_ROUTES.has(this.$route.name);
-    },
     profileLink() {
       return {
         name: 'profile',
@@ -74,6 +71,11 @@ export default {
   },
   methods: {
     ...mapActions('profile', ['loginAuthorized']),
+    seperatorColor() {
+      return WITH_SEPARATOR_MODAL_ROUTES.has(this.$route.name) ?(
+          'var(--clr-primary-lighter)'
+        ) : 'var(--clr-primary)';
+    },
   },
   async mounted() {
     await this.loginAuthorized();
@@ -114,7 +116,7 @@ export default {
 
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.3s ease;
+  transition: opacity 0.3s linear;
 }
 
 
@@ -129,7 +131,7 @@ export default {
   transition: all .3s linear;
 }
 .slide-fade-leave-active {
-  transition: all .8s linear;
+  transition: all .3s linear;
 }
 .slide-fade-enter, .slide-fade-leave-to
 /* .slide-fade-leave-active below version 2.1.8 */ {
