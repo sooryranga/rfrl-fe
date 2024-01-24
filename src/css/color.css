@@ -19,7 +19,8 @@
   --clr-primary-lighter: hsl(28,80%,64.1%);
   --clr-primary-lightest: hsl(28,80%,74.1%);
 
-  --clr-accent: #606C38;
+  --clr-accent: hsl(73.8,31.7%,32.2%);
+  --clr-accent-light: hsl(73.8,31.7%,45.2%);
 
   --clr-background-dark: hsl(52,93.8%,98.5%, 1);
   --clr-background: hsl(52,93.8%,99.7%, 1);
@@ -57,4 +58,5 @@
   --clr-button-primary-outline: var(--clr-primary);
   --clr-button-secondary: var(--clr-gray-2);
   --clr-button-secondary-outline: white;
+  --btn-disabled-opacity: 0.65
 }

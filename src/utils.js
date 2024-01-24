@@ -34,6 +34,21 @@ const dayOfWeekMapping = [
   'Sun',
 ];
 
+const monthOfYearMapping = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+];
+
 const tags = [
   {name: 'Math', key: 'math'},
   {name: 'English', key: 'english'},
@@ -121,4 +136,5 @@ export {
   datePosted,
   tagKeyValue,
   datePostedKeyValue,
+  monthOfYearMapping,
 };

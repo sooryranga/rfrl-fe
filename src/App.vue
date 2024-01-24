@@ -37,6 +37,7 @@ export default {
 <style>
 @import './css/color.css';
 @import './css/tooltip.css';
+@import './css/button.css';
 
 #app {
   height: 100%;
