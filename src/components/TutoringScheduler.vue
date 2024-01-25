@@ -5,7 +5,8 @@
         {{error}}
       </div>
     </transition>
-    <h5 class="my-2" id="component-name">Schedule</h5>
+    <h5 id="component-name">Schedule</h5>
+    <div v-if="pendingSessions.length" id="pending-sessions">
       <div v-for="(session) in pendingSessions" v-bind:key="session.id">
         <div class="h-100" v-if="isWaitingForResponseFromOthers(session)">
           <p class="m-0"> Waiting for response</p>
@@ -37,37 +38,38 @@
           </div>
         </div>
       </div>
-      <div id="create-session-container">
-        <h6 id="component-subheader">Create New</h6>
-        <p>
-          <button
-          v-if="currentProfile.isTutor"
-          v-on:click="create(currentProfile.id)"
-          class="primary-btn primary-btn-light mx-2 float-left scheduler-btn">
-            Tutor
-          </button>
-        </p>
-        <p>
-          <button
-          v-bind:class="{ tutorDropDownActive: 'dropdown-toggle' }"
-          v-on:click="selectTutor"
-          class="primary-btn primary-btn-light mx-2 float-left scheduler-btn">
-            Learn from
-          </button>
-        </p>
-        <div v-if="showDropDown" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <a v-for="(user, id) in selectableTutor" v-bind:key="id" class="dropdown-item">
-            <div class="row">
-              <div class="col-2 my-2 mx-2">
-                <img class="profilePicture" v-bind:src="user.photo"/>
-              </div>
-              <div class="col">
-                {user.username}
-              </div>
+    </div>
+    <div id="create-session-container">
+      <h6 id="component-subheader">Create New</h6>
+      <p>
+        <button
+        v-if="currentProfile.isTutor"
+        v-on:click="create(currentProfile.id)"
+        class="primary-btn primary-btn-light mx-2 float-left scheduler-btn">
+          Tutor
+        </button>
+      </p>
+      <p>
+        <button
+        v-bind:class="{ tutorDropDownActive: 'dropdown-toggle' }"
+        v-on:click="selectTutor"
+        class="primary-btn primary-btn-light mx-2 float-left scheduler-btn">
+          Learn from
+        </button>
+      </p>
+      <div v-if="showDropDown" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <a v-for="(user, id) in selectableTutor" v-bind:key="id" class="dropdown-item">
+          <div class="row">
+            <div class="col-2 my-2 mx-2">
+              <img class="profilePicture" v-bind:src="user.photo"/>
             </div>
-          </a>
-        </div>
+            <div class="col">
+              {user.username}
+            </div>
+          </div>
+        </a>
       </div>
+    </div>
   </div>
 </template>
 
@@ -229,21 +231,22 @@ export default {
 
 <style scoped>
 #component-name{
-  color:var(--clr-gray-2);
   font-weight: 400;
   font-size: 1.5rem;
   padding-bottom: 1rem;
+  margin-bottom: 0rem;
+  color: white;
 }
 
 #component-subheader{
-  color:var(--clr-gray-2);
   font-weight: 400;
   font-size: 1.1rem;
   padding-bottom: 1rem;
+  color:white;
 }
 
-#create-session-container{
-  padding-top: 1rem;
+#pending-sessions{
+  padding-bottom: 1rem;
 }
 
 .scheduler-btn{

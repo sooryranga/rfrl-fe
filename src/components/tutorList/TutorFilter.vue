@@ -157,7 +157,7 @@ export default {
   font-weight: 400;
 }
 #side-bar{
-  width:340px;
+  width:380px;
   padding-left: 1rem;
   padding-right: 2rem;
   background-color: var(--clr-primary);

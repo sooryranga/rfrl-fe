@@ -1,7 +1,15 @@
 <template>
-  <div class="pt-3 h-100">
-    <div class="row h-100">
-      <div class="col-8 h-100">
+  <div class="h-100">
+    <div id="chat-container">
+      <div id="left-container">
+        <tutoring-scheduler
+          :room-id="roomId"
+        />
+        <scheduled-tutoring
+        :room-id="roomId"
+        />
+      </div>
+      <div id="right-container">
         <chat
         class="chat"
         :currentUserId="currentProfileId"
@@ -10,22 +18,6 @@
         v-if="showChat"
         @newRoom="setNewRoom"
         />
-      </div>
-      <div class="col h-100">
-        <div class="row">
-          <div class="col">
-            <tutoring-scheduler
-              :room-id="roomId"
-            />
-          </div>
-        </div>
-        <div class="row mt-3 pt-2">
-          <div class="col">
-            <scheduled-tutoring
-            :room-id="roomId"
-            />
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -81,6 +73,25 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+#chat-container{
+  flex-direction: row;
+  display:flex;
+  height:100%;
+  flex-wrap: nowrap;
+}
+
+#left-container{
+  background: var(--clr-primary);
+  width: 380px;
+  padding-left:1rem;
+  padding-right:1rem;
+  padding-top:3.5rem;
+}
+
+#right-container{
+  flex:1 1
+}
+
 select {
   height: 20px;
   outline: none;
