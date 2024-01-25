@@ -9,6 +9,9 @@ import ChatIcon from './ChatIcon.vue';
 import LinkedInIcon from './LinkedInIcon.vue';
 import GithubIcon from './GithubIcon.vue';
 import WorkIcon from './WorkIcon.vue';
+import EditIcon from './EditIcon.vue';
+import DeleteIcon from './DeleteIcon.vue';
+import CheckIcon from './CheckIcon.vue';
 
 export {
   QuestionIcon,
@@ -22,4 +25,7 @@ export {
   LinkedInIcon,
   GithubIcon,
   WorkIcon,
+  EditIcon,
+  DeleteIcon,
+  CheckIcon,
 };

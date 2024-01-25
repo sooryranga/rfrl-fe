@@ -15,7 +15,7 @@
           </button>
           <div class="text-center month-txt">{{toMonth(dateSession.date.getMonth())}}</div>
           <button
-          class="primary-btn primary-btn-dark event-button"
+          class="primary-btn primary-btn-light event-button"
           v-on:click="goToEvent(session)">
             <div v-if="showName" class="row">
               <div class="col-6 my-auto">
@@ -164,6 +164,8 @@ export default {
 #component-name{
   color:var(--clr-gray-2);
   font-weight: 400;
+  font-size: 1.5rem;
+  padding-bottom: 1rem;
 }
 
 #scheduled-tutoring{
@@ -176,7 +178,8 @@ export default {
   display: flex;
   flex-direction:row;
   flex-wrap: nowrap;
-  justify-content: flex-start
+  justify-content: flex-start;
+  padding-top: 0.2rem;
 }
 .month-txt{
   padding-left: 2rem;
@@ -185,7 +188,9 @@ export default {
 
 .event-button{
   width:100%;
-  max-width:16rem;
+  max-width:18rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
 }
 
 .circle-btn {
