@@ -12,6 +12,7 @@ import WorkIcon from './WorkIcon.vue';
 import EditIcon from './EditIcon.vue';
 import DeleteIcon from './DeleteIcon.vue';
 import CheckIcon from './CheckIcon.vue';
+import AddIcon from './AddIcon.vue';
 
 export {
   QuestionIcon,
@@ -28,4 +29,5 @@ export {
   EditIcon,
   DeleteIcon,
   CheckIcon,
+  AddIcon,
 };

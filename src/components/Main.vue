@@ -27,7 +27,6 @@ import MainNavBar from './MainNavBar.vue';
 const WITH_SEPARATOR_MODAL_ROUTES = new Set([
   'home',
   'clients',
-  'questions',
 ]);
 
 export default {
