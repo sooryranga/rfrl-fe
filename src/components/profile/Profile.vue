@@ -1,22 +1,20 @@
 <template>
-  <div class="container-xl h-100">
+  <div class="h-100">
     <loading :active.sync="isLoading"/>
-    <div v-if="!isLoading" class="row h-100">
-      <div class="col-7 h-100 overflowContainer">
+    <div v-if="!isLoading" id="profile">
+      <div id="side-bar">
+        <scheduled-tutoring
+          showName
+          v-if="isLoggedInUser"
+          :profile-id="userId"/>
+        <asked-questions :profile-id="userId"></asked-questions>
+      </div>
+      <div id="profile-section">
         <profile-about :profile-id="userId" :fetched-profile="profile"></profile-about>
         <want-referral v-if="isLoggedInUser"></want-referral>
         <education :profile-id="userId" :fetched-profile="profile"></education>
         <documents :profile-id="userId"></documents>
         <tutor-review :profile-id="userId"></tutor-review>
-      </div>
-      <div class="col-4 overflowContainer mt-4">
-        <scheduled-tutoring
-          showName
-          v-if="isLoggedInUser"
-          class="p-2 my-1"
-          :profile-id="userId"/>
-        <answered-questions :profile-id="userId"></answered-questions>
-        <asked-questions :profile-id="userId"></asked-questions>
       </div>
     </div>
   </div>
@@ -68,6 +66,28 @@ export default {
 :root{
   --section-button-span-clr: var(--clr-primary-lighter);
   --section-button-span-hover-clr: var(--clr-primary-darkest);
+}
+
+#profile{
+  flex-direction: row;
+  display:flex;
+  height:100%;
+  flex-wrap: nowrap;
+}
+
+#side-bar{
+  padding-left: 1rem;
+  padding-right: 2rem;
+  background-color: var(--clr-primary);
+  color: white;
+  font-size:1.1rem;
+  flex: 0 0 380px;
+}
+
+#profile-section{
+  padding-left: 1rem;
+  padding-right: 1rem;
+  flex: 1 1 100%;
 }
 
 .section-button-container{

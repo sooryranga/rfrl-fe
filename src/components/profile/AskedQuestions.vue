@@ -1,36 +1,17 @@
 <template>
-  <div id="questions" class="p-2 my-1 bg-white">
-    <div class="row mb-0">
-      <div class="col">
-        <h5 class=" my-2" >Asked Questions</h5>
-      </div>
-    </div>
-    <div class="row pl-3 mb-1" v-for="(question, index) in questions" v-bind:key="index">
-      <div class="col my-auto my-0 py-0">
-        <div class="row">
-          <button type="button" class="btn btn-link pl-0 h6 m-0">Q: {{shorten(question.title, 60)}}</button>
-        </div>
-        <div class="row">
-          <p class="my-1 text-wrap text-justify">{{ shorten(question.body, 150) }} </p>
-        </div>
-        <div class="row my-0 py-0" id="questionTags">
-          <div
-            v-for="tag in question.tags"
-            v-bind:key="tag.name"
-            class="col-auto ms-0 pl-0">
-            <button
-              type="button"
-              class="btn btn-outline-secondary btn-sm small">
-              {{tag.name}}
-            </button>
-          </div>
-        </div>
-      </div>
+  <div id="asked-question-container">
+    <h5 id="title" >Asked Questions</h5>
+    <div id="asked-question" v-for="(question, index) in questions" v-bind:key="index">
+      <p class="question-title">{{shorten(question.title, 60)}}</p>
+      <button @click="askedButtonOnClick(question)" class="primary-btn primary-btn-light asked-button">
+        {{askedButtonDescription}}
+      </button>
     </div>
   </div>
 </template>
 
 <script>
+import {mapGetters} from 'vuex';
 import {Question} from '@/api';
 
 export default {
@@ -43,12 +24,33 @@ export default {
       questions: [],
     };
   },
+  computed: {
+    ...mapGetters('profile', ['currentProfileId']),
+    isLoggedInUser() {
+      return this.currentProfileId === this.userId;
+    },
+    askedButtonDescription() {
+      return this.isLoggedInUser ? 'Resolve' : 'Schedule';
+    },
+  },
   methods: {
     shorten: function(text, length) {
       if (text.length > length) {
         return text.slice(0, length-5) + '...';
       }
       return text;
+    },
+    resolve() {
+
+    },
+    schedule() {
+
+    },
+    askedButtonOnClick(question) {
+      if (this.currentProfileId) {
+        return this.resolve(question);
+      }
+      return this.schedule(question);
     },
   },
   async mounted() {
@@ -59,3 +61,32 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+#title{
+  font-size: 1.5rem;
+  font-weight: 400;
+  padding-bottom: 1rem;
+}
+
+.asked-button{
+  width:100%;
+  max-width: 15rem;
+  padding-top:0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.question-title{
+  font-size: 1rem;
+  color:white;
+  font-weight: 300;
+}
+
+#asked-question{
+  padding-bottom: 0.5rem;
+}
+
+#asked-question-container{
+  padding-top:1rem;
+}
+</style>

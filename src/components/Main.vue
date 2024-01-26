@@ -4,7 +4,7 @@
     <transition name="slide-fade">
       <div id="seperator" :style="{backgroundColor:seperatorColor($route.name)}"/>
     </transition>
-    <div class="flex-item-grow">
+    <div class="flex-item-grow col-flex-container">
       <verify-email-banner
         v-if="emailBannerReqiured"
         :email-type="emailBannerType"
@@ -89,6 +89,14 @@ export default {
   height:100%;
   flex-wrap: nowrap;
 }
+
+.col-flex-container{
+  flex-direction: column;
+  display:flex;
+  height:100%;
+  flex-wrap: nowrap;
+}
+
 .flex-item-grow{
   flex: 1;
   min-width: 0; /* new */

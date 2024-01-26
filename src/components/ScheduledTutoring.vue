@@ -45,8 +45,8 @@
       </div>
     </div>
     <div v-else>
-      <div class="mt-4">
-        <p> You haven't scheduled tutoring yet. Give it a try! </p>
+      <div>
+        <p id="no-schedule"> You haven't scheduled tutoring yet. Give it a try! </p>
       </div>
     </div>
   </div>
@@ -161,6 +161,12 @@ export default {
 </script>
 
 <style scoped>
+#no-schedule{
+  font-weight: 300;
+  color: white;
+  font-size: 1rem;
+}
+
 #component-name{
   color:var(--clr-gray-2);
   font-weight: 400;
@@ -170,7 +176,7 @@ export default {
 }
 
 #scheduled-tutoring{
-  margin-top: 2rem;
+  padding-top: 2rem;
   padding-right: 1rem;
 }
 

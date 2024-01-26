@@ -6,12 +6,12 @@
       </div>
     </div>
     <div class="row pl-3 mb-1" v-for="(question, index) in questions" v-bind:key="index">
-      <div class="col my-auto my-0 py-0">
+      <div class="col my-0 py-0">
         <div class="row">
           <button type="button" class="btn btn-link pl-0 h6 m-0">Q: {{shorten(question.title, 60)}}</button>
         </div>
         <div class="row">
-          <p class="my-1 text-wrap text-justify">{{ shorten(question.text, 150) }} </p>
+          <p class="my-1 text-wrap">{{ shorten(question.text, 150) }} </p>
         </div>
         <div class="row my-0 py-0" id="questionTags">
           <div
@@ -63,3 +63,10 @@ export default {
   },
 };
 </script>
+
+
+<style scoped>
+#questions{
+  background-color: rgba(0,0,0, 0) ;
+}
+</style>
