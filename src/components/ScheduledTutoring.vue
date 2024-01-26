@@ -176,8 +176,8 @@ export default {
 }
 
 #scheduled-tutoring{
-  padding-top: 2rem;
   padding-right: 1rem;
+  padding-top: 1rem;
 }
 
 .sections-container{
