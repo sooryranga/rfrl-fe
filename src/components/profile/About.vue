@@ -42,7 +42,7 @@
             </p>
           </div>
         </div>
-        <div class="col-2" v-if="isLoggedInUser">
+        <div v-if="isLoggedInUser">
           <button class="no-styling-button primary-color" id="edit-about" v-on:click="edit">
             <edit-icon :iconColor="'var(--clr-accent)'">
             </edit-icon>
@@ -152,8 +152,7 @@ export default {
 <style scoped>
 #about-container{
   padding-top:3rem;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  padding-bottom:3rem;
 }
 
 #name{
@@ -161,6 +160,7 @@ export default {
   font-weight: 400;
   padding-bottom: 0.5rem;
   margin-bottom: 0;
+  font-size: 4rem;
 }
 
 #left-container{
@@ -169,13 +169,6 @@ export default {
 
 #right-container{
   flex: 1 1;
-}
-
-.flex-container-column{
-  flex-direction: row;
-  display:flex;
-  height:16rem;
-  flex-wrap: nowrap;
 }
 
 .profile-items{

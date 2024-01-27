@@ -100,7 +100,7 @@ export default {
 </script>
 
 <style scroped>
-p {
+#question-selector p {
   color: white;
 }
 

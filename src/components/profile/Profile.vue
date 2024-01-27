@@ -10,11 +10,11 @@
         <asked-questions :profile-id="userId"></asked-questions>
       </div>
       <div id="profile-section">
-        <profile-about :profile-id="userId" :fetched-profile="profile"></profile-about>
-        <want-referral v-if="isLoggedInUser"></want-referral>
-        <education :profile-id="userId" :fetched-profile="profile"></education>
-        <documents :profile-id="userId"></documents>
-        <tutor-review :profile-id="userId"></tutor-review>
+        <profile-about :profile-id="userId" :fetched-profile="profile"/>
+        <want-referral class="profile-component" v-if="isLoggedInUser"/>
+        <education class="profile-component" :profile-id="userId" :fetched-profile="profile"/>
+        <resume class="profile-component" :profile-id="userId"/>
+        <tutor-review class="profile-component" :profile-id="userId"/>
       </div>
     </div>
   </div>
@@ -24,6 +24,7 @@
 import {mapGetters} from 'vuex';
 import {Client} from '@/api';
 import AskedQuestions from '@/components/profile/AskedQuestions.vue';
+import Resume from '@/components/profile/Resume.vue';
 import WantReferral from './WantReferral.vue';
 import Loading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/vue-loading.css';
@@ -40,6 +41,7 @@ export default {
   },
   components: {
     'asked-questions': AskedQuestions,
+    Resume,
     WantReferral,
     Loading,
   },
@@ -63,6 +65,23 @@ export default {
 </script>
 
 <style>
+.profile-component{
+  padding-top:1.5rem;
+  padding-bottom:1.5rem;
+}
+
+.profile-component #title{
+  color: var(--clr-primary);
+  font-size: 2rem;
+  font-weight: 400;
+}
+
+.flex-container-column{
+  flex-direction: row;
+  display:flex;
+  flex-wrap: nowrap;
+}
+
 :root{
   --section-button-span-clr: var(--clr-primary-lighter);
   --section-button-span-hover-clr: var(--clr-primary-darkest);
@@ -86,8 +105,8 @@ export default {
 }
 
 #profile-section{
-  padding-left: 1rem;
-  padding-right: 1rem;
+  padding-left: 4rem;
+  padding-right: 4rem;
   flex: 1 1 100%;
   overflow-y: scroll;
 }
