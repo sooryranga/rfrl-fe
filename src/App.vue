@@ -56,11 +56,4 @@ p {
   max-width: 50ch;
   color: var(--clr-gray-4)
 }
-
-.no-styling-button{
-  background: none;
-  color: inherit;
-  border: none;
-  padding: 0;
-}
 </style>

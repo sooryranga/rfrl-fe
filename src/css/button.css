@@ -46,3 +46,10 @@
   border: none;
   background-color: var(--clr-background-darker);
 }
+
+.no-styling-button{
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+}

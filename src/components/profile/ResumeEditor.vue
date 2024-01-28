@@ -1,39 +1,51 @@
 <template>
   <transition name="modal">
-    <div class="modal-mask ">
+    <div class="modal-mask">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLongTitle">Document Edit</h5>
+            <h5 class="modal-title" id="exampleModalLongTitle">Resume Edit</h5>
             <button v-on:click="cancel" type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          <div class="modal-body">
-            <div class="row">
-              <div class="col-2">
-                <p>Name</p>
-              </div>
-              <div class="col">
-                <input class="w-100" v-model="name" placeholder="document name">
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-2">
-                <p>Description</p>
-              </div>
-              <div class="col">
-                <textarea class="h-100 w-100" v-model="description" placeholder="add description"/>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-2">
-                <p>File</p>
-              </div>
-              <div class="col">
-                <input type="file" id="file" ref="file" v-on:change="handleFileUpload"/>
-              </div>
-            </div>
+          <div class="modal-body p-0">
+            <file-drop
+                v-model="files"
+                :picker-trigger="filePickerTrigger"
+                id="file-picker"
+            >
+                <template #content id="content">
+                    <div v-if="hasFiles" key="__hasFiles__">
+                        <div
+                             v-for="file in files"
+                             :key="file.name"
+                             class="mb-3"
+                        >
+                            {{ file.name }}
+
+                            <button
+                              class="no-styling-button"
+                              style="height:1.5rem; width: 1.5rem;"
+                              @click="removeFile(file)">
+                              <delete-icon style="font-size:1.2rem" :iconColor="'white'"/>
+                            </button>
+                        </div>
+                    </div>
+
+                    <p class="mb-1">
+                        Drop files or
+                        <button
+                            type="button"
+                            id="upload-button"
+                            class="primary-btn primary-btn-light"
+                            @click="filePickerTrigger = $event"
+                        >
+                            Upload
+                        </button>
+                    </p>
+                </template>
+            </file-drop>
           </div>
           <div class="modal-footer">
             <button type="button" v-on:click="cancel" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -48,28 +60,36 @@
 <script>
 import {mapGetters} from 'vuex';
 import {documentRef} from '@/firestore';
+import FileDrop from '@/components/FileDrop.vue';
+import {DeleteIcon} from '@/components/icons';
 
 export default {
   name: 'resume-editor',
   props: {
     documentprop: Object,
   },
+  components: {
+    FileDrop,
+    DeleteIcon,
+  },
   data() {
     return {
-      documentId: null,
-      type: null,
-      description: null,
-      name: null,
-      src: null,
-      file: '',
+      filePickerTrigger: {},
+      files: [],
     };
   },
   computed: {
     ...mapGetters('profile', ['currentProfileId']),
+    hasFiles() {
+      return this.files.length > 0;
+    },
   },
   methods: {
     handleFileUpload() {
       this.file = this.$refs.file.files[0];
+    },
+    removeFile(file) {
+      this.files = this.files.filter((x) => x !== file);
     },
     async save() {
       // Save file to bucket and update src
@@ -112,6 +132,22 @@ export default {
 </script>
 
 <style scoped>
+#file-picker{
+  width:100%;
+  height:100%;
+}
+
+#file-picker #content{
+  color:white;
+}
+
+#upload-button{
+  padding-right: 2rem;
+  padding-left: 2rem;
+  padding-top:0.5rem;
+  padding-bottom: 0.5rem;
+}
+
 .modal-mask {
   position: fixed;
   z-index: 9998;
