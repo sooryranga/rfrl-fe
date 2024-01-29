@@ -1,15 +1,17 @@
 <template>
   <div id="pdf-container">
     <loading :active.sync="isLoading" :is-full-page="false"/>
-    <div id="pdf" :style="pdfStyle">
-      <pdf
-        :src="loadingSrc"
-        :page="page"
-        @num-pages="numPages = $event"
-        @progress="progress = $event"/>
-    </div>
-    <div v-if="!isOpen" id="overlay">
-    </div>
+    <transition name="smooth">
+      <div id="pdf" :style="pdfStyle">
+        <pdf
+          :src="loadingSrc"
+          :page="page"
+          @num-pages="numPages = $event"
+          @progress="progress = $event"/>
+      </div>
+      <div v-if="!isOpen" id="overlay">
+      </div>
+    </transition>
     <button
       v-if="!isOpen"
       type="button"
@@ -73,6 +75,7 @@ export default {
       return {
         top: 0,
         left: 0,
+        height: '100%',
         // width: '80%',
         // marginLeft: 'auto',
         // marginRight: 'auto',
@@ -114,8 +117,8 @@ export default {
   transform: translateX(-50%);
   z-index: 3;
   position:absolute;
-  -webkit-box-shadow: 5px 5px 15px 5px rgba(0,0,0,0.2);
-  box-shadow: 5px 5px 15px 5px rgba(0,0,0,0.2);
+  -webkit-box-shadow: 5px 5px 15px 5px rgba(0,0,0,0.3);
+  box-shadow: 5px 5px 15px 5px rgba(0,0,0,0.3);
 }
 
 #overlay{
@@ -125,6 +128,14 @@ export default {
   top: 0;
   left: 0;
   z-index: 2;
-  background-color: rgba(0,0,0,0.1);
+  background-color: rgba(0,0,0,0.05);
 }
+
+.smooth-enter-active, .smooth-leave-active {
+  transition: all .5s;
+}
+.smooth-enter, .smooth-leave-to {
+  height: 10rem;
+}
+
 </style>
