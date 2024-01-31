@@ -55,12 +55,8 @@ export const QuestionService = {
     const response = await Vue.axios.post(`question/`, payload);
     return responseToQuestion(response.data);
   },
-  async update(id, {title, body, tags}) {
-    payload = {
-      'title': title,
-      'body': body,
-      'tags': tags,
-    };
+  async update(id, {title, body, tags, resolved}) {
+    payload = {title, body, tags, resolved};
     const response = await Vue.axios.put(`question/${id}`, payload);
     return responseToQuestion(response.data);
   },

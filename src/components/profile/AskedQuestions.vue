@@ -27,7 +27,7 @@ export default {
   computed: {
     ...mapGetters('profile', ['currentProfileId']),
     isLoggedInUser() {
-      return this.currentProfileId === this.userId;
+      return this.currentProfileId === this.profileId;
     },
     askedButtonDescription() {
       return this.isLoggedInUser ? 'Resolve' : 'Schedule';
@@ -40,17 +40,20 @@ export default {
       }
       return text;
     },
-    resolve() {
-
+    async resolve(question) {
+      await Question.QuestionService.update(
+          question.id,
+          {resolved: true},
+      );
     },
     schedule() {
 
     },
-    askedButtonOnClick(question) {
+    async askedButtonOnClick(question) {
       if (this.currentProfileId) {
-        return this.resolve(question);
+        return await this.resolve(question);
       }
-      return this.schedule(question);
+      return await this.schedule(question);
     },
   },
   async mounted() {

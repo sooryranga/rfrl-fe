@@ -1,46 +1,10 @@
 <template>
   <div v-if="selectedQuestion" class="">
-    <transition name="modal">
-      <div v-if="showModal" class="modal-mask">
-        <transition name="fade">
-          <div v-if="showError" class="alert alert-danger fade-in" role="alert">
-            {{error}}
-          </div>
-        </transition>
-        <div class="modal-dialog modal-dialog-centered" role="education">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLongTitle">
-                Session Booking
-              </h5>
-              <button v-on:click="cancel" type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <div class="row">
-                <div class="col">
-                  <h6> Introduce your self! </h6>
-                </div>
-              </div>
-              <div class="row h-75">
-                <div class="col h-100">
-                  <textarea
-                  class="h-100 w-100"
-                  v-model="introduction"
-                  placeholder="Introduce your self to the mentee and explain why you would be best to help them!"
-                  />
-                </div>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" v-on:click="cancel" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" v-on:click="save" class="btn btn-primary">Save changes</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </transition>
+    <chat-introduction-modal
+      v-if="showModal"
+      @cancel="cancel"
+      @introduced="save"
+      :clientId="selectedQuestion.from.id"/>
     <p id="title">
       <button id="go-back-btn" type="button" class="btn btn-link shadow-none" v-on:click="goBack">
          <span class="material-icons-outlined">arrow_back</span>
@@ -70,14 +34,15 @@
 <script>
 import {mapActions, mapGetters} from 'vuex';
 import TimeAgo from 'javascript-time-ago';
-import {
-  messagesRef,
-} from '@/firestore';
+import ChatIntroductionModal from '@/components/ChatIntroductionModal.vue';
 
 const timeAgo = new TimeAgo('en-US');
 
 export default {
   name: 'questions-viewer',
+  components: {
+    ChatIntroductionModal,
+  },
   computed: {
     ...mapGetters('questions', ['selectedQuestion']),
     ...mapGetters('profile', ['currentProfileId']),
@@ -88,21 +53,15 @@ export default {
   },
   data() {
     return {
-      introduction: null,
       showModal: false,
-      showError: false,
-      error: null,
     };
   },
   methods: {
-    ...mapActions('chatRooms', ['createRoom']),
     ...mapActions('questions', ['applyToQuestion']),
 
     goBack() {
-      console.log('hello');
       this.$emit('goback');
     },
-
     timeAgoFormat(newDate) {
       return timeAgo.format(newDate);
     },
@@ -112,38 +71,8 @@ export default {
     cancel() {
       this.showModal = false;
     },
-    setError(error) {
-      this.error = error;
-      this.showError = true;
-      setTimeout(function() {
-        this.error = null;
-        this.showError = false;
-      }.bind(this), 2000);
-    },
     async save() {
-      if (this.introduction === null) {
-        this.setError('You need to introduce your self to the mentee!');
-      }
-
-      const roomId = await this.createRoom([this.selectedQuestion.from.id]);
-
-      const message = {
-        senderId: this.currentProfileId,
-        content: this.introduction,
-        timestamp: new Date(),
-      };
-
       await this.applyToQuestion(this.selectedQuestion.id);
-      await messagesRef(roomId).add(message);
-
-      this.$router.push(
-          {
-            name: 'chat',
-            params: {
-              roomId: roomId,
-            },
-          },
-      );
     },
   },
 };

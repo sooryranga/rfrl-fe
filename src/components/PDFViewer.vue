@@ -1,17 +1,15 @@
 <template>
   <div id="pdf-container">
     <loading :active.sync="isLoading" :is-full-page="false"/>
-    <transition name="smooth">
-      <div id="pdf" :style="pdfStyle">
-        <pdf
-          :src="loadingSrc"
-          :page="page"
-          @num-pages="numPages = $event"
-          @progress="progress = $event"/>
-      </div>
-      <div v-if="!isOpen" id="overlay">
-      </div>
-    </transition>
+    <div id="pdf" :style="pdfStyle">
+      <pdf
+        :src="loadingSrc"
+        :page="page"
+        @num-pages="numPages = $event"
+        @progress="progress = $event"/>
+    </div>
+    <div v-if="!isOpen" id="overlay">
+    </div>
     <button
       v-if="!isOpen"
       type="button"
