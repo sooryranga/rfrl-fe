@@ -9,30 +9,32 @@
     <div v-if="pendingSessions.length" id="pending-sessions">
       <div v-for="(session) in pendingSessions" v-bind:key="session.id">
         <div class="h-100" v-if="isWaitingForResponseFromOthers(session)">
-          <p class="m-0"> Waiting for response</p>
+          <p class="m-0" style="color:white"> Waiting for response</p>
           <button @click="modify(session)" class="btn-no-style">
-            <edit-icon  class="mr-2 scheduler-icon"/>
+            <edit-icon :iconColor="'white'" class="mr-2 scheduler-icon"/>
           </button>
           <button @click="deleteSession(session)" class="btn-no-style">
-            <delete-icon class="mr-2 scheduler-icon"/>
+            <delete-icon :iconColor="'white'" class="mr-2 scheduler-icon"/>
           </button>
         </div>
         <div v-else>
           <div class="row h-100" v-if="isWaitingForResponseFromYou(session)">
             <div class="col my-auto">
-              <p class="align-middle" v-if="session.tutorId != currentProfile.id">
+              <p class="align-middle"
+                style="color:white"
+                v-if="session.tutorId != currentProfile.id">
                 {{session.tutor.firstName}} wants to tutor you
               </p>
-              <p class="align-middle" v-else>
+              <p class="align-middle" style="color:white" v-else>
                 {{wantsToLearnFromYou}}
               </p>
             </div>
             <p>
               <button  v-on:click="modify(session)" class="btn-no-style">
-                <check-icon class="mr-2 scheduler-icon"/>
+                <check-icon iconColor="'white'" class="mr-2 scheduler-icon"/>
               </button>
               <button v-on:click="deleteSession(session)" class="btn-no-style">
-                <delete-icon class="mr-2 scheduler-icon"/>
+                <delete-icon iconColor="'white'" class="mr-2 scheduler-icon"/>
               </button>
             </p>
           </div>

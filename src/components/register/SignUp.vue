@@ -1,13 +1,9 @@
 <template>
 <div class="row h-100">
-  <div class="col">
-     <div class="parent">
-      <div class="mx-auto my-auto">
-        <h1> Education </h1>
-      </div>
-     </div>
+  <div class="col h-100">
+    <img src="@/assets/pexels-djordje-petrovic-2102416.jpg" id="feature-img"/>
   </div>
-  <div class="col">
+  <div class="col h-100">
     <div class="parent">
       <div class="mx-auto my-auto">
         <div id="google-signin-btn">
@@ -16,15 +12,17 @@
             Register with Google
           </button>
         </div>
-        <div id="linkedin-signin-btn" class="mt-2">
-          <button type="button" class="btn btn-outline-dark btn-lg" v-on:click="loginToLinkedIn">
+        <!-- <div id="linkedin-signin-btn" class="mt-2">
+          <button type="button"
+          class="btn btn-outline-dark btn-lg"
+          v-on:click="loginToLinkedIn">
             <i class="fab fa-linkedin"></i>
             Register with LinkedIn
           </button>
-        </div>
+        </div> -->
         <hr class="mt-4 mb-4"/>
         <form>
-          <div class="form-group">
+          <div class="form-group mb-2 mt-4">
             <label for="exampleInputEmail1">Email address</label>
             <div class="form-row">
               <div class="col">
@@ -47,7 +45,7 @@
             </div>
             <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
           </div>
-          <div class="form-group">
+          <div class="form-group  mt-2">
             <label for="exampleInputPassword1">Password</label>
             <div class="form-row">
               <div class="col">
@@ -69,10 +67,14 @@
             </div>
           </div>
           <div class="row">
-            <button type="button" class="col btn btn-primary mt-3" v-on:click="registerWithEmail">Register</button>
+            <button
+              type="button"
+              class="col primary-btn primary-btn-dark mt-3 p-2" v-on:click="registerWithEmail">Register</button>
           </div>
           <div class="row">
-            <button type="button" class="col btn btn-primary mt-3" v-on:click="loginToEmail">Login</button>
+            <button
+              type="button"
+              class="col primary-btn primary-btn-dark mt-3 p-2" v-on:click="loginToEmail">Login</button>
           </div>
         </form>
       </div>
@@ -216,6 +218,12 @@ export default {
   width: 100%;
 }
 .btn{
-  width: 400px
+  width: 400px;
+}
+
+#feature-img{
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
 }
 </style>

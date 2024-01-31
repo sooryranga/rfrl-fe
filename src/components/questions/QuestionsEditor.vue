@@ -5,7 +5,8 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLongTitle">{{questionEditorTitle}}</h5>
-            <button v-on:click="cancel" type="button" class="close" aria-label="Close">
+            <button v-on:click="cancel" type="button"
+            class="no-styling-button" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>

@@ -13,7 +13,7 @@
             <h5 class="modal-title" id="exampleModalLongTitle">Tutoring Session</h5>
             <button
             v-on:click="cancelEventCreation"
-            type="button" class="close" data-dismiss="modal" aria-label="Close">
+            type="button" class="no-styling-button" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
@@ -62,7 +62,7 @@
             <h5 class="modal-title" id="exampleModalLongTitle">Proposed Tutoring Session</h5>
             <button
             v-on:click="cancelEventAcceptation"
-            type="button" class="close" data-dismiss="modal" aria-label="Close">
+            type="button" class="no-styling-button" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
