@@ -7,12 +7,12 @@
       <slot></slot>
     </div>
     <div class="card-buttons">
-      <router-link class="text-decoration-none" :to="routeTo">
+      <router-link class="text-decoration-none" :to="routeToProfile">
         <profile-icon class="card-button"/>
       </router-link>
-      <router-link class="text-decoration-none" :to="routeTo">
+      <button class="no-styling-button" v-on:click="startChatting">
         <chat-icon class="card-button"/>
-      </router-link>
+      </button>
     </div>
   </div>
 </template>
@@ -30,9 +30,14 @@ export default {
       requied: true,
       type: String,
     },
-    routeTo: {
+    routeToProfile: {
       required: true,
       type: Object,
+    },
+  },
+  methods: {
+    startChatting() {
+      this.$emit('startChatting');
     },
   },
 };
