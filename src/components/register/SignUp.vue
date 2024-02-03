@@ -1,9 +1,15 @@
 <template>
-<div class="row h-100">
-  <div class="col h-100">
+<div class="row h-100 w-100 p-0 m-0">
+  <loading :active.sync="isLoading" :is-full-page="false"/>
+  <div class="col h-100 p-0">
     <img src="@/assets/pexels-djordje-petrovic-2102416.jpg" id="feature-img"/>
   </div>
-  <div class="col h-100">
+  <div class="col h-100 p-0">
+    <transition name="fade">
+      <div v-if="showError" class="alert alert-danger fade-in fixed-current-top" role="alert">
+        {{error}}
+      </div>
+    </transition>
     <div class="parent">
       <div class="mx-auto my-auto">
         <div id="google-signin-btn">
@@ -43,7 +49,6 @@
                 <small>Not a valid email.</small>
               </div>
             </div>
-            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
           </div>
           <div class="form-group  mt-2">
             <label for="exampleInputPassword1">Password</label>
@@ -110,6 +115,9 @@ export default {
       googleOauth: null,
       password: '',
       email: '',
+      isLoading: false,
+      showError: false,
+      error: '',
     };
   },
   methods: {
@@ -145,24 +153,45 @@ export default {
       });
     },
 
+    setError(error) {
+      this.error = error;
+      this.showError = true;
+      setTimeout(function() {
+        this.error = null;
+        this.showError = false;
+      }.bind(this), 2000);
+    },
+
     async registerWithEmail() {
       this.$v.$touch();
       if (this.$v.$invalid) return;
-
+      this.isLoading = true;
       const auth = await this.emailRegister({
         email: this.email,
         password: this.password,
       });
+      this.isLoading = false;
       this.routeAfterLogin(auth);
     },
     async loginToEmail() {
       this.$v.$touch();
       if (this.$v.$invalid) return;
-      const auth = await this.emailLogin({
-        email: this.email,
-        password: this.password,
-      });
-      this.routeAfterLogin(auth);
+      this.isLoading = true;
+      let auth = null;
+      try {
+        auth = await this.emailLogin({
+          email: this.email,
+          password: this.password,
+        });
+      } catch (errResponse) {
+        const {data} = errResponse;
+        this.setError(data.message);
+      }
+
+      if (auth != null) {
+        this.routeAfterLogin(auth);
+      }
+      this.isLoading = false;
     },
     async onGoogleSignIn(hasUser) {
       if (!hasUser) {
@@ -178,13 +207,18 @@ export default {
       console.log('Email: ' + profile.getEmail());
       console.log('token: ' + idToken);
 
-      const auth = await this.googleLogin({
-        token: idToken,
-        name: profile.getName(),
-        profilePicture: profile.getImageUrl(),
-      });
-
-      this.routeAfterLogin(auth);
+      this.isLoading = true;
+      try {
+        const auth = await this.googleLogin({
+          token: idToken,
+          name: profile.getName(),
+          profilePicture: profile.getImageUrl(),
+        });
+        this.routeAfterLogin(auth);
+      } catch (err) {
+        console.log(err);
+      }
+      this.isLoading = false;
     },
   },
   computed: {
@@ -225,5 +259,14 @@ export default {
   height: 100%;
   width: 100%;
   object-fit: cover;
+}
+
+.fixed-current-top {
+  position: absolute;
+  top: 1rem;
+  width: calc(100% - 2rem);
+  margin-left: 1rem;
+  margin-right: 1rem;
+  z-index: 123;
 }
 </style>
