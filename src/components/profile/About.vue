@@ -150,6 +150,12 @@ export default {
 </script>
 
 <style scoped>
+.flex-container-column{
+  flex-direction: row;
+  display:flex;
+  flex-wrap: nowrap;
+}
+
 #about-container{
   padding-top:3rem;
   padding-bottom:3rem;

@@ -103,9 +103,8 @@ export default {
           about: this.about.length > 0 ? this.about : null,
         });
         await this.goNext();
-      } catch (errResponse) {
-        const {data} = errResponse;
-        this.setError(data.message);
+      } catch (error) {
+        this.setError(error?.message);
       }
       this.isLoading = false;
     },

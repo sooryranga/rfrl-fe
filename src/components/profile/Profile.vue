@@ -24,7 +24,6 @@
 import {mapGetters} from 'vuex';
 import {Client} from '@/api';
 import AskedQuestions from '@/components/profile/AskedQuestions.vue';
-import Resume from '@/components/profile/Resume.vue';
 import WantReferral from './WantReferral.vue';
 import Loading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/vue-loading.css';
@@ -41,7 +40,6 @@ export default {
   },
   components: {
     'asked-questions': AskedQuestions,
-    Resume,
     WantReferral,
     Loading,
   },
@@ -74,12 +72,6 @@ export default {
   color: var(--clr-primary);
   font-size: 2rem;
   font-weight: 400;
-}
-
-.flex-container-column{
-  flex-direction: row;
-  display:flex;
-  flex-wrap: nowrap;
 }
 
 :root{

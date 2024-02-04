@@ -48,8 +48,6 @@ export default {
   height: 100%;
   flex-direction:column;
   align-items: center;
-  padding-top: 5rem;
-  padding-bottom: 5rem;
 }
 
 #feature-img{

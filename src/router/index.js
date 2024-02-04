@@ -7,11 +7,13 @@ import TutorReview from '@/components/profile/TutorReview.vue';
 import ProfileAbout from '@/components/profile/About.vue';
 import ScheduledTutoring from '@/components/ScheduledTutoring.vue';
 // import AnsweredQuestions from '@/components/profile/AnsweredQuestions.vue';
+import Resume from '@/components/profile/Resume.vue';
 import Loading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/vue-loading.css';
 
 import VueCal from 'vue-cal';
 
+Vue.component('resume', Resume);
 Vue.component('education', Education);
 Vue.component('documents', Documents);
 Vue.component('tutor-dashboard', TutorDashboard);

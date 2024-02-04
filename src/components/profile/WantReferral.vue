@@ -114,6 +114,12 @@ export default {
 </script>
 
 <style scoped>
+.flex-container-column{
+  flex-direction: row;
+  display:flex;
+  flex-wrap: nowrap;
+}
+
 #left-container{
   flex: 1 1;
 }
