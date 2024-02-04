@@ -4,7 +4,7 @@
     <div class="col h-100 p-0">
       <img v-bind:src="imageSrc" id="feature-img"/>
     </div>
-    <div class="col h-100 p-0">
+    <div class="col h-100 p-0" style="position: relative;">
       <transition name="fade">
         <div v-if="showError" class="alert alert-danger fade-in fixed-current-top" role="alert">
           {{error}}

@@ -1,72 +1,73 @@
 <template>
-<div class="row h-100 w-100 p-0 m-0">
-  <loading :active.sync="isLoading"/>
-  <div class="col h-100 p-0">
-    <img src="@/assets/pexels-djordje-petrovic-2102416.jpg" id="feature-img"/>
-  </div>
-  <div class="col h-100 p-0">
-    <transition name="fade">
-      <div v-if="showError" class="alert alert-danger fade-in fixed-current-top" role="alert">
-        {{error}}
-      </div>
-    </transition>
-    <div class="form-group">
-      <label for="firstName">First Name</label>
-      <div class="form-row">
-        <div class="col">
-          <input
-            type="text" class="form-control" id="firstName" placeholder="First Name"
-            :class="{ 'is-invalid': $v.firstName.$error }"
-            v-model.trim="$v.firstName.$model"/>
+  <register-template
+    :imageSrc="require('@/assets/pexels-djordje-petrovic-2102416.jpg')"
+    :isLoading="isLoading"
+    :error="error"
+    :showError="showError"
+  >
+    <div id="basic-user-info">
+      <div class="form-group">
+        <label for="firstName">First Name</label>
+        <div class="form-row">
+          <div class="col">
+            <input
+              type="text" class="form-control" id="firstName" placeholder="First Name"
+              :class="{ 'is-invalid': $v.firstName.$error }"
+              v-model.trim="$v.firstName.$model"/>
+          </div>
+        </div>
+        <div class="error row" v-if="$v.firstName.$error && !$v.firstName.required">
+          <div class="col text-danger">
+            <small>First Name is required</small>
+          </div>
         </div>
       </div>
-      <div class="error row" v-if="$v.firstName.$error && !$v.firstName.required">
-        <div class="col text-danger">
-          <small>First Namee is required</small>
+      <div class="form-group">
+        <label for="lastName">Last Name</label>
+        <div class="form-row">
+          <div class="col">
+            <input
+              type="text" class="form-control" id="lastName" placeholder="Last Name"
+              :class="{ 'is-invalid': $v.lastName.$error }"
+              v-model.trim="$v.lastName.$model"/>
+          </div>
+        </div>
+        <div class="error row" v-if="$v.lastName.$error && !$v.lastName.required">
+          <div class="col text-danger">
+            <small>Last Name is required</small>
+          </div>
         </div>
       </div>
+      <div class="form-group">
+        <label for="about">Describe Yourself</label>
+        <div class="form-row">
+          <div class="col">
+            <textarea
+              v-model="about"
+              class="form-control"
+              rows="3" id="about" placeholder="About"
+            />
+          </div>
+        </div>
+      </div>
+      <button
+        type="button"
+        class="primary-btn primary-btn-dark mt-5 p-3 w-100" v-on:click="saveAndNext">
+        Lets Go!
+      </button>
     </div>
-    <div class="form-group">
-      <label for="lastName">Last Name</label>
-      <div class="form-row">
-        <div class="col">
-          <input
-            type="text" class="form-control" id="lastName" placeholder="Last Name"
-            :class="{ 'is-invalid': $v.lastName.$error }"
-            v-model.trim="$v.lastName.$model"/>
-        </div>
-      </div>
-      <div class="error row" v-if="$v.lastName.$error && !$v.lastName.required">
-        <div class="col text-danger">
-          <small>Last Name is required</small>
-        </div>
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="about">Describe your self</label>
-      <div class="form-row">
-        <div class="col">
-          <textarea
-            v-model="about"
-            class="form-control"
-            rows="3" id="about" placeholder="about"
-          />
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <button type="button" class="col btn btn-primary mt-3" v-on:click="saveAndNext">Lets Goooo</button>
-    </div>
-  </div>
-</div>
+  </register-template>
 </template>
 
 <script>
 import {mapActions, mapGetters} from 'vuex';
 import {required, minLength} from 'vuelidate/lib/validators';
 import {flowToNextStep, basicInfo} from './RegisterFlow';
+import RegisterTemplate from './RegisterTemplate.vue';
+import {ErrorMixin} from '@/components/mixins';
 
 export default {
+  components: {RegisterTemplate},
   name: 'BasicUserInfo',
   validations: {
     firstName: {
@@ -77,6 +78,7 @@ export default {
       required,
     },
   },
+  mixins: [ErrorMixin],
   computed: {
     ...mapGetters('profile', ['currentProfile']),
   },
@@ -85,6 +87,7 @@ export default {
       about: '',
       firstName: '',
       lastName: '',
+      isLoading: false,
     };
   },
   methods: {
@@ -92,13 +95,19 @@ export default {
     async saveAndNext() {
       this.$v.$touch();
       if (this.$v.$invalid) return;
-
-      this.updateProfile({
-        firstName: this.firstName,
-        lastName: this.lastName,
-        about: this.about.length > 0 ? this.about : null,
-      });
-      await this.goNext();
+      this.isLoading = true;
+      try {
+        await this.updateProfile({
+          firstName: this.firstName,
+          lastName: this.lastName,
+          about: this.about.length > 0 ? this.about : null,
+        });
+        await this.goNext();
+      } catch (errResponse) {
+        const {data} = errResponse;
+        this.setError(data.message);
+      }
+      this.isLoading = false;
     },
     async goNext() {
       await flowToNextStep({
@@ -117,6 +126,13 @@ export default {
 };
 </script>
 
-<style>
-
+<style scoped>
+#basic-user-info{
+  max-height: 50rem;
+  width: 50%;
+  max-width: 50rem;
+}
+.form-group{
+  padding-top: 1rem;
+}
 </style>
