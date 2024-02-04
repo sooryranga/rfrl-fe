@@ -1,9 +1,15 @@
 <template>
-<div class="row h-100">
-  <div class="col h-100">
-    <!--Buy picture-->
+<div class="row h-100 w-100 p-0 m-0">
+  <loading :active.sync="isLoading"/>
+  <div class="col h-100 p-0">
+    <img src="@/assets/pexels-djordje-petrovic-2102416.jpg" id="feature-img"/>
   </div>
-  <div class="col h-100">
+  <div class="col h-100 p-0">
+    <transition name="fade">
+      <div v-if="showError" class="alert alert-danger fade-in fixed-current-top" role="alert">
+        {{error}}
+      </div>
+    </transition>
     <div class="form-group">
       <label for="firstName">First Name</label>
       <div class="form-row">

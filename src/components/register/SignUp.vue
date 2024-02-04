@@ -1,6 +1,6 @@
 <template>
 <div class="row h-100 w-100 p-0 m-0">
-  <loading :active.sync="isLoading" :is-full-page="false"/>
+  <loading :active.sync="isLoading"/>
   <div class="col h-100 p-0">
     <img src="@/assets/pexels-djordje-petrovic-2102416.jpg" id="feature-img"/>
   </div>
