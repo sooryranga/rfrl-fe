@@ -92,6 +92,7 @@
 import {mapActions, mapGetters} from 'vuex';
 import queryString from 'query-string';
 
+import {ErrorMixin} from '@/components/mixins/';
 import {flowToStep} from './RegisterFlow';
 import {required, minLength, email} from 'vuelidate/lib/validators';
 
@@ -108,6 +109,8 @@ export default {
       minLength: minLength(6),
     },
   },
+
+  mixins: [ErrorMixin],
   data: function() {
     return {
       publicPath: process.env.BASE_URL,
@@ -116,8 +119,6 @@ export default {
       password: '',
       email: '',
       isLoading: false,
-      showError: false,
-      error: '',
     };
   },
   methods: {
@@ -151,15 +152,6 @@ export default {
         router: this.$router,
         params: {profileId: this.currentProfile.id},
       });
-    },
-
-    setError(error) {
-      this.error = error;
-      this.showError = true;
-      setTimeout(function() {
-        this.error = null;
-        this.showError = false;
-      }.bind(this), 2000);
     },
 
     async registerWithEmail() {
