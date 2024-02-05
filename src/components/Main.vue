@@ -12,7 +12,7 @@
               slot="global-banner"
               v-if="emailBannerReqiured"
               :email-type="emailBannerType"
-              class="flex-item-shrink"/>
+              />
           </router-view>
         </transition>
       </div>
