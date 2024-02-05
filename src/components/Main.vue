@@ -5,13 +5,15 @@
       <div id="seperator" :style="{backgroundColor:seperatorColor($route.name)}"/>
     </transition>
     <div class="flex-item-grow col-flex-container">
-      <verify-email-banner
-        v-if="emailBannerReqiured"
-        :email-type="emailBannerType"
-        class="flex-item-shrink"/>
       <div id="content" class="h-100 w-100 flex-item-grow">
         <transition name="fade" mode="out-in">
-          <router-view :key="routerViewKey"/>
+          <router-view :key="routerViewKey">
+            <verify-email-banner
+              slot="global-banner"
+              v-if="emailBannerReqiured"
+              :email-type="emailBannerType"
+              class="flex-item-shrink"/>
+          </router-view>
         </transition>
       </div>
     </div>

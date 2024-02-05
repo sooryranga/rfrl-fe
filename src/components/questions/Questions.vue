@@ -17,6 +17,7 @@
         id="questions-viewer"
         ref="viewerContainer"
         v-bind:class="[showViewerContainer ? 'display-on' : 'display-off']">
+        <slot name="global-banner"/>
         <questions-viewer @goback="showSelector"/>
       </div>
     </div>
@@ -81,25 +82,25 @@ export default {
 
 #questions-selector{
   flex: 0 0 25rem;
-  margin-right: 2rem;
 }
 
 #questions-viewer{
   flex: 2 1;
   max-width:100%;
+  padding-right:2rem;
+  padding-left:2rem;
 }
 
 @media only screen and (max-width: 900px) {
   #questions-selector{
-    flex: 0 1 40rem;
-    margin-right: 2rem;
-    margin-left: 2rem;
+    flex: 0 1 100%;
+     padding-right: 0rem;
   }
 
   #questions-viewer{
     flex: 2 1;
-    margin-right: 2rem;
-    margin-left: 2rem;
+    padding-right: 2rem;
+    padding-left: 2rem;
     max-width:100%;
   }
 
