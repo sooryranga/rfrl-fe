@@ -116,7 +116,6 @@ export default {
       refId: this.refId,
       refType: 'client',
     });
-    console.log(documents);
     this.resume = documents.length > 0 ? documents[0] : null;
   },
 };
