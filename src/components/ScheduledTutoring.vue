@@ -47,15 +47,15 @@ import {Session} from '@/api';
 export default {
   name: 'scheduled-tutoring',
   props: {
-    'profileId': {
+    profileId: {
       type: String,
       required: false,
     },
-    'roomId': {
+    roomId: {
       type: String,
       required: false,
     },
-    'showName': {
+    showName: {
       type: Boolean,
     },
   },
@@ -94,6 +94,7 @@ export default {
   },
   watch: {
     async roomId() {
+      console.log('roomId');
       await this.importSessionForRoom();
     },
     async profileId() {
@@ -142,7 +143,7 @@ export default {
     if (this.profileId) {
       return await this.importSessionForUser();
     }
-    if (this.sessionId) {
+    if (this.roomId) {
       return await this.importSessionForRoom();
     }
   },
@@ -178,8 +179,7 @@ export default {
   padding-top: 0.2rem;
 }
 .month-txt{
-  padding-left: 2rem;
-  padding-right: 2rem;
+  width: 6rem;
   color:white;
 }
 
