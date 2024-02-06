@@ -239,4 +239,10 @@ p {
   padding-bottom: 0.5rem;
   font-weight: 300;
 }
+
+#title{
+  color: var(--clr-primary);
+  font-size: 2rem;
+  font-weight: 400;
+}
 </style>

@@ -73,7 +73,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 #monaco-editor{
   text-align: left;
   height: 100%!important;

@@ -60,10 +60,13 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 #editor{
   height:100%;
 }
+</style>
+
+<style>
 .ql-container.ql-snow {
     height: auto;
 }

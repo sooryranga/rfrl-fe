@@ -49,24 +49,6 @@ export default {
 </script>
 
 <style scoped>
-.section-button-container{
-  display: flex;
-  align-items: center;
-}
-
-.section-button{
-  font-size:1rem;
-  line-height: 1rem;
-}
-
-.section-button-span{
-  color: var(--clr-primary-lighter)
-}
-
-.section-button-span:hover{
-  color: var(--clr-primary-darkest)
-}
-
 #register-documents{
   width:100%;
   padding-left:3rem;
