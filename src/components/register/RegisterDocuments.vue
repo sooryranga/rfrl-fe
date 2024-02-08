@@ -1,6 +1,6 @@
 <template>
   <register-template
-      :imageSrc="require('@/assets/pexels-djordje-petrovic-2102416.jpg')"
+      :imageSrc="require('@/assets/pexels-karolina-grabowska-5908822.jpg')"
       :isLoading="isLoading"
       :error="error"
       :showError="showError"

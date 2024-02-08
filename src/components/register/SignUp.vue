@@ -2,7 +2,7 @@
 <div class="row h-100 w-100 p-0 m-0">
   <loading :active.sync="isLoading"/>
   <div class="col h-100 p-0">
-    <img src="@/assets/pexels-djordje-petrovic-2102416.jpg" id="feature-img"/>
+    <img src="@/assets/pexels-elina-sazonova-1850617.jpg" id="feature-img"/>
   </div>
   <div class="col h-100 p-0">
     <transition name="fade">
