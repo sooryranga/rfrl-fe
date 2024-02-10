@@ -156,6 +156,11 @@ const routes = [
     name: 'registerDocuments',
     component: () => import('@/components/register/RegisterDocuments.vue'),
   },
+  {
+    path: 'work-in-progress',
+    name: 'workInProgress',
+    component: () => import('@/components/WorkInProgress.vue'),
+  },
 ];
 
 const router = new VueRouter({

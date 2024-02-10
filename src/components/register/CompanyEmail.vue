@@ -10,7 +10,7 @@
         <p class="explain-why-company-email">
           You wanna tutor and recruit some good co-workers
           then you gotta tell them where you work!
-          Referal bonus is on the line :P
+          Referral bonus is on the line :P
         </p>
         <p class="explain-why-company-email">
           We will sent a passcode to your work email and
