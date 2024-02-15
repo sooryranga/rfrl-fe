@@ -44,18 +44,18 @@
             </div>
             <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
           </div>
-          <div class="row">
+          <div class="w-100">
             <button
               type="button"
-              class="col primary-btn primary-btn-dark mt-3 p-2"
+              class="w-100 primary-btn primary-btn-dark mt-3 p-2"
               v-on:click="setCompanyVerification">
             Verify Company
             </button>
           </div>
-          <div class="row">
+          <div class="w-100">
             <button
               type="button"
-              class="col primary-btn primary-btn-dark mt-3 p-2"
+              class="w-100 primary-btn primary-btn-dark mt-3 p-2"
               v-on:click="skipCompanyVerification">
             Skip Verification
             </button>
@@ -83,26 +83,26 @@
             <small>Passcode is invalid. Check your email again!</small>
           </div>
         </div>
-        <div class="row">
+        <div class="w-100">
           <button
               type="button"
-              class="col primary-btn primary-btn-dark mt-3 p-2"
+              class="w-100 primary-btn primary-btn-dark mt-3 p-2"
               v-on:click="verifyPasscode">
           Verify
           </button>
         </div>
-        <div class="row">
+        <div class="w-100">
           <button
             type="button"
-            class="col primary-btn primary-btn-dark mt-3 p-2"
+            class="w-100 primary-btn primary-btn-dark mt-3 p-2"
             v-on:click="deleteEmailRelation">
           Change Email
           </button>
         </div>
-        <div class="row">
+        <div class="w-100">
           <button
             type="button"
-            class="col primary-btn primary-btn-dark mt-3 p-2"
+            class="w-100 primary-btn primary-btn-dark mt-3 p-2"
             v-on:click="skipCompanyVerification">
           Skip
           </button>
