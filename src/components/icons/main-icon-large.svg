@@ -1,0 +1,8 @@
+<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    @import url('https://fonts.googleapis.com/css?family=Roboto:100,200,300,400');
+    .text { font-family: 'Roboto', sans-serif; font-size: 60px; font-weight:400;}
+  </style>
+  <rect x="0" y="0" width="120" height="120" rx="120" fill="hsl(28,80%,44%)"/>
+  <text x="60" y="61" dominant-baseline="middle" fill="white" text-anchor="middle" class="text">rfrl</text>
+</svg>

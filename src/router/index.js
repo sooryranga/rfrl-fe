@@ -134,6 +134,7 @@ const routes = [
   {
     path: '/signup',
     name: 'signup',
+    props: (route) => ({...route.query, ...route.params}),
     component: () => import('@/components/register/SignUp.vue'),
   },
   {

@@ -14,6 +14,7 @@ import DeleteIcon from './DeleteIcon.vue';
 import CheckIcon from './CheckIcon.vue';
 import AddIcon from './AddIcon.vue';
 import DragIcon from './DragIcon.vue';
+import EducationIcon from './EducationIcon.vue';
 
 export {
   QuestionIcon,
@@ -32,4 +33,5 @@ export {
   CheckIcon,
   AddIcon,
   DragIcon,
+  EducationIcon,
 };
