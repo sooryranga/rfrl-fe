@@ -31,10 +31,10 @@
             </div>
             <p>
               <button  v-on:click="modify(session)" class="btn-no-style">
-                <check-icon iconColor="'white'" class="mr-2 scheduler-icon"/>
+                <check-icon :iconColor="'white'" class="mr-2 scheduler-icon"/>
               </button>
               <button v-on:click="deleteSession(session)" class="btn-no-style">
-                <delete-icon iconColor="'white'" class="mr-2 scheduler-icon"/>
+                <delete-icon :iconColor="'white'" class="mr-2 scheduler-icon"/>
               </button>
             </p>
           </div>
@@ -126,9 +126,12 @@ export default {
   },
 
   watch: {
-    currentRoom: async function() {
-      if (!this.currentRoom) return;
-      await this.setNewRoom();
+    currentRoom: {
+      immediate: true,
+      handler(newValue, oldValue) {
+        if (newValue == oldValue) return;
+        this.setNewRoom();
+      },
     },
   },
 
