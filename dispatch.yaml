@@ -1,0 +1,11 @@
+dispatch:
+  # Default service serves simple hostname request.
+  - url: "rfrl.ca/*"
+    service: default
+  
+  - url: "www.rfrl.ca/*"
+    service: default
+
+  # Send all mobile traffic to the mobile frontend.
+  - url: "app.rfrl.ca/*"
+    service: rfrl-app
