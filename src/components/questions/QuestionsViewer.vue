@@ -1,33 +1,38 @@
 <template>
-  <div v-if="selectedQuestion" class="">
-    <chat-introduction-modal
-      v-if="showModal"
-      @cancel="cancel"
-      @introduced="save"
-      :clientId="selectedQuestion.from.id"/>
-    <p id="title">
-      <button id="go-back-btn" type="button" class="btn btn-link shadow-none" v-on:click="goBack">
-         <span class="material-icons-outlined">arrow_back</span>
+  <div>
+    <div v-if="selectedQuestion" class="">
+      <chat-introduction-modal
+        v-if="showModal"
+        @cancel="cancel"
+        @introduced="save"
+        :clientId="selectedQuestion.from.id"/>
+      <p id="title">
+        <button id="go-back-btn" type="button" class="btn btn-link shadow-none" v-on:click="goBack">
+          <span class="material-icons-outlined">arrow_back</span>
+        </button>
+        {{ selectedQuestion.title }}
+      </p>
+      <p id="poster-client">
+        <img
+            v-if="selectedQuestion.from.photo"
+            id="profile-picture"
+            v-bind:src="selectedQuestion.from.photo"
+          />
+        {{ selectedQuestion.from.firstName }} {{ selectedQuestion.from.lastName[0] }} ·
+        {{ timeAgoFormat(selectedQuestion.createdAt) }}
+      </p>
+      <button
+      class="primary-btn primary-btn-dark shadow-none my-3"
+      id="schedule-btn"
+      v-if="canScheduleSession"
+      v-on:click="scheduleSession">
+      <small>Schedule Session</small>
       </button>
-      {{ selectedQuestion.title }}
-    </p>
-    <p id="poster-client">
-      <img
-          v-if="selectedQuestion.from.photo"
-          id="profile-picture"
-          v-bind:src="selectedQuestion.from.photo"
-        />
-      {{ selectedQuestion.from.firstName }} {{ selectedQuestion.from.lastName[0] }} ·
-      {{ timeAgoFormat(selectedQuestion.createdAt) }}
-    </p>
-    <button
-    class="primary-btn primary-btn-dark shadow-none my-3"
-    id="schedule-btn"
-    v-if="canScheduleSession"
-    v-on:click="scheduleSession">
-    <small>Schedule Session</small>
-    </button>
-    <p class="text-large"> {{ selectedQuestion.body }}</p>
+      <p class="text-large"> {{ selectedQuestion.body }}</p>
+    </div>
+    <div v-else class="mt-5">
+      No Question Selected
+    </div>
   </div>
 </template>
 

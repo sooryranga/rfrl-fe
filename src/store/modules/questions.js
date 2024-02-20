@@ -90,7 +90,7 @@ const actions = {
 
     const lastQuestion = existingQuestions.length > 0 ?
       existingQuestions[existingQuestions.length-1].id :
-      null;
+      undefined;
 
     try {
       const newQuestions = await Question.QuestionService.getQuestions(
@@ -101,7 +101,7 @@ const actions = {
         commit(SET_MORE_QUESTIONS, questions);
       }
 
-      if (getters.selectedQuestion == null && questions) {
+      if (getters.selectedQuestion == null && questions.length > 0) {
         commit(SET_SELECT_QUESTION, questions[0].id);
       }
       return newQuestions;

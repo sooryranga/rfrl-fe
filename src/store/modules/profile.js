@@ -109,7 +109,7 @@ const actions = {
     try {
       const {profile, auth} = await Auth.AuthService.loginAuthorized();
       if (!profile) {
-        return;
+        throw new Error('Could not log in');
       }
 
       commit(SET_LOGGED_IN);

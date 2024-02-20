@@ -1,9 +1,7 @@
 <template>
   <div class="h-100">
     <transition name="fade">
-      <div v-if="error" class="alert alert-danger fade-in" role="alert">
-        {{error}}
-      </div>
+
     </transition>
     <questions-editor v-if="isEditorOpen"></questions-editor>
     <div id="questions-container" class="w-100">
@@ -17,7 +15,11 @@
         id="questions-viewer"
         ref="viewerContainer"
         v-bind:class="[showViewerContainer ? 'display-on' : 'display-off']">
-        <slot name="global-banner"/>
+        <slot name="global-banner">
+          <div v-if="error" class="alert alert-danger fade-in" role="alert">
+            {{error}}
+          </div>
+        </slot>
         <questions-viewer @goback="showSelector"/>
       </div>
     </div>
