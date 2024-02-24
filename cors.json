@@ -1,0 +1,7 @@
+[
+  {
+    "origin": ["https://app.rfrl.ca/"],
+    "method": ["GET"],
+    "maxAgeSeconds": 3600
+  }
+]
