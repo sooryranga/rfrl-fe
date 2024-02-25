@@ -48,23 +48,21 @@ const ApiService = {
           Auth.destroyToken();
         }
 
-        return Promise.reject(
-            new RequestError({
-              statusCode: status,
-              message: data?.message,
-            }),
-        );
+        const err = new RequestError({
+          statusCode: status,
+          message: data,
+        });
+        return Promise.reject(err);
       } else if (error.request) {
         // The request was made but no response was received
         // `error.request` is an instance of XMLHttpRequest
         // in the browser and an instance of
         // http.ClientRequest in node.js
-        return Promise.reject(
-            new RequestError({
-              statusCode: status,
-              message: error.message,
-            }),
-        );
+        const err = new RequestError({
+          statusCode: status,
+          message: error.message,
+        });
+        return Promise.reject(err);
       } else {
         // Something happened in setting up the request that triggered an Error
         console.log('Error', error.message);

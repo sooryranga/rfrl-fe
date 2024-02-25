@@ -1,7 +1,7 @@
 <template>
   <div class="row h-100 w-100 p-0 m-0">
     <loading :active.sync="isLoading"/>
-    <div class="col h-100 p-0">
+    <div id="img-container" class="col h-100 p-0">
       <img v-bind:src="imageSrc" id="feature-img"/>
     </div>
     <div class="col h-100 p-0" style="position: relative;">
@@ -64,6 +64,12 @@ export default {
   margin-left: 1rem;
   margin-right: 1rem;
   z-index: 123;
+}
+
+@media (max-width: 900px) {
+  #img-container{
+    display: none;
+  }
 }
 
 </style>

@@ -1,90 +1,86 @@
 <template>
 <div class="row h-100 w-100 p-0 m-0">
-  <loading :active.sync="isLoading"/>
-  <div class="col h-100 p-0">
-    <img src="@/assets/pexels-elina-sazonova-1850617.jpg" id="feature-img"/>
-  </div>
-  <div class="col h-100 p-0">
-    <transition name="fade">
-      <div v-if="showError" class="alert alert-danger fade-in fixed-current-top" role="alert">
-        {{error}}
-      </div>
-    </transition>
+  <register-template
+      :imageSrc="require('@/assets/pexels-elina-sazonova-1850617.jpg')"
+      :isLoading="isLoading"
+      :error="error"
+      :showError="showError"
+    >
     <div class="parent">
-      <div class="mx-auto my-auto">
-        <div id="google-signin-btn">
-          <button type="button" class="btn btn-outline-dark btn-lg" v-on:click="loginToGoogle" disabled>
-            <i class="fab fa-google"></i>
-            Register with Google
-          </button>
-        </div>
-        <!-- <div id="linkedin-signin-btn" class="mt-2">
-          <button type="button"
-          class="btn btn-outline-dark btn-lg"
-          v-on:click="loginToLinkedIn">
-            <i class="fab fa-linkedin"></i>
-            Register with LinkedIn
-          </button>
-        </div> -->
-        <hr class="mt-4 mb-4"/>
-        <form>
-          <div class="form-group mb-2 mt-4">
-            <label for="exampleInputEmail1">Email address</label>
-            <div class="form-row">
-              <div class="col">
-                <input
-                  class="form-control" id="exampleInputEmail1"
-                  :class="{ 'is-invalid': $v.email.$error }"
-                  v-model.trim="$v.email.$model"
-                  placeholder="Enter email"/>
-              </div>
-            </div>
-            <div class="error row" v-if="$v.email.$error && !$v.email.required">
-              <div class="col text-danger">
-                <small>Email is required</small>
-              </div>
-            </div>
-            <div class="error row" v-if="$v.email.$error && !$v.email.email">
-              <div class="col text-danger">
-                <small>Not a valid email.</small>
-              </div>
-            </div>
-          </div>
-          <div class="form-group  mt-2">
-            <label for="exampleInputPassword1">Password</label>
-            <div class="form-row">
-              <div class="col">
-                <input
-                  type="password" class="form-control" id="exampleInputPassword1" placeholder="Password"
-                  :class="{ 'is-invalid': $v.password.$error }"
-                  v-model.trim="$v.password.$model"/>
-              </div>
-            </div>
-            <div class="error row" v-if="$v.password.$error && !$v.password.required">
-              <div class="col text-danger">
-                <small>Password is required</small>
-              </div>
-            </div>
-            <div class="error row" v-if="$v.password.$error && !$v.password.minLength">
-              <div class="col text-danger">
-                <small>Password must have at least {{$v.password.$params.minLength.min}} characters.</small>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <button
-              type="button"
-              class="col primary-btn primary-btn-dark mt-3 p-2" v-on:click="registerWithEmail">Register</button>
-          </div>
-          <div class="row">
-            <button
-              type="button"
-              class="col primary-btn primary-btn-dark mt-3 p-2" v-on:click="loginToEmail">Login</button>
-          </div>
-        </form>
+      <div id="google-signin-btn">
+        <button type="button" class="w-100 btn btn-outline-dark btn-lg" v-on:click="loginToGoogle" disabled>
+          <i class="fab fa-google"></i>
+          Register with Google
+        </button>
       </div>
+      <!-- <div id="linkedin-signin-btn" class="mt-2">
+        <button type="button"
+        class="btn btn-outline-dark btn-lg"
+        v-on:click="loginToLinkedIn">
+          <i class="fab fa-linkedin"></i>
+          Register with LinkedIn
+        </button>
+      </div> -->
+      <hr class="mt-4 mb-4"/>
+      <form>
+        <div class="form-group mb-2 mt-4">
+          <label for="exampleInputEmail1">Email address</label>
+          <div class="form-row">
+            <div class="col">
+              <input
+                class="form-control" id="exampleInputEmail1"
+                :class="{ 'is-invalid': $v.email.$error }"
+                v-model.trim="$v.email.$model"
+                placeholder="Enter email"/>
+            </div>
+          </div>
+          <div class="error row" v-if="$v.email.$error && !$v.email.required">
+            <div class="col text-danger">
+              <small>Email is required</small>
+            </div>
+          </div>
+          <div class="error row" v-if="$v.email.$error && !$v.email.email">
+            <div class="col text-danger">
+              <small>Not a valid email.</small>
+            </div>
+          </div>
+        </div>
+        <div class="form-group  mt-2">
+          <label for="exampleInputPassword1">Password</label>
+          <div class="form-row">
+            <div class="col">
+              <input
+                type="password" class="form-control" id="exampleInputPassword1" placeholder="Password"
+                :class="{ 'is-invalid': $v.password.$error }"
+                v-model.trim="$v.password.$model"/>
+            </div>
+          </div>
+          <div class="error row" v-if="$v.password.$error && !$v.password.required">
+            <div class="col text-danger">
+              <small>Password is required</small>
+            </div>
+          </div>
+          <div class="error row" v-if="$v.password.$error && !$v.password.minLength">
+            <div class="col text-danger">
+              <small>Password must have at least {{$v.password.$params.minLength.min}} characters.</small>
+            </div>
+          </div>
+        </div>
+        <div class="w-100">
+          <button
+            type="button"
+            id="login-button"
+            class="w-100 primary-btn primary-btn-dark mt-3" v-on:click="loginToEmail">Login</button>
+        </div>
+        <div class="w-100">
+          <button
+            type="button"
+            id="signup-button"
+            class="w-100 primary-btn primary-btn-dark mt-3" v-on:click="registerWithEmail">Register</button>
+        </div>
+      </form>
     </div>
-  </div>
+  </register-template>
 </div>
 </template>
 
@@ -93,6 +89,7 @@ import {mapActions, mapGetters} from 'vuex';
 import queryString from 'query-string';
 
 import {ErrorMixin} from '@/components/mixins/';
+import RegisterTemplate from '@/components/register/RegisterTemplate.vue';
 import {flowToStep} from './RegisterFlow';
 import {required, minLength, email} from 'vuelidate/lib/validators';
 
@@ -116,6 +113,10 @@ export default {
       required: false,
       default: '',
     },
+  },
+
+  components: {
+    RegisterTemplate,
   },
 
   mixins: [ErrorMixin],
@@ -183,6 +184,7 @@ export default {
           password: this.password,
         });
       } catch (error) {
+        console.log(error);
         this.setError(error?.message);
       }
 
@@ -245,12 +247,8 @@ export default {
 
 <style scoped>
 .parent{
-  display: grid;
-  height: 100%;
-  width: 100%;
-}
-.btn{
-  width: 400px;
+  max-width: 30rem;
+  width: 95%;
 }
 
 #feature-img{
@@ -266,5 +264,13 @@ export default {
   margin-left: 1rem;
   margin-right: 1rem;
   z-index: 123;
+}
+
+#login-button{
+  height:2.5rem;
+}
+
+#signup-button{
+  height: 2.5rem;
 }
 </style>
