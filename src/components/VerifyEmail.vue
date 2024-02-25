@@ -218,3 +218,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.btn{
+  height:2.5rem;
+}
+</style>

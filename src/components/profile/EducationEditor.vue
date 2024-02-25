@@ -11,33 +11,21 @@
             </button>
           </div>
           <div class="modal-body">
-            <div class="row">
-              <div class="col-2">
-                <p>Institution</p>
-              </div>
-              <div class="col">
-                <input class="w-100" v-model="institution" placeholder="Institution name?">
-              </div>
+            <div class="mb-3">
+              <label class="form-label mb-0">Institution</label>
+              <input class="w-100 form-control" v-model="institution" placeholder="Institution name?">
             </div>
-            <div class="row">
-              <div class="col-2">
-                <p>Degree</p>
-              </div>
-              <div class="col">
-                <input class="w-100" v-model="degree" placeholder="Whats the degree?">
-              </div>
+            <div class="mb-3">
+              <label class="form-label mb-0">Degree</label>
+              <input class="w-100 form-control" v-model="degree" placeholder="Whats the degree?">
             </div>
-            <div class="row">
-              <div class="col-2">
-                <p>Field of Study</p>
-              </div>
-              <div class="col">
-                <input clas="w-100" v-model="fieldOfStudy" placeholder="Whats the field of study?" />
-              </div>
+            <div class="mb-3">
+              <label class="form-label mb-0">Field of Study</label>
+              <input class="w-100 form-control" v-model="fieldOfStudy" placeholder="Whats the field of study?" />
             </div>
-            <div class="row">
-              <div class="col-2">
-                <p>Start Year</p>
+            <div class="mb-3 row">
+              <div class="col-3">
+                <label class="form-label mb-0">Start Year</label>
               </div>
               <div class="col">
                 <datepicker
@@ -49,9 +37,9 @@
                 </datepicker>
               </div>
             </div>
-            <div class="row">
-              <div class="col-2">
-                <p>End Year</p>
+            <div class="mb-1 row">
+              <div class="col-3">
+                <label class="form-label mb-0">End Year</label>
               </div>
               <div class="col">
                 <datepicker

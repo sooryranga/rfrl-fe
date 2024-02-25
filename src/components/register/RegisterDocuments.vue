@@ -6,11 +6,14 @@
       :showError="showError"
     >
     <div id="register-documents">
-      <education :profileId="currentProfile.id" :fetched-profile="currentProfile"/>
-      <resume :profileId="currentProfile.id" :fetched-profile="currentProfile"/>
-      <div class="row">
-        <button type="button" class="col btn btn-primary mt-3" v-on:click="goNext">Done woot woot</button>
-      </div>
+      <education :profileId="currentProfile.id" :fetched-profile="currentProfile" class="mb-5"/>
+      <resume :profileId="currentProfile.id" :fetched-profile="currentProfile" class="mb-5"/>
+      <button
+        type="button"
+        id="next-button"
+        class="w-100 primary-btn primary-btn-dark mt-3" v-on:click="goNext">
+        Done woot woot
+      </button>
     </div>
   </register-template>
 </template>
@@ -51,11 +54,16 @@ export default {
 <style scoped>
 #register-documents{
   width:100%;
-  padding-left:3rem;
-  padding-right:3rem;
   height:100%;
+  padding-left:3%;
+  padding-right:3%;
   padding-top:6rem;
   padding-bottom: 3rem;
   overflow-y: scroll;
+  overflow-x:hidden;
+}
+
+#next-button{
+  height: 2.5rem;
 }
 </style>

@@ -18,9 +18,11 @@ export default {
 
 <style>
 #container{
-  padding-top: 3rem;
+  padding-top: 5rem;
   height:100%;
   width: 100%;
+  padding-left: 1rem;
+  padding-right: 1rem;
   display: flex;
   justify-content: center;
   flex-direction: column;

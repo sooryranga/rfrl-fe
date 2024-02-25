@@ -5,7 +5,7 @@
     :error="error"
     :showError="showError"
   >
-    <div id="basic-user-info">
+    <div class="parent">
       <div class="form-group">
         <label for="firstName">First Name</label>
         <div class="form-row">
@@ -52,7 +52,8 @@
       </div>
       <button
         type="button"
-        class="primary-btn primary-btn-dark mt-5 p-3 w-100" v-on:click="saveAndNext">
+        id="next-button"
+        class="primary-btn primary-btn-dark mt-5 w-100" v-on:click="saveAndNext">
         Lets Go!
       </button>
     </div>
@@ -126,12 +127,14 @@ export default {
 </script>
 
 <style scoped>
-#basic-user-info{
-  max-height: 50rem;
-  width: 50%;
-  max-width: 50rem;
+.parent{
+  max-width: 30rem;
+  width: 90%;
 }
 .form-group{
   padding-top: 1rem;
+}
+#next-button{
+  height:2.5rem;
 }
 </style>
