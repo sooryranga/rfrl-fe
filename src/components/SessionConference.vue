@@ -23,10 +23,10 @@
           </div>
         </div>
       </div>
-      <div class="col">
-        <div class="row" style="height:6%">
-          <div class="col p-0">
-            <nav id="tutor-nav" class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="col p-0 h-100">
+        <div id="session-tools">
+          <div id="session-tools-nav">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light h-100">
               <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                   <li class="nav-item active">
@@ -63,9 +63,7 @@
               </div>
             </nav>
           </div>
-        </div>
-        <div class="row" style="height:94%">
-          <div class="col p-0">
+          <div id="session-tool-view">
             <router-view
               :doc="doc"
               :videoStream="shareScreenStream"
@@ -209,13 +207,26 @@ export default {
 </script>
 
 <style scoped>
-#tutor-nav{
-  flex: 0 0 auto!important;
-}
 #left-bar{
   position:relative;
   width:21vw;
   min-width: 300px;
   flex: 0 1 auto!important;;
+}
+
+#session-tools{
+  display: flex;
+  flex-direction: column;
+  height:100%;
+}
+
+#session-tools-nav{
+  flex: 0 0 auto;
+  width: 100%;
+}
+#session-tool-view{
+  flex: 1 1 100%;
+  width: 100%;
+  min-height: 0;
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div
     ref="vue-command"
-    class="vue-command h-100">
+    class="vue-command">
 
     <slot name="bar">
       <div
@@ -107,7 +107,7 @@ export default {
       await this.$nextTick();
 
       // Only scroll to bottom if it was scrolled to bottom before
-      if (this.scroll.isBottom) {
+      if (this.scroll.isBottom && this.$refs['term-std']?.scrollHeight) {
         this.$refs['term-std'].scrollTop = this.$refs['term-std'].scrollHeight;
       }
     });
@@ -134,8 +134,9 @@ export default {
 $background: #111;
 
 .vue-command {
-  overflow-y: auto;
-  overflow-x: hidden;
+  display: block;
+  height: 100%;
+  flex: 1;
 
   .term-bar {
     background: $background;
@@ -160,6 +161,8 @@ $background: #111;
     flex-direction: column;
     width: 100%;
     border: 0px solid $background;
+    height: auto !important;
+    min-height: 100%;
 
     @extend .term-hist-container-fullscreen;
   }
@@ -184,4 +187,11 @@ $background: #111;
     word-break: break-all;
   }
 }
+#terminal-container{
+    height: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    overflow-y: auto;
+  }
 </style>
