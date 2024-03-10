@@ -21,7 +21,7 @@
       <div class="pt-1" v-if="profile && profile.institution">
         <div class="educationRow row">
           <div class="col-3">
-            <education-icon :size="'70%'" :hoverExpand="false"/>
+            <education-icon :size="'70%'" :hoverExpand="false" :iconColor="'var(--clr-accent)'"/>
           </div>
           <div class="col my-auto">
             <p id="institution-name">{{profile.institution}}</p>
