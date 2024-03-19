@@ -76,7 +76,6 @@ export const AuthService = {
       const response = await Vue.axios.post(
           'login-authorized/',
       );
-      console.log(response);
       saveToken(response.data?.token);
       return processLoginResponse(response);
     } catch (err) {
