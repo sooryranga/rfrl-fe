@@ -26,7 +26,13 @@ export class WebrtcConn {
     /**
      * @type {any}
      */
-    this.peer = new Peer({initiator, ...peerOpts});
+    this.peer = new Peer({
+      initiator,
+      config: {
+        iceServers: [{'url': 'stun:global.stun.twilio.com:3478?transport=udp', 'urls': 'stun:global.stun.twilio.com:3478?transport=udp'}, {'url': 'turn:global.turn.twilio.com:3478?transport=udp', 'username': '208891c080bf16de736ba87c4136742e070bc2b3a87c9a3ed6b0facedcfd5f0c', 'urls': 'turn:global.turn.twilio.com:3478?transport=udp', 'credential': 'lvIEqwP+Y0CVflC6DhyFp7I7sW1APpg1C3+wx3xqQJU='}, {'url': 'turn:global.turn.twilio.com:3478?transport=tcp', 'username': '208891c080bf16de736ba87c4136742e070bc2b3a87c9a3ed6b0facedcfd5f0c', 'urls': 'turn:global.turn.twilio.com:3478?transport=tcp', 'credential': 'lvIEqwP+Y0CVflC6DhyFp7I7sW1APpg1C3+wx3xqQJU='}, {'url': 'turn:global.turn.twilio.com:443?transport=tcp', 'username': '208891c080bf16de736ba87c4136742e070bc2b3a87c9a3ed6b0facedcfd5f0c', 'urls': 'turn:global.turn.twilio.com:443?transport=tcp', 'credential': 'lvIEqwP+Y0CVflC6DhyFp7I7sW1APpg1C3+wx3xqQJU='}], //eslint-disable-line
+      },
+      ...peerOpts,
+    });
     this.peer.on('signal', (signal) => {
       console.log('signal', this.peerId, this.remotePeerId);
       this.webrtcManager.publishSignalingMessage(
@@ -116,7 +122,6 @@ export class WebrtcManager {
     this.announceData = announceData;
     this.maxConns = maxConns;
     this.trackAndStream = {};
-    this.firstTime = true;
 
     this.conn = new WebSocket(this.url);
     this.conn.addEventListener('message', (m) => this.onMessage(m));
@@ -209,12 +214,10 @@ export class WebrtcManager {
   * onConnect
   */
   onConnect() {
-    if (!this.firstTime) return;
     this.conn.send(
         JSON.stringify({type: 'subscribe', topics: [this.conferenceId]}),
     );
     this.publishSignalingMessage({type: 'announce', from: this.peerId});
-    this.firstTime = false;
   }
 
   /**
