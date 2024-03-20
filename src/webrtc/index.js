@@ -116,6 +116,7 @@ export class WebrtcManager {
     this.announceData = announceData;
     this.maxConns = maxConns;
     this.trackAndStream = {};
+    this.firstTime = true;
 
     this.conn = new WebSocket(this.url);
     this.conn.addEventListener('message', (m) => this.onMessage(m));
@@ -190,6 +191,7 @@ export class WebrtcManager {
   */
   onDisconnect() {
     console.log(`disconnect (${this.url})`);
+    this.conn = new WebSocket(this.url);
   }
 
   /**
@@ -207,10 +209,12 @@ export class WebrtcManager {
   * onConnect
   */
   onConnect() {
+    if (!this.firstTime) return;
     this.conn.send(
         JSON.stringify({type: 'subscribe', topics: [this.conferenceId]}),
     );
     this.publishSignalingMessage({type: 'announce', from: this.peerId});
+    this.firstTime = false;
   }
 
   /**
