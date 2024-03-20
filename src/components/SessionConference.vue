@@ -7,13 +7,13 @@
       <div class='col-auto p-0 h-100'>
         <div class="h-100" style="width: 350px">
           <video-messaging
-            style="height: 30%;"
+            style="height: 263px;"
             v-bind:conferenceId="conferenceId"
             v-bind:videoStream="videoStream"
             v-on:setTrack="setTrackOnPeers"
             v-on:removeTrack="removeTrackFromPeers"
             ref="videoMessaging"/>
-          <div class="w-100" style="height:70%">
+          <div class="w-100" id="chat-container">
             <chat
               ref="chat"
               :isSingleRoom="true"
@@ -224,5 +224,9 @@ export default {
   flex: 1 1;
   width: 100%;
   min-height: 0;
+}
+
+#chat-container{
+  height: calc(100% - 263px)
 }
 </style>
