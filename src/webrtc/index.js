@@ -34,7 +34,6 @@ export class WebrtcConn {
       ...peerOpts,
     });
     this.peer.on('signal', (signal) => {
-      console.log('signal', this.peerId, this.remotePeerId);
       this.webrtcManager.publishSignalingMessage(
           {
             to: this.remotePeerId,
@@ -45,10 +44,6 @@ export class WebrtcConn {
       );
     });
     this.peer.on('connect', () => {
-      console.log(
-          'signal', this.peerId, this.remotePeerId,
-          this.webrtcManager.trackAndStream,
-      );
       Object.values(this.webrtcManager.trackAndStream).forEach(
           ({track, stream, meta}) => {
             const stringifiedData = JSON.stringify(meta);
@@ -60,7 +55,6 @@ export class WebrtcConn {
     });
 
     this.peer.on('close', () => {
-      console.log('closed');
       this.connected = false;
       this.closed = true;
       this.webrtcManager.deleteRemotePeer(this.remotePeerId);
@@ -70,12 +64,10 @@ export class WebrtcConn {
     this.peer.on('data', (data) => {
       const parsedData = new TextDecoder().decode(data);
       const jsonData = JSON.parse(parsedData);
-      console.log('data', jsonData);
       this.webrtcManager.announceData(jsonData);
     });
 
     this.peer.on('error', (err) => {
-      console.error(err);
       console.log('error', this.peerId, this.remotePeerId, err);
     });
 
@@ -85,7 +77,6 @@ export class WebrtcConn {
     // });
 
     this.peer.on('track', (track, stream) => {
-      console.log('track', this.peerId, this.remotePeerId, stream, track);
       this.webrtcManager.onPeerStream(stream);
     });
   }
@@ -184,7 +175,6 @@ export class WebrtcManager {
   * @param {string} peerId
   */
   deleteRemotePeer(peerId) {
-    console.log('deleteRemotePeer', peerId);
     if (peerId in this.webrtcConns) {
       delete this.webrtcConns[peerId];
     }

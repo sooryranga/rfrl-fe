@@ -88,15 +88,11 @@ export default {
   methods: {
     onVideoStreamChange(stream) {
       this.othersSharing = true;
-      const tracks = stream.getVideoTracks();
-      const webrtcTrack = tracks.length > 0? tracks[0]: null;
-
-      if (webrtcTrack) {
-        webrtcTrack.onmute = () => {
-          console.log('stream stopped');
-          this.othersSharing = false;
-        };
-      }
+      stream.onremovetrack = (event) => {
+        event.track.stop();
+        this.videortc.load();
+        this.othersSharing = false;
+      };
 
       this.videortc.srcObject = stream;
       this.videortc.play();
