@@ -1,12 +1,12 @@
 <template>
     <div ref="parent" id="parent">
       <div>
-        <video id="rtcvideo" ref="videortc" class="video">
+        <video id="rtcvideo" ref="videortc" class="video" playsinline autoplay>
           RTC Video stream not available.
         </video>
       </div>
       <div>
-        <video id="myvideo" ref="video" class="video">
+        <video id="myvideo" ref="video" class="video" playsinline autoplay>
           Video stream not available.
         </video>
       </div>
@@ -46,14 +46,13 @@ export default {
   watch: {
     videoStream(stream, _) {
       this.videortc.srcObject = stream;
-      this.videortc.muted = true;
       this.videortc.play();
 
       const videoTacks = stream.getVideoTracks();
       if (videoTacks.length > 0) {
         const videoTrack = videoTacks[0];
         videoTrack.onmute = () => {
-          videoTrack.stop();
+          console.log('stream stopped');
         };
       }
     },
