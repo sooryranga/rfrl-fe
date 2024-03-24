@@ -9,7 +9,7 @@ const SET_PROFILE = 'set_profile';
 const SET_UPDATE_PROFILE = 'set_update_profile';
 const SET_PROFILE_IMAGE = 'set_profile_image';
 const SET_NAME = 'set_name';
-const SET_TUTORED_STUDENTS = 'set_tutored_students';
+const SET_REFERRED_CLIENTS = 'set_referred_clients';
 const SET_EDUCATION = 'set_education';
 const SET_ABOUT = 'set_about';
 const SET_EMAIL_VERIFICATION = 'set_email_verification';
@@ -70,7 +70,7 @@ export {
   SET_PROFILE,
   SET_PROFILE_IMAGE,
   SET_NAME,
-  SET_TUTORED_STUDENTS,
+  SET_REFERRED_CLIENTS,
   SET_EDUCATION,
   SET_ABOUT,
   SET_UPDATE_PROFILE,

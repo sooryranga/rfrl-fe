@@ -6,7 +6,7 @@
       @cancel="cancel"
       :clientId="chatClientId"/>
     <div class="wrapper-grid">
-      <div v-for="(tutor) in tutors" v-bind:key="tutor.id">
+      <div v-for="(tutor) in activeTutors" v-bind:key="tutor.id">
         <profile-card
           :img="getPhoto(tutor)"
           :routeToProfile="routeToProfile(tutor.id)"
@@ -81,6 +81,9 @@ export default {
   computed: {
     ...mapGetters('listTutors', ['tutors', 'params']),
     ...mapGetters('companies', ['companies']),
+    activeTutors() {
+      return this.tutors.filter((tutor) => tutor.firstName);
+    },
   },
   methods: {
     ...mapActions('companies', ['getCompanies']),
@@ -116,7 +119,14 @@ export default {
       return client.photo;
     },
     cardName(firstName, lastName) {
-      return firstName;
+      const name = [];
+      if (firstName) {
+        name.push(firstName);
+      }
+      if (lastName) {
+        name.push(lastName[0]);
+      }
+      return name.length > 0 ? name.join(' '): 'test';
     },
     shortAbout(about) {
       const i = about?.indexOf(' ', 60);

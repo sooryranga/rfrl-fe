@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h4 id="title"> Student Review </h4>
+    <h4 id="title"> Review </h4>
     <div class="mt-4" v-if="tutorReviews.length">
       <div id="averageReview">
         <div class="row">

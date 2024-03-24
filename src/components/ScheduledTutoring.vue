@@ -1,7 +1,7 @@
 
 <template>
   <div id="scheduled-tutoring">
-    <h5 id="component-name">Scheduled Tutoring</h5>
+    <h5 id="component-name">Scheduled Mentoring</h5>
     <div v-if="scheduledSessions.length">
       <div class="mt-1" v-for="(dateSession,index) in dateScheduledSessions" v-bind:key="index">
         <div
@@ -33,7 +33,7 @@
     </div>
     <div v-else>
       <div>
-        <p id="no-schedule"> You haven't scheduled tutoring yet. Give it a try! </p>
+        <p id="no-schedule"> You haven't scheduled mentoring yet. Give it a try! </p>
       </div>
     </div>
   </div>

@@ -33,7 +33,7 @@
     <div class="filter">
       <div class="row">
         <div class="col">
-          <label>Tutoring</label>
+          <label>Mentoring</label>
         </div>
         <div class="col my-auto mx-auto">
           <label class="switch">
@@ -84,7 +84,7 @@ export default {
         {name: 'Software Engineering', id: 1},
       ],
       type: [
-        {name: 'Tutoring & Referral', id: 1},
+        {name: 'Mentoring & Referral', id: 1},
       ],
       forTutoring: true,
       forReferral: true,

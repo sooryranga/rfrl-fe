@@ -5,13 +5,13 @@
       @cancel="cancel"
       :clientId="chatClientId"/>
     <div class="wrapper-grid">
-      <div v-for="(client) in clients" v-bind:key="client.id">
+      <div v-for="(client) in activeClients" v-bind:key="client.id">
         <profile-card
             :img="getPhoto(client)"
             :routeToProfile="routeToProfile(client.id)"
             @startChatting="startChatting(client)"
           >
-          <p class="name">{{name(client.firstName, client.lastName)}}</p>
+          <p class="name">{{cardName(client.firstName, client.lastName)}}</p>
           <div class="profile-items">
             <p v-if="client.linkedInProfile" class="profile-item">
               <linked-in-icon :hoverExpand="false" :iconColor="iconColor"/>
@@ -68,6 +68,9 @@ export default {
   computed: {
     ...mapGetters('listClients', ['clients']),
     ...mapGetters('profile', ['currentProfile']),
+    activeClients() {
+      return this.clients.filter((client) => client.firstName);
+    },
   },
   methods: {
     ...mapActions('listClients', ['getClients']),
@@ -102,7 +105,7 @@ export default {
     toGithub(shortenedGithub) {
       return 'https://' + shortenedGithub;
     },
-    name(firstName, lastName) {
+    cardName(firstName, lastName) {
       const name = [];
       if (firstName) {
         name.push(firstName);

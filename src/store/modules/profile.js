@@ -2,7 +2,7 @@ import {v1 as uuidv1} from 'uuid';
 
 import {
   SET_PROFILE, SET_UPDATE_PROFILE,
-  SET_TUTORED_STUDENTS, SET_EDUCATION,
+  SET_REFERRED_CLIENTS, SET_EDUCATION,
   SET_LOGGED_IN, SET_GOOGLE_AUTH,
   SET_LINKED_IN_AUTH, SET_EMAIL_AUTH, SET_LOGGED_OUT,
   SET_AUTH_ERROR, SET_EMAIL_VERIFICATION,
@@ -81,8 +81,8 @@ const actions = {
 
     commit(SET_UPDATE_PROFILE, updatedProfile);
   },
-  async tutoredStudents({commit}) {
-    commit(SET_TUTORED_STUDENTS, [
+  async referredClients({commit}) {
+    commit(SET_REFERRED_CLIENTS, [
       {from: {id:uuidv1()}, name: 'soory', lastTutoredDate: new Date(), image: 'https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png'},// eslint-disable-line
       {from: {id:uuidv1()}, name: 'arun', lastTutoredDate: new Date(), image: 'https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png'},// eslint-disable-line
     ]);
@@ -209,8 +209,8 @@ const mutations = {
   [SET_UPDATE_PROFILE](state, updatedProfile) {
     state.profile = {...state.profile, ...updatedProfile};
   },
-  [SET_TUTORED_STUDENTS](state, tutoredStudents) {
-    state.profile.tutoredStudents = tutoredStudents;
+  [SET_REFERRED_CLIENTS](state, referredClients) {
+    state.profile.referredClients = referredClients;
   },
   [SET_EDUCATION](
       state,
