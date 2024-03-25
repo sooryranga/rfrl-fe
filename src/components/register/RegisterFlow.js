@@ -25,7 +25,7 @@ const routeToStep = {
     router.push({name: 'registerDocuments'});
   },
   [doneSignUp]: (router, {profileId}) => {
-    router.push({name: 'workInProgress', params: {userId: profileId}});
+    router.push({name: 'profile', params: {userId: profileId}});
   },
 };
 
